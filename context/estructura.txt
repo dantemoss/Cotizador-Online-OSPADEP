@@ -1,0 +1,28 @@
+Quiero crear una pagina web para que los miembros del equipo de ventas puedan cotizar
+los planes de salud para los afiliados nuevos que esten interesados en pertenecer a la 
+obra social (OSPADEP). 
+El funcionamiento tiene que ser sencillo, interactivo, sobretodo claro y rapido. 
+Se debe poder cargar en un formulario a quien está destinado el servicio, es decir, la 
+cotizacion debe permitir elegir "para quien o quienes esta buscando un plan?". 
+Dando algunas opciones como:
+-Para mi
+En este caso se le pide la Edad al posible afiliado y situacion laboral.
+(Relacion de dependencia, Monotributista, Particular)
+
+-Para mi y mi pareja.
+En este caso se le pide la Edad al los posibles afiliados y situacion laboral.
+(Relacion de dependencia, Monotributista, Particular)
+
+-Para mi y mis hijos.
+En este caso se le pide la Edad al los posibles afiliados, cantidad de hijos y situacion laboral.
+(Relacion de dependencia, Monotributista, Particular)
+
+-Para mi, mi pareja y mis hijos. 
+En este caso se le pide la Edad al los posibles afiliados, cantidad de hijos y situacion laboral.
+(Relacion de dependencia, Monotributista, Particular)
+
+Luego de eso tiene que existir un boton que diga "Cotizar Plan" y que eso lleve a una pagina
+(o algo por el estilo) que muestre en modo de tarjetas los planes disponibles segun el rango
+etario de los afiliados.
+
+A nivel de diseño quiero que te bases en las imagenes que te muestro en la carpeta "context" aplicandolo a lo que refiere a la app.

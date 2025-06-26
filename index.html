@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Online OSPADEP - Planes de Salud</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1><i class="fas fa-heartbeat"></i> OSPADEP</h1>
+                <p>Obra Social del Personal de Aeronavegación de Entes Privados</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Formulario Principal -->
+            <div class="form-section" id="form-section">
+                <div class="form-card">
+                    <!-- Progress Indicator -->
+                    <div class="progress-container">
+                        <div class="progress-step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <span class="step-label">Tipo de Plan</span>
+                        </div>
+                        <div class="progress-line"></div>
+                        <div class="progress-step" data-step="2">
+                            <div class="step-number">2</div>
+                            <span class="step-label">Información</span>
+                        </div>
+                        <div class="progress-line"></div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-number">3</div>
+                            <span class="step-label">Cotización</span>
+                        </div>
+                    </div>
+
+                    <div class="form-content">
+                        <h2>¿Para quién estás buscando un plan?</h2>
+                        <p class="subtitle">Selecciona la opción que mejor se ajuste a tu situación familiar</p>
+                        
+                        <div class="options-container">
+                            <div class="option-item" data-option="solo">
+                                <div class="option-content">
+                                    <div class="option-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="option-text">
+                                        <h3>Para mí</h3>
+                                        <p>Plan individual para una persona</p>
+                                    </div>
+                                </div>
+                                <div class="option-radio">
+                                    <div class="radio-button"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="option-item" data-option="pareja">
+                                <div class="option-content">
+                                    <div class="option-icon">
+                                        <i class="fas fa-user-friends"></i>
+                                    </div>
+                                    <div class="option-text">
+                                        <h3>Para mí y mi pareja</h3>
+                                        <p>Plan familiar para 2 personas</p>
+                                    </div>
+                                </div>
+                                <div class="option-radio">
+                                    <div class="radio-button"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="option-item" data-option="hijos">
+                                <div class="option-content">
+                                    <div class="option-icon">
+                                        <i class="fas fa-baby"></i>
+                                    </div>
+                                    <div class="option-text">
+                                        <h3>Para mí y mis hijos</h3>
+                                        <p>Plan familiar con hijos incluidos</p>
+                                    </div>
+                                </div>
+                                <div class="option-radio">
+                                    <div class="radio-button"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="option-item" data-option="familia">
+                                <div class="option-content">
+                                    <div class="option-icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <div class="option-text">
+                                        <h3>Para mi familia completa</h3>
+                                        <p>Pareja e hijos incluidos</p>
+                                    </div>
+                                </div>
+                                <div class="option-radio">
+                                    <div class="radio-button"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="continue-button" id="continue-btn" disabled>
+                                Continuar <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Detalles -->
+            <div class="details-section" id="details-section" style="display: none;">
+                <div class="form-card">
+                    <!-- Progress Indicator -->
+                    <div class="progress-container">
+                        <div class="progress-step completed" data-step="1">
+                            <div class="step-number"><i class="fas fa-check"></i></div>
+                            <span class="step-label">Tipo de Plan</span>
+                        </div>
+                        <div class="progress-line completed"></div>
+                        <div class="progress-step active" data-step="2">
+                            <div class="step-number">2</div>
+                            <span class="step-label">Información</span>
+                        </div>
+                        <div class="progress-line"></div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-number">3</div>
+                            <span class="step-label">Cotización</span>
+                        </div>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-header">
+                            <button class="back-button" onclick="goBack()">
+                                <i class="fas fa-arrow-left"></i> Volver
+                            </button>
+                            <h2 id="details-title">Información Personal</h2>
+                            <p class="subtitle">Completa los datos para generar tu cotización personalizada</p>
+                        </div>
+                        
+                        <form id="cotization-form" class="modern-form">
+                            <div class="form-sections" id="form-fields">
+                                <!-- Los campos se generarán dinámicamente con JavaScript -->
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="back-step-button" onclick="goBack()">
+                                    <i class="fas fa-arrow-left"></i> Anterior
+                                </button>
+                                <button type="submit" class="continue-button">
+                                    <i class="fas fa-calculator"></i> Cotizar Plan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Planes -->
+            <div class="plans-section" id="plans-section" style="display: none;">
+                <div class="plans-container">
+                    <!-- Progress Indicator -->
+                    <div class="progress-container">
+                        <div class="progress-step completed" data-step="1">
+                            <div class="step-number"><i class="fas fa-check"></i></div>
+                            <span class="step-label">Tipo de Plan</span>
+                        </div>
+                        <div class="progress-line completed"></div>
+                        <div class="progress-step completed" data-step="2">
+                            <div class="step-number"><i class="fas fa-check"></i></div>
+                            <span class="step-label">Información</span>
+                        </div>
+                        <div class="progress-line completed"></div>
+                        <div class="progress-step active" data-step="3">
+                            <div class="step-number">3</div>
+                            <span class="step-label">Cotización</span>
+                        </div>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-header">
+                            <button class="back-button" onclick="goToDetails()">
+                                <i class="fas fa-arrow-left"></i> Modificar datos
+                            </button>
+                            <h2><i class="fas fa-clipboard-list"></i> Planes Disponibles</h2>
+                            <p class="subtitle">Estos son los planes que se ajustan a tu perfil</p>
+                        </div>
+                    
+                    <div class="plans-grid" id="plans-grid">
+                        <!-- Los planes se generarán dinámicamente -->
+                    </div>
+                    
+                        <div class="contact-info">
+                            <h3>¿Necesitas más información?</h3>
+                            <p>Nuestro equipo de ventas está disponible para ayudarte</p>
+                            <div class="contact-buttons">
+                                <button class="contact-btn whatsapp">
+                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                                </button>
+                                <button class="contact-btn phone">
+                                    <i class="fas fa-phone"></i> Llamar
+                                </button>
+                                <button class="contact-btn email">
+                                    <i class="fas fa-envelope"></i> Email
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
