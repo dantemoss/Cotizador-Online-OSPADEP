@@ -1,6 +1,7 @@
 // Variables globales
 let selectedOption = null;
 let formData = {};
+let validationErrors = {};
 
 // Datos de planes (simulación de base de datos)
 const planesData = {
@@ -119,7 +120,9 @@ function initializeApp() {
     const cotizationForm = document.getElementById('cotization-form');
     cotizationForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        processForm();
+        if (validateForm()) {
+            processForm();
+        }
     });
 
     // Event listeners para botones de contacto
@@ -177,17 +180,19 @@ function generateFormFields(option) {
         '</div>' +
         '<div class="form-row">' +
         '<div class="form-group">' +
-        '<label for="edad-titular">Tu edad</label>' +
+        '<label for="edad-titular">Tu edad *</label>' +
         '<input type="number" id="edad-titular" name="edad-titular" min="18" max="100" placeholder="Ej: 30" required>' +
+        '<div class="error-message" id="error-edad-titular"></div>' +
         '</div>' +
         '<div class="form-group">' +
-        '<label for="situacion-laboral">Situación laboral</label>' +
+        '<label for="situacion-laboral">Situación laboral *</label>' +
         '<select id="situacion-laboral" name="situacion-laboral" required>' +
         '<option value="">Selecciona una opción</option>' +
         '<option value="dependencia">Relación de dependencia</option>' +
         '<option value="monotributista">Monotributista</option>' +
         '<option value="particular">Particular</option>' +
         '</select>' +
+        '<div class="error-message" id="error-situacion-laboral"></div>' +
         '</div>' +
         '</div>' +
         '</div>';
@@ -201,17 +206,19 @@ function generateFormFields(option) {
                 '</div>' +
                 '<div class="form-row">' +
                 '<div class="form-group">' +
-                '<label for="edad-pareja">Edad de tu pareja</label>' +
+                '<label for="edad-pareja">Edad de tu pareja *</label>' +
                 '<input type="number" id="edad-pareja" name="edad-pareja" min="18" max="100" placeholder="Ej: 28" required>' +
+                '<div class="error-message" id="error-edad-pareja"></div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="situacion-pareja">Situación laboral de tu pareja</label>' +
+                '<label for="situacion-pareja">Situación laboral de tu pareja *</label>' +
                 '<select id="situacion-pareja" name="situacion-pareja" required>' +
                 '<option value="">Selecciona una opción</option>' +
                 '<option value="dependencia">Relación de dependencia</option>' +
                 '<option value="monotributista">Monotributista</option>' +
                 '<option value="particular">Particular</option>' +
                 '</select>' +
+                '<div class="error-message" id="error-situacion-pareja"></div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -224,12 +231,15 @@ function generateFormFields(option) {
                 '</div>' +
                 '<div class="form-row">' +
                 '<div class="form-group">' +
-                '<label for="cantidad-hijos">Cantidad de hijos</label>' +
+                '<label for="cantidad-hijos">Cantidad de hijos *</label>' +
                 '<input type="number" id="cantidad-hijos" name="cantidad-hijos" min="1" max="10" placeholder="Ej: 2" required>' +
+                '<div class="error-message" id="error-cantidad-hijos"></div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="edades-hijos">Edades de los hijos</label>' +
+                '<label for="edades-hijos">Edades de los hijos *</label>' +
                 '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12" required>' +
+                '<small class="field-help">Separa las edades con comas</small>' +
+                '<div class="error-message" id="error-edades-hijos"></div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -242,17 +252,19 @@ function generateFormFields(option) {
                 '</div>' +
                 '<div class="form-row">' +
                 '<div class="form-group">' +
-                '<label for="edad-pareja">Edad de tu pareja</label>' +
+                '<label for="edad-pareja">Edad de tu pareja *</label>' +
                 '<input type="number" id="edad-pareja" name="edad-pareja" min="18" max="100" placeholder="Ej: 28" required>' +
+                '<div class="error-message" id="error-edad-pareja"></div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="situacion-pareja">Situación laboral de tu pareja</label>' +
+                '<label for="situacion-pareja">Situación laboral de tu pareja *</label>' +
                 '<select id="situacion-pareja" name="situacion-pareja" required>' +
                 '<option value="">Selecciona una opción</option>' +
                 '<option value="dependencia">Relación de dependencia</option>' +
                 '<option value="monotributista">Monotributista</option>' +
                 '<option value="particular">Particular</option>' +
                 '</select>' +
+                '<div class="error-message" id="error-situacion-pareja"></div>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
@@ -262,19 +274,237 @@ function generateFormFields(option) {
                 '</div>' +
                 '<div class="form-row">' +
                 '<div class="form-group">' +
-                '<label for="cantidad-hijos">Cantidad de hijos</label>' +
+                '<label for="cantidad-hijos">Cantidad de hijos *</label>' +
                 '<input type="number" id="cantidad-hijos" name="cantidad-hijos" min="1" max="10" placeholder="Ej: 2" required>' +
+                '<div class="error-message" id="error-cantidad-hijos"></div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="edades-hijos">Edades de los hijos</label>' +
+                '<label for="edades-hijos">Edades de los hijos *</label>' +
                 '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12" required>' +
+                '<small class="field-help">Separa las edades con comas</small>' +
+                '<div class="error-message" id="error-edades-hijos"></div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
             break;
     }
     
+    // Después de generar los campos, configurar validaciones en tiempo real
+    setTimeout(() => {
+        setupFieldValidations();
+    }, 100);
+    
     return sections;
+}
+
+// Configurar validaciones en tiempo real
+function setupFieldValidations() {
+    const fields = document.querySelectorAll('input, select');
+    
+    fields.forEach(field => {
+        // Validación al perder el foco
+        field.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        // Validación en tiempo real para números
+        if (field.type === 'number') {
+            field.addEventListener('input', function() {
+                clearFieldError(this);
+                if (this.value) {
+                    validateField(this);
+                }
+            });
+        }
+        
+        // Validación en tiempo real para texto (edades de hijos)
+        if (field.name === 'edades-hijos') {
+            field.addEventListener('input', function() {
+                clearFieldError(this);
+                if (this.value) {
+                    validateField(this);
+                }
+            });
+        }
+        
+        // Validación para selects
+        if (field.tagName === 'SELECT') {
+            field.addEventListener('change', function() {
+                validateField(this);
+            });
+        }
+    });
+}
+
+// Validar un campo individual
+function validateField(field) {
+    const fieldName = field.name;
+    const value = field.value.trim();
+    let isValid = true;
+    let errorMessage = '';
+    
+    // Limpiar error previo
+    clearFieldError(field);
+    
+    // Validaciones según el tipo de campo
+    switch (fieldName) {
+        case 'edad-titular':
+        case 'edad-pareja':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Este campo es obligatorio';
+            } else if (!validateAge(parseInt(value))) {
+                isValid = false;
+                errorMessage = 'La edad debe estar entre 18 y 100 años';
+            }
+            break;
+            
+        case 'situacion-laboral':
+        case 'situacion-pareja':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Debes seleccionar una opción';
+            }
+            break;
+            
+        case 'cantidad-hijos':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Este campo es obligatorio';
+            } else {
+                const cantidad = parseInt(value);
+                if (cantidad < 1 || cantidad > 10) {
+                    isValid = false;
+                    errorMessage = 'La cantidad debe estar entre 1 y 10';
+                }
+            }
+            break;
+            
+        case 'edades-hijos':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Este campo es obligatorio';
+            } else if (!validateChildrenAges(value)) {
+                isValid = false;
+                errorMessage = 'Las edades deben ser números entre 0 y 25 años, separados por comas';
+            } else {
+                // Validar que coincida con la cantidad de hijos
+                const cantidadInput = document.querySelector('[name="cantidad-hijos"]');
+                if (cantidadInput && cantidadInput.value) {
+                    const expectedCount = parseInt(cantidadInput.value);
+                    const actualCount = value.split(',').length;
+                    if (actualCount !== expectedCount) {
+                        isValid = false;
+                        errorMessage = `Debes ingresar exactamente ${expectedCount} edad${expectedCount > 1 ? 'es' : ''}`;
+                    }
+                }
+            }
+            break;
+    }
+    
+    if (!isValid) {
+        showFieldError(field, errorMessage);
+        validationErrors[fieldName] = errorMessage;
+    } else {
+        delete validationErrors[fieldName];
+    }
+    
+    return isValid;
+}
+
+// Mostrar error en un campo
+function showFieldError(field, message) {
+    field.classList.add('error');
+    const errorElement = document.getElementById(`error-${field.name}`);
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+}
+
+// Limpiar error de un campo
+function clearFieldError(field) {
+    field.classList.remove('error');
+    const errorElement = document.getElementById(`error-${field.name}`);
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.style.display = 'none';
+    }
+}
+
+// Validar todo el formulario
+function validateForm() {
+    const fields = document.querySelectorAll('input[required], select[required]');
+    let isFormValid = true;
+    validationErrors = {};
+    
+    fields.forEach(field => {
+        if (!validateField(field)) {
+            isFormValid = false;
+        }
+    });
+    
+    // Validaciones cruzadas adicionales
+    if (isFormValid) {
+        isFormValid = validateCrossFields();
+    }
+    
+    // Mostrar mensaje general si hay errores
+    if (!isFormValid) {
+        showFormError('Por favor, corrige los errores antes de continuar');
+        // Hacer scroll al primer error
+        const firstError = document.querySelector('.form-group input.error, .form-group select.error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
+        }
+    } else {
+        hideFormError();
+    }
+    
+    return isFormValid;
+}
+
+// Validaciones cruzadas entre campos
+function validateCrossFields() {
+    let isValid = true;
+    
+    // Validar coherencia entre cantidad de hijos y edades
+    const cantidadInput = document.querySelector('[name="cantidad-hijos"]');
+    const edadesInput = document.querySelector('[name="edades-hijos"]');
+    
+    if (cantidadInput && edadesInput && cantidadInput.value && edadesInput.value) {
+        const expectedCount = parseInt(cantidadInput.value);
+        const actualCount = edadesInput.value.split(',').filter(age => age.trim()).length;
+        
+        if (actualCount !== expectedCount) {
+            showFieldError(edadesInput, `Debes ingresar exactamente ${expectedCount} edad${expectedCount > 1 ? 'es' : ''}`);
+            isValid = false;
+        }
+    }
+    
+    return isValid;
+}
+
+// Mostrar error general del formulario
+function showFormError(message) {
+    let errorContainer = document.querySelector('.form-error-general');
+    if (!errorContainer) {
+        errorContainer = document.createElement('div');
+        errorContainer.className = 'form-error-general';
+        const formContent = document.querySelector('.form-content');
+        formContent.insertBefore(errorContainer, formContent.querySelector('.form-sections'));
+    }
+    errorContainer.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+    errorContainer.style.display = 'block';
+}
+
+// Ocultar error general del formulario
+function hideFormError() {
+    const errorContainer = document.querySelector('.form-error-general');
+    if (errorContainer) {
+        errorContainer.style.display = 'none';
+    }
 }
 
 function processForm() {
@@ -293,12 +523,14 @@ function processForm() {
     const submitButton = form.querySelector('.continue-button');
     if (submitButton) {
         submitButton.classList.add('loading');
-        submitButton.textContent = 'Calculando...';
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculando...';
+        submitButton.disabled = true;
         
         // Simular procesamiento
         setTimeout(() => {
             submitButton.classList.remove('loading');
             submitButton.innerHTML = '<i class="fas fa-calculator"></i> Cotizar Plan';
+            submitButton.disabled = false;
             showPlans();
         }, 1500);
     }
@@ -393,13 +625,13 @@ function setupContactButtons() {
         
         if (emailBtn) {
             emailBtn.addEventListener('click', () => {
-                window.open('mailto:ventas@ospadep.com.ar?subject=Consulta%20sobre%20planes%20de%20salud');
+                window.open('mailto:comercial@ospadep.com.ar?subject=Consulta%20sobre%20planes%20de%20salud');
             });
         }
     }, 100);
 }
 
-// Funciones de utilidad
+// Funciones de utilidad mejoradas
 function formatCurrency(amount) {
     return new Intl.NumberFormat('es-AR', {
         style: 'currency',
@@ -412,6 +644,18 @@ function validateAge(age) {
 }
 
 function validateChildrenAges(agesString) {
-    const ages = agesString.split(',').map(age => parseInt(age.trim()));
-    return ages.every(age => age >= 0 && age <= 18);
+    if (!agesString || !agesString.trim()) {
+        return false;
+    }
+    
+    const ages = agesString.split(',').map(age => age.trim()).filter(age => age);
+    
+    if (ages.length === 0) {
+        return false;
+    }
+    
+    return ages.every(ageStr => {
+        const age = parseInt(ageStr);
+        return !isNaN(age) && age >= 0 && age <= 25;
+    });
 } 

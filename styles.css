@@ -320,6 +320,7 @@ h2 i {
 .form-group {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .form-group label {
@@ -327,6 +328,7 @@ h2 i {
     color: #0F152B;
     margin-bottom: 8px;
     font-size: 0.95rem;
+    transition: color 0.3s ease;
 }
 
 .form-group input, 
@@ -421,26 +423,23 @@ h2 i {
     background: #94a3b8;
     cursor: not-allowed;
     position: relative;
+    overflow: hidden;
 }
 
-.continue-button.loading::after {
-    content: '';
+.continue-button.loading::before {
+    content: "";
     position: absolute;
-    top: 50%;
-    right: 16px;
-    width: 16px;
-    height: 16px;
-    margin-top: -8px;
-    border: 2px solid transparent;
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: loading-shimmer 2s infinite;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+@keyframes loading-shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
 }
 
 .back-button {
@@ -802,7 +801,128 @@ h2 i {
 }
 
 @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estilos para validaciones del formulario */
+.form-group input.error,
+.form-group select.error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-group input.error:focus,
+.form-group select.error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.error-message {
+    display: none;
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    padding-left: 4px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.error-message:before {
+    content: "⚠ ";
+    margin-right: 4px;
+}
+
+.field-help {
+    display: block;
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    padding-left: 4px;
+    font-style: italic;
+}
+
+.form-error-general {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    color: #dc2626;
+    font-weight: 500;
+    display: none;
+    animation: slideDown 0.3s ease;
+}
+
+.form-error-general i {
+    margin-right: 8px;
+    color: #ef4444;
+}
+
+/* Animación para mensajes de error */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
     to {
-        transform: rotate(360deg);
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estados de validación para labels */
+.form-group:has(input.error) label,
+.form-group:has(select.error) label {
+    color: #ef4444;
+}
+
+/* Indicador de campo obligatorio */
+.form-group label:has-text("*")::after {
+    content: "";
+}
+
+.form-group label {
+    position: relative;
+}
+
+/* Estilo para campos validados correctamente */
+.form-group input.valid,
+.form-group select.valid {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+.form-group input.valid:focus,
+.form-group select.valid:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Tooltip de ayuda mejorado */
+.form-group .field-help {
+    transition: opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+.form-group:hover .field-help {
+    opacity: 1;
+}
+
+/* Responsive para mensajes de error */
+@media (max-width: 768px) {
+    .error-message {
+        font-size: 0.8rem;
+        margin-top: 4px;
+    }
+    
+    .form-error-general {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .field-help {
+        font-size: 0.75rem;
     }
 } 
