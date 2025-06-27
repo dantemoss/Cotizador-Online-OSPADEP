@@ -10,6 +10,8 @@
     <!-- Archivos de configuración y seguridad -->
     <script src="config.js"></script>
     <script src="security.js"></script>
+    <script src="user-system.js"></script>
+    <script src="auth-system.js"></script>
 </head>
 <body>
     <div class="container">
@@ -18,6 +20,26 @@
             <div class="logo">
                 <h1><i class="fas fa-heartbeat"></i> OSPADEP</h1>
                 <p>Obra Social del Personal de Aeronavegación de Entes Privados</p>
+            </div>
+            <div class="user-section">
+                <!-- Cuando no hay usuario logueado -->
+                <div class="login-section" id="login-section">
+                    <button class="header-login-btn" onclick="showAdminLogin()">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </button>
+                </div>
+                <!-- Cuando hay usuario logueado -->
+                <div class="user-info-section" id="user-info-section" style="display: none;">
+                    <div class="user-greeting">
+                        <span class="user-name" id="header-user-name">Usuario</span>
+                        <span class="user-role" id="header-user-role">Admin</span>
+                    </div>
+                    <div class="user-menu">
+                        <button class="user-menu-btn" onclick="showUserMenu()">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -235,37 +257,46 @@
                     <div class="admin-content">
                         <div class="admin-controls">
                             <div class="admin-actions">
-                                <button class="admin-btn primary" onclick="showBulkUpdate()">
-                                    <i class="fas fa-percentage"></i> Actualización Masiva
-                                </button>
-                                <button class="admin-btn secondary" onclick="showIndividualUpdate()">
-                                    <i class="fas fa-edit"></i> Edición Individual
-                                </button>
-                                <button class="admin-btn warning" onclick="resetPrices()">
-                                    <i class="fas fa-undo"></i> Restaurar Precios Originales
-                                </button>
-                                <button class="admin-btn export" onclick="exportPrices()">
-                                    <i class="fas fa-download"></i> Exportar Configuración
-                                </button>
+                                <div class="admin-actions-row">
+                                    <button class="admin-btn increase" onclick="showBulkIncrease()">
+                                        <i class="fas fa-arrow-up"></i> Aplicar Aumento
+                                    </button>
+                                    <button class="admin-btn decrease" onclick="showBulkDecrease()">
+                                        <i class="fas fa-arrow-down"></i> Aplicar Descuento
+                                    </button>
+                                </div>
+                                <div class="admin-actions-row">
+                                    <button class="admin-btn secondary" onclick="showIndividualUpdate()">
+                                        <i class="fas fa-edit"></i> Edición Individual
+                                    </button>
+                                    <button class="admin-btn warning" onclick="resetPrices()">
+                                        <i class="fas fa-undo"></i> Restaurar Precios Originales
+                                    </button>
+                                </div>
+                                <div class="admin-actions-row">
+                                    <button class="admin-btn export" onclick="exportPrices()">
+                                        <i class="fas fa-download"></i> Exportar Configuración
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Actualización masiva por porcentaje -->
-                        <div class="bulk-update-section" id="bulk-update-section" style="display: none;">
-                            <div class="update-card">
-                                <h3><i class="fas fa-percentage"></i> Actualización Masiva por Porcentaje</h3>
-                                <p class="card-subtitle">Aplica un porcentaje de aumento o descuento a todos los planes</p>
+                        <!-- Sección de aumento masivo -->
+                        <div class="bulk-increase-section" id="bulk-increase-section" style="display: none;">
+                            <div class="update-card increase-card">
+                                <h3><i class="fas fa-arrow-up"></i> Aplicar Aumento Masivo</h3>
+                                <p class="card-subtitle">Aumenta los precios de los planes seleccionados</p>
                                 
                                 <div class="update-form">
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="bulk-percentage">Porcentaje de cambio (%)</label>
-                                            <input type="number" id="bulk-percentage" step="0.1" placeholder="Ej: 1.5 para 1.5% de aumento" />
-                                            <small class="field-help">Usa números positivos para aumentos y negativos para descuentos</small>
+                                            <label for="increase-percentage">Porcentaje de aumento (%)</label>
+                                            <input type="number" id="increase-percentage" step="0.1" min="0.1" placeholder="Ej: 1.5 para 1.5% de aumento" />
+                                            <small class="field-help">Solo números positivos. Ej: 1.5 aumentará los precios un 1.5%</small>
                                         </div>
                                         <div class="form-group">
-                                            <label for="plan-category">Categoría de planes</label>
-                                            <select id="plan-category">
+                                            <label for="increase-category">Categoría de planes</label>
+                                            <select id="increase-category">
                                                 <option value="all">Todos los planes</option>
                                                 <option value="individual">Solo planes individuales</option>
                                                 <option value="familiar">Solo planes familiares</option>
@@ -273,10 +304,44 @@
                                         </div>
                                     </div>
                                     <div class="form-actions">
-                                        <button class="update-btn" onclick="applyBulkUpdate()">
-                                            <i class="fas fa-calculator"></i> Calcular y Aplicar
+                                        <button class="update-btn increase-btn" onclick="applyBulkIncrease()">
+                                            <i class="fas fa-plus"></i> Aplicar Aumento
                                         </button>
-                                        <button class="cancel-btn" onclick="hideBulkUpdate()">
+                                        <button class="cancel-btn" onclick="hideBulkIncrease()">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección de descuento masivo -->
+                        <div class="bulk-decrease-section" id="bulk-decrease-section" style="display: none;">
+                            <div class="update-card decrease-card">
+                                <h3><i class="fas fa-arrow-down"></i> Aplicar Descuento Masivo</h3>
+                                <p class="card-subtitle">Reduce los precios de los planes seleccionados</p>
+                                
+                                <div class="update-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="decrease-percentage">Porcentaje de descuento (%)</label>
+                                            <input type="number" id="decrease-percentage" step="0.1" min="0.1" max="99" placeholder="Ej: 10 para 10% de descuento" />
+                                            <small class="field-help">Solo números positivos. Ej: 10 reducirá los precios un 10%</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="decrease-category">Categoría de planes</label>
+                                            <select id="decrease-category">
+                                                <option value="all">Todos los planes</option>
+                                                <option value="individual">Solo planes individuales</option>
+                                                <option value="familiar">Solo planes familiares</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="update-btn decrease-btn" onclick="applyBulkDecrease()">
+                                            <i class="fas fa-minus"></i> Aplicar Descuento
+                                        </button>
+                                        <button class="cancel-btn" onclick="hideBulkDecrease()">
                                             Cancelar
                                         </button>
                                     </div>
@@ -323,12 +388,133 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Panel de SuperAdmin -->
+            <div class="super-admin-section" id="super-admin-section" style="display: none;">
+                <div class="super-admin-container">
+                    <div class="super-admin-header">
+                        <button class="back-button" onclick="goToAdminPanel()">
+                            <i class="fas fa-arrow-left"></i> Volver al panel administrativo
+                        </button>
+                        <h2><i class="fas fa-crown"></i> Panel de SuperAdministrador</h2>
+                        <p class="subtitle">Control total del sistema y auditoría de usuarios</p>
+                    </div>
+
+                    <div class="super-admin-content">
+                        <!-- Estadísticas generales -->
+                        <div class="stats-overview">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="total-sessions">0</h3>
+                                    <p>Sesiones totales</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="total-actions">0</h3>
+                                    <p>Acciones registradas</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="avg-session">0m</h3>
+                                    <p>Duración promedio</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="today-activity">0</h3>
+                                    <p>Actividad hoy</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controles de SuperAdmin -->
+                        <div class="super-admin-controls">
+                            <div class="control-section">
+                                <h3><i class="fas fa-cogs"></i> Controles del Sistema</h3>
+                                <div class="control-buttons">
+                                    <button class="control-btn" onclick="showUserManagement()">
+                                        <i class="fas fa-users-cog"></i> Gestionar Usuarios
+                                    </button>
+                                    <button class="control-btn" onclick="showAuditLog()">
+                                        <i class="fas fa-search"></i> Ver Registro de Auditoría
+                                    </button>
+                                    <button class="control-btn" onclick="showUserActivity()">
+                                        <i class="fas fa-user-friends"></i> Actividad de Usuarios
+                                    </button>
+                                    <button class="control-btn" onclick="exportFullData()">
+                                        <i class="fas fa-download"></i> Exportar Todo
+                                    </button>
+                                    <button class="control-btn warning" onclick="clearAuditLog()">
+                                        <i class="fas fa-trash"></i> Limpiar Auditoría
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Registro de auditoría -->
+                        <div class="audit-log-section" id="audit-log-section" style="display: none;">
+                            <div class="audit-header">
+                                <h3><i class="fas fa-list-alt"></i> Registro de Auditoría</h3>
+                                <div class="audit-filters">
+                                    <select id="audit-user-filter">
+                                        <option value="">Todos los usuarios</option>
+                                    </select>
+                                    <select id="audit-action-filter">
+                                        <option value="">Todas las acciones</option>
+                                    </select>
+                                    <input type="date" id="audit-date-from" />
+                                    <input type="date" id="audit-date-to" />
+                                    <button class="filter-btn" onclick="applyAuditFilters()">
+                                        <i class="fas fa-filter"></i> Filtrar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="audit-log-list" id="audit-log-list">
+                                <!-- Los registros se generarán dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Actividad de usuarios -->
+                        <div class="user-activity-section" id="user-activity-section" style="display: none;">
+                            <h3><i class="fas fa-chart-bar"></i> Actividad de Usuarios</h3>
+                            <div class="user-activity-list" id="user-activity-list">
+                                <!-- La actividad se generará dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Gestión de usuarios -->
+                        <div class="user-management-section" id="user-management-section" style="display: none;">
+                            <div class="user-management-header">
+                                <h3><i class="fas fa-users-cog"></i> Gestión de Usuarios</h3>
+                                <button class="add-user-btn" onclick="showCreateUserModal()">
+                                    <i class="fas fa-user-plus"></i> Crear Usuario
+                                </button>
+                            </div>
+                            
+                            <div class="users-grid" id="users-grid">
+                                <!-- Los usuarios se generarán dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 
-        <!-- Botón de acceso administrativo (flotante) -->
-        <div class="admin-access" onclick="showAdminLogin()">
-            <i class="fas fa-cog"></i>
-        </div>
+
 
         <!-- Modal de login administrativo -->
         <div class="admin-modal" id="admin-modal" style="display: none;">
@@ -343,16 +529,96 @@
                 <div class="modal-body">
                     <div class="login-form">
                         <div class="form-group">
-                            <label for="admin-password">Contraseña de administrador</label>
-                            <input type="password" id="admin-password" placeholder="Ingrese la contraseña" />
-                            <div class="error-message" id="admin-error"></div>
+                            <label for="login-username">Nombre de usuario *</label>
+                            <input type="text" id="login-username" placeholder="Ingresa tu usuario" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Contraseña *</label>
+                            <input type="password" id="login-password" placeholder="Ingresa tu contraseña" required />
+                            <div class="error-message" id="login-error"></div>
                         </div>
                         <div class="form-actions">
-                            <button class="login-btn" onclick="validateAdminAccess()">
-                                <i class="fas fa-sign-in-alt"></i> Acceder
+                            <button class="login-btn" onclick="handleLogin()">
+                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                             </button>
                         </div>
+                        <div class="login-help">
+                            <small>
+                                <i class="fas fa-info-circle"></i>
+                                Usuario por defecto: <strong>superadmin</strong> / Contraseña: <strong>superadmin2024</strong>
+                            </small>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para crear/editar usuario -->
+        <div class="user-modal" id="user-modal" style="display: none;">
+            <div class="modal-overlay" onclick="hideUserModal()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="user-modal-title"><i class="fas fa-user-plus"></i> Crear Usuario</h3>
+                    <button class="modal-close" onclick="hideUserModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="user-form" class="user-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="user-username">Nombre de usuario *</label>
+                                <input type="text" id="user-username" required />
+                                <small class="field-help">Solo letras, números y guiones bajos</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-name">Nombre completo *</label>
+                                <input type="text" id="user-name" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="user-email">Email</label>
+                                <input type="email" id="user-email" />
+                            </div>
+                            <div class="form-group">
+                                <label for="user-role">Rol *</label>
+                                <select id="user-role" required>
+                                    <option value="">Seleccionar rol</option>
+                                    <option value="user">Usuario</option>
+                                    <option value="admin">Administrador</option>
+                                    <option value="super_admin">Super Administrador</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="user-password">Contraseña *</label>
+                                <input type="password" id="user-password" required />
+                                <small class="field-help">Mínimo 6 caracteres</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-password-confirm">Confirmar contraseña *</label>
+                                <input type="password" id="user-password-confirm" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="user-active" checked />
+                                <span class="checkmark"></span>
+                                Usuario activo
+                            </label>
+                        </div>
+                        <div class="error-message" id="user-form-error"></div>
+                        <div class="form-actions">
+                            <button type="button" class="cancel-btn" onclick="hideUserModal()">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="save-btn">
+                                <i class="fas fa-save"></i> Guardar Usuario
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
