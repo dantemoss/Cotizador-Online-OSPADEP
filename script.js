@@ -94,8 +94,45 @@ const planesData = {
     ]
 };
 
+// Función para agregar planes personalizados
+function addCustomPlan(category, planData) {
+    if (!planesData[category]) {
+        planesData[category] = [];
+    }
+    
+    // Validar estructura del plan
+    const requiredFields = ['name', 'price', 'ageRange', 'features'];
+    for (let field of requiredFields) {
+        if (!planData[field]) {
+            console.error(`Campo requerido faltante: ${field}`);
+            return false;
+        }
+    }
+    
+    // Agregar valores por defecto
+    const newPlan = {
+        name: planData.name,
+        price: planData.price,
+        ageRange: planData.ageRange,
+        features: planData.features,
+        recommended: planData.recommended || false
+    };
+    
+    planesData[category].push(newPlan);
+    console.log(`Plan "${newPlan.name}" agregado a la categoría "${category}"`);
+    return true;
+}
+
+// Función para crear categorías personalizadas
+function createPlanCategory(categoryName, plans = []) {
+    planesData[categoryName] = plans;
+    console.log(`Categoría "${categoryName}" creada con ${plans.length} planes`);
+}
+
 // Inicialización de la aplicación
 document.addEventListener('DOMContentLoaded', function() {
+    // Cargar planes personalizados si existen
+    loadCustomPlans();
     initializeApp();
 });
 
@@ -644,18 +681,628 @@ function validateAge(age) {
 }
 
 function validateChildrenAges(agesString) {
-    if (!agesString || !agesString.trim()) {
-        return false;
+    const ages = agesString.split(',').map(age => age.trim());
+    
+    for (let age of ages) {
+        if (isNaN(age) || age === '' || parseInt(age) < 0 || parseInt(age) > 25) {
+            return false;
+        }
     }
     
-    const ages = agesString.split(',').map(age => age.trim()).filter(age => age);
-    
-    if (ages.length === 0) {
-        return false;
+    return true;
+}
+
+// ===== PANEL ADMINISTRATIVO =====
+
+// Contraseña del administrador (en un entorno real, esto debería estar en el backend)
+const ADMIN_PASSWORD = 'ospadep2024';
+
+// Precios originales para poder restaurar
+const originalPrices = JSON.parse(JSON.stringify(planesData));
+
+// Inicializar datos administrativos
+function initializeAdminData() {
+    // Cargar precios personalizados si existen
+    const savedPrices = localStorage.getItem('ospadep_custom_prices');
+    if (savedPrices) {
+        const customPrices = JSON.parse(savedPrices);
+        applyCustomPrices(customPrices);
     }
     
-    return ages.every(ageStr => {
-        const age = parseInt(ageStr);
-        return !isNaN(age) && age >= 0 && age <= 25;
+    // Cargar histórico de cambios
+    const savedHistory = localStorage.getItem('ospadep_price_history');
+    if (!savedHistory) {
+        localStorage.setItem('ospadep_price_history', JSON.stringify([]));
+    }
+}
+
+// Mostrar modal de login administrativo
+function showAdminLogin() {
+    const modal = document.getElementById('admin-modal');
+    modal.style.display = 'flex';
+    
+    // Focus en el campo de contraseña
+    setTimeout(() => {
+        document.getElementById('admin-password').focus();
+    }, 100);
+    
+    // Event listener para Enter en el campo de contraseña
+    document.getElementById('admin-password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            validateAdminAccess();
+        }
     });
-} 
+}
+
+// Ocultar modal de login
+function hideAdminLogin() {
+    const modal = document.getElementById('admin-modal');
+    modal.style.display = 'none';
+    
+    // Limpiar campos
+    document.getElementById('admin-password').value = '';
+    document.getElementById('admin-error').textContent = '';
+}
+
+// Validar acceso administrativo
+function validateAdminAccess() {
+    const password = document.getElementById('admin-password').value;
+    const errorElement = document.getElementById('admin-error');
+    
+    // Verificar que SecurityManager esté disponible
+    if (!window.SecurityManager) {
+        errorElement.textContent = 'Error del sistema. Recarga la página.';
+        return;
+    }
+    
+    // Usar el nuevo sistema de seguridad
+    window.SecurityManager.attemptLogin(password)
+        .then(isValid => {
+            if (isValid) {
+                hideAdminLogin();
+                showAdminPanel();
+            } else {
+                const remainingAttempts = APP_CONFIG.MAX_LOGIN_ATTEMPTS - window.SecurityManager.loginAttempts;
+                errorElement.textContent = `Contraseña incorrecta. Intentos restantes: ${remainingAttempts}`;
+                document.getElementById('admin-password').style.borderColor = '#ef4444';
+                
+                // Limpiar error después de 3 segundos
+                setTimeout(() => {
+                    errorElement.textContent = '';
+                    document.getElementById('admin-password').style.borderColor = '#e2e8f0';
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            errorElement.textContent = error.message;
+            document.getElementById('admin-password').style.borderColor = '#ef4444';
+        });
+}
+
+// Mostrar panel administrativo
+function showAdminPanel() {
+    // Ocultar todas las secciones
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('details-section').style.display = 'none';
+    document.getElementById('plans-section').style.display = 'none';
+    
+    // Mostrar panel administrativo
+    document.getElementById('admin-section').style.display = 'block';
+    
+    // Inicializar vista del panel
+    initializeAdminView();
+}
+
+// Volver a la página principal
+function goToMainPage() {
+    document.getElementById('admin-section').style.display = 'none';
+    document.getElementById('form-section').style.display = 'block';
+    
+    // Reiniciar formulario
+    selectedOption = null;
+    const continueBtn = document.getElementById('continue-btn');
+    continueBtn.disabled = true;
+    
+    // Limpiar selecciones
+    const optionItems = document.querySelectorAll('.option-item');
+    optionItems.forEach(item => {
+        item.classList.remove('selected');
+    });
+}
+
+// Inicializar vista del panel administrativo
+function initializeAdminView() {
+    // Cargar precios actuales
+    loadCurrentPrices();
+    
+    // Cargar histórico
+    loadPriceHistory();
+    
+    // Ocultar secciones de edición
+    document.getElementById('bulk-update-section').style.display = 'none';
+    document.getElementById('individual-update-section').style.display = 'none';
+}
+
+// Mostrar sección de actualización masiva
+function showBulkUpdate() {
+    hideAllUpdateSections();
+    document.getElementById('bulk-update-section').style.display = 'block';
+    
+    // Focus en el campo de porcentaje
+    setTimeout(() => {
+        document.getElementById('bulk-percentage').focus();
+    }, 100);
+}
+
+// Ocultar sección de actualización masiva
+function hideBulkUpdate() {
+    document.getElementById('bulk-update-section').style.display = 'none';
+    
+    // Limpiar campos
+    document.getElementById('bulk-percentage').value = '';
+    document.getElementById('plan-category').value = 'all';
+}
+
+// Mostrar sección de edición individual
+function showIndividualUpdate() {
+    hideAllUpdateSections();
+    document.getElementById('individual-update-section').style.display = 'block';
+    
+    // Cargar lista de planes para editar
+    loadPlansForEditing();
+}
+
+// Ocultar sección de edición individual
+function hideIndividualUpdate() {
+    document.getElementById('individual-update-section').style.display = 'none';
+}
+
+// Ocultar todas las secciones de actualización
+function hideAllUpdateSections() {
+    document.getElementById('bulk-update-section').style.display = 'none';
+    document.getElementById('individual-update-section').style.display = 'none';
+}
+
+// Aplicar actualización masiva por porcentaje
+function applyBulkUpdate() {
+    const percentage = parseFloat(document.getElementById('bulk-percentage').value);
+    const category = document.getElementById('plan-category').value;
+    
+    if (isNaN(percentage)) {
+        alert('Por favor, ingresa un porcentaje válido');
+        return;
+    }
+    
+    // Confirmar cambios
+    const action = percentage > 0 ? 'aumento' : 'descuento';
+    const confirm = window.confirm(
+        `¿Estás seguro de aplicar un ${action} del ${Math.abs(percentage)}% a ${category === 'all' ? 'todos los planes' : 'los planes ' + category}?`
+    );
+    
+    if (!confirm) return;
+    
+    let updatedPlans = 0;
+    const changes = [];
+    
+    // Aplicar cambios según la categoría
+    Object.keys(planesData).forEach(categoryKey => {
+        if (category === 'all' || 
+            (category === 'individual' && categoryKey === 'individual') ||
+            (category === 'familiar' && categoryKey === 'familiar')) {
+            
+            planesData[categoryKey].forEach(plan => {
+                const oldPrice = plan.price;
+                const newPrice = Math.round(oldPrice * (1 + percentage / 100));
+                plan.price = newPrice;
+                updatedPlans++;
+                
+                changes.push({
+                    plan: plan.name,
+                    category: categoryKey,
+                    oldPrice: oldPrice,
+                    newPrice: newPrice,
+                    change: newPrice - oldPrice
+                });
+            });
+        }
+    });
+    
+    // Guardar cambios
+    saveCustomPrices();
+    
+    // Registrar en histórico
+    addToHistory({
+        type: 'bulk_update',
+        description: `Actualización masiva: ${action} del ${Math.abs(percentage)}% en ${category === 'all' ? 'todos los planes' : 'planes ' + category}`,
+        plansAffected: updatedPlans,
+        changes: changes
+    });
+    
+    // Actualizar vistas
+    loadCurrentPrices();
+    loadPriceHistory();
+    hideBulkUpdate();
+    
+    alert(`Se actualizaron ${updatedPlans} planes correctamente`);
+}
+
+// Cargar planes para edición individual
+function loadPlansForEditing() {
+    const container = document.getElementById('admin-plans-list');
+    let html = '';
+    
+    Object.keys(planesData).forEach(categoryKey => {
+        planesData[categoryKey].forEach((plan, index) => {
+            const originalPrice = getOriginalPrice(categoryKey, index);
+            const priceChange = plan.price - originalPrice;
+            const changeClass = priceChange > 0 ? 'increase' : priceChange < 0 ? 'decrease' : 'no-change';
+            const changeText = priceChange === 0 ? 'Sin cambios' : 
+                              priceChange > 0 ? `+$${priceChange.toLocaleString()}` : 
+                              `-$${Math.abs(priceChange).toLocaleString()}`;
+            
+            html += `
+                <div class="admin-plan-item">
+                    <div class="plan-info">
+                        <h4>${plan.name}</h4>
+                        <div class="plan-category">${categoryKey}</div>
+                    </div>
+                    <input type="number" 
+                           class="price-input" 
+                           value="${plan.price}" 
+                           data-category="${categoryKey}" 
+                           data-index="${index}"
+                           min="0">
+                    <div class="price-change ${changeClass}">
+                        ${changeText}
+                    </div>
+                </div>
+            `;
+        });
+    });
+    
+    container.innerHTML = html;
+    
+    // Agregar event listeners para cambios en tiempo real
+    container.querySelectorAll('.price-input').forEach(input => {
+        input.addEventListener('input', function() {
+            updatePriceChange(this);
+        });
+    });
+}
+
+// Actualizar indicador de cambio de precio en tiempo real
+function updatePriceChange(input) {
+    const category = input.dataset.category;
+    const index = parseInt(input.dataset.index);
+    const newPrice = parseInt(input.value) || 0;
+    const originalPrice = getOriginalPrice(category, index);
+    const change = newPrice - originalPrice;
+    
+    const changeElement = input.nextElementSibling;
+    
+    if (change === 0) {
+        changeElement.className = 'price-change no-change';
+        changeElement.textContent = 'Sin cambios';
+    } else if (change > 0) {
+        changeElement.className = 'price-change increase';
+        changeElement.textContent = `+$${change.toLocaleString()}`;
+    } else {
+        changeElement.className = 'price-change decrease';
+        changeElement.textContent = `-$${Math.abs(change).toLocaleString()}`;
+    }
+}
+
+// Guardar cambios individuales
+function saveIndividualChanges() {
+    const inputs = document.querySelectorAll('.price-input');
+    const changes = [];
+    let hasChanges = false;
+    
+    inputs.forEach(input => {
+        const category = input.dataset.category;
+        const index = parseInt(input.dataset.index);
+        const newPrice = parseInt(input.value) || 0;
+        const oldPrice = planesData[category][index].price;
+        
+        if (newPrice !== oldPrice && newPrice > 0) {
+            planesData[category][index].price = newPrice;
+            hasChanges = true;
+            
+            changes.push({
+                plan: planesData[category][index].name,
+                category: category,
+                oldPrice: oldPrice,
+                newPrice: newPrice,
+                change: newPrice - oldPrice
+            });
+        }
+    });
+    
+    if (!hasChanges) {
+        alert('No se detectaron cambios en los precios');
+        return;
+    }
+    
+    // Confirmar cambios
+    const confirm = window.confirm(`¿Confirmas los cambios en ${changes.length} planes?`);
+    if (!confirm) return;
+    
+    // Guardar cambios
+    saveCustomPrices();
+    
+    // Registrar en histórico
+    addToHistory({
+        type: 'individual_update',
+        description: `Actualización individual de ${changes.length} planes`,
+        plansAffected: changes.length,
+        changes: changes
+    });
+    
+    // Actualizar vistas
+    loadCurrentPrices();
+    loadPriceHistory();
+    hideIndividualUpdate();
+    
+    alert(`Se actualizaron ${changes.length} planes correctamente`);
+}
+
+// Obtener precio original de un plan
+function getOriginalPrice(category, index) {
+    return originalPrices[category][index].price;
+}
+
+// Guardar precios personalizados
+function saveCustomPrices() {
+    localStorage.setItem('ospadep_custom_prices', JSON.stringify(planesData));
+}
+
+// Aplicar precios personalizados
+function applyCustomPrices(customPrices) {
+    Object.keys(customPrices).forEach(category => {
+        customPrices[category].forEach((customPlan, index) => {
+            if (planesData[category] && planesData[category][index]) {
+                planesData[category][index].price = customPlan.price;
+            }
+        });
+    });
+}
+
+// Restaurar precios originales
+function resetPrices() {
+    const confirm = window.confirm('¿Estás seguro de que deseas restaurar todos los precios a sus valores originales? Esta acción no se puede deshacer.');
+    
+    if (!confirm) return;
+    
+    // Contar planes que cambiarán
+    let affectedPlans = 0;
+    Object.keys(planesData).forEach(category => {
+        planesData[category].forEach((plan, index) => {
+            if (plan.price !== originalPrices[category][index].price) {
+                affectedPlans++;
+            }
+        });
+    });
+    
+    // Restaurar precios
+    Object.keys(originalPrices).forEach(category => {
+        originalPrices[category].forEach((originalPlan, index) => {
+            if (planesData[category] && planesData[category][index]) {
+                planesData[category][index].price = originalPlan.price;
+            }
+        });
+    });
+    
+    // Limpiar localStorage
+    localStorage.removeItem('ospadep_custom_prices');
+    
+    // Registrar en histórico
+    addToHistory({
+        type: 'reset',
+        description: 'Restauración de precios originales',
+        plansAffected: affectedPlans,
+        changes: []
+    });
+    
+    // Actualizar vistas
+    loadCurrentPrices();
+    loadPriceHistory();
+    hideAllUpdateSections();
+    
+    alert(`Se restauraron los precios originales de ${affectedPlans} planes`);
+}
+function exportPrices() {
+    const exportData = {
+        timestamp: new Date().toISOString(),
+        version: '1.0',
+        originalPrices: originalPrices,
+        currentPrices: planesData,
+        history: JSON.parse(localStorage.getItem('ospadep_price_history') || '[]')
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `ospadep_precios_${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    
+    alert('Configuración exportada correctamente');
+}
+
+// Cargar precios actuales en la vista
+function loadCurrentPrices() {
+    const container = document.getElementById('current-prices-grid');
+    let html = '';
+    
+    Object.keys(planesData).forEach(categoryKey => {
+        planesData[categoryKey].forEach((plan, index) => {
+            const originalPrice = getOriginalPrice(categoryKey, index);
+            const hasChanged = plan.price !== originalPrice;
+            
+            html += `
+                <div class="current-price-item">
+                    <h4>${plan.name}</h4>
+                    <div class="price-display">
+                        $${plan.price.toLocaleString()}
+                        ${hasChanged ? `<span class="original-price">$${originalPrice.toLocaleString()}</span>` : ''}
+                    </div>
+                    <div class="price-status">
+                        ${hasChanged ? 'Precio modificado' : 'Precio original'}
+                    </div>
+                </div>
+            `;
+        });
+    });
+    
+    container.innerHTML = html;
+}
+
+// Cargar histórico de cambios
+function loadPriceHistory() {
+    const container = document.getElementById('price-history-list');
+    const history = JSON.parse(localStorage.getItem('ospadep_price_history') || '[]');
+    
+    if (history.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 20px;">No hay cambios registrados</p>';
+        return;
+    }
+    
+    let html = '';
+    history.slice(-10).reverse().forEach(record => { // Mostrar últimos 10 cambios
+        html += `
+            <div class="history-item">
+                <div class="history-date">
+                    ${new Date(record.timestamp).toLocaleDateString('es-ES')} 
+                    ${new Date(record.timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+                <div class="history-description">
+                    ${record.description}
+                </div>
+                <div class="history-impact">
+                    ${record.plansAffected} planes afectados
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Agregar registro al histórico
+function addToHistory(record) {
+    const history = JSON.parse(localStorage.getItem('ospadep_price_history') || '[]');
+    
+    record.timestamp = new Date().toISOString();
+    record.id = Date.now();
+    
+    history.push(record);
+    
+    // Mantener solo los últimos 50 registros
+    if (history.length > 50) {
+        history.splice(0, history.length - 50);
+    }
+    
+    localStorage.setItem('ospadep_price_history', JSON.stringify(history));
+}
+
+// Inicializar datos administrativos al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    initializeAdminData();
+}); 
+
+// ================================
+// FUNCIONES PARA PLANES PERSONALIZADOS
+// ================================
+
+// Guardar planes personalizados
+function saveCustomPlans() {
+    localStorage.setItem('ospadep_custom_plans', JSON.stringify(planesData));
+    console.log('Planes personalizados guardados');
+}
+
+// Cargar planes personalizados
+function loadCustomPlans() {
+    const saved = localStorage.getItem('ospadep_custom_plans');
+    if (saved) {
+        try {
+            const customPlans = JSON.parse(saved);
+            // Mergear con planes existentes, dando prioridad a los personalizados
+            Object.keys(customPlans).forEach(category => {
+                if (customPlans[category] && Array.isArray(customPlans[category])) {
+                    planesData[category] = customPlans[category];
+                }
+            });
+            console.log('Planes personalizados cargados');
+        } catch (error) {
+            console.error('Error cargando planes personalizados:', error);
+        }
+    }
+}
+
+// Eliminar un plan específico
+function removePlan(category, planIndex) {
+    if (planesData[category] && planesData[category][planIndex]) {
+        const removedPlan = planesData[category].splice(planIndex, 1)[0];
+        saveCustomPlans();
+        console.log(`Plan "${removedPlan.name}" eliminado de la categoría "${category}"`);
+        
+        // Actualizar vista si estamos en el panel admin
+        if (document.getElementById('admin-section').style.display === 'block') {
+            loadCurrentPrices();
+        }
+        return true;
+    }
+    return false;
+}
+
+// Resetear a planes originales
+function resetToOriginalPlans() {
+    const confirm = window.confirm('¿Estás seguro de resetear todos los planes a los originales? Se perderán todos los planes personalizados.');
+    if (confirm) {
+        localStorage.removeItem('ospadep_custom_plans');
+        localStorage.removeItem('ospadep_custom_prices');
+        alert('Planes reseteados. La página se recargará.');
+        location.reload();
+    }
+}
+
+// Función para agregar planes desde la consola del navegador
+window.agregarPlan = function(categoria, planData) {
+    const resultado = addCustomPlan(categoria, planData);
+    if (resultado) {
+        saveCustomPlans();
+        
+        // Actualizar vista si estamos en el panel admin
+        if (document.getElementById('admin-section').style.display === 'block') {
+            loadCurrentPrices();
+        }
+        
+        alert(`Plan "${planData.name}" agregado exitosamente!`);
+    }
+    return resultado;
+};
+
+// Función para eliminar planes desde la consola
+window.eliminarPlan = function(categoria, indice) {
+    const resultado = removePlan(categoria, indice);
+    if (resultado) {
+        alert('Plan eliminado exitosamente!');
+    } else {
+        alert('No se pudo eliminar el plan. Verifica la categoría e índice.');
+    }
+    return resultado;
+};
+
+// Función para ver todos los planes actuales
+window.verPlanes = function() {
+    console.log('Planes actuales:', planesData);
+    return planesData;
+};
+
+// Función para crear categoría personalizada
+window.crearCategoria = function(nombre, planes = []) {
+    createPlanCategory(nombre, planes);
+    saveCustomPlans();
+    console.log(`Categoría "${nombre}" creada`);
+}; 

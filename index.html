@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Archivos de configuración y seguridad -->
+    <script src="config.js"></script>
+    <script src="security.js"></script>
 </head>
 <body>
     <div class="container">
@@ -216,7 +219,143 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Panel Administrativo -->
+            <div class="admin-section" id="admin-section" style="display: none;">
+                <div class="admin-container">
+                    <div class="admin-header">
+                        <button class="back-button" onclick="goToMainPage()">
+                            <i class="fas fa-arrow-left"></i> Volver al cotizador
+                        </button>
+                        <h2><i class="fas fa-cogs"></i> Panel Administrativo</h2>
+                        <p class="subtitle">Gestión de precios y configuración de planes</p>
+                    </div>
+
+                    <!-- Sección de gestión de precios -->
+                    <div class="admin-content">
+                        <div class="admin-controls">
+                            <div class="admin-actions">
+                                <button class="admin-btn primary" onclick="showBulkUpdate()">
+                                    <i class="fas fa-percentage"></i> Actualización Masiva
+                                </button>
+                                <button class="admin-btn secondary" onclick="showIndividualUpdate()">
+                                    <i class="fas fa-edit"></i> Edición Individual
+                                </button>
+                                <button class="admin-btn warning" onclick="resetPrices()">
+                                    <i class="fas fa-undo"></i> Restaurar Precios Originales
+                                </button>
+                                <button class="admin-btn export" onclick="exportPrices()">
+                                    <i class="fas fa-download"></i> Exportar Configuración
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Actualización masiva por porcentaje -->
+                        <div class="bulk-update-section" id="bulk-update-section" style="display: none;">
+                            <div class="update-card">
+                                <h3><i class="fas fa-percentage"></i> Actualización Masiva por Porcentaje</h3>
+                                <p class="card-subtitle">Aplica un porcentaje de aumento o descuento a todos los planes</p>
+                                
+                                <div class="update-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="bulk-percentage">Porcentaje de cambio (%)</label>
+                                            <input type="number" id="bulk-percentage" step="0.1" placeholder="Ej: 1.5 para 1.5% de aumento" />
+                                            <small class="field-help">Usa números positivos para aumentos y negativos para descuentos</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="plan-category">Categoría de planes</label>
+                                            <select id="plan-category">
+                                                <option value="all">Todos los planes</option>
+                                                <option value="individual">Solo planes individuales</option>
+                                                <option value="familiar">Solo planes familiares</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="update-btn" onclick="applyBulkUpdate()">
+                                            <i class="fas fa-calculator"></i> Calcular y Aplicar
+                                        </button>
+                                        <button class="cancel-btn" onclick="hideBulkUpdate()">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Edición individual -->
+                        <div class="individual-update-section" id="individual-update-section" style="display: none;">
+                            <div class="update-card">
+                                <h3><i class="fas fa-edit"></i> Edición Individual de Precios</h3>
+                                <p class="card-subtitle">Modifica el precio de planes específicos</p>
+                                
+                                <div class="plans-list" id="admin-plans-list">
+                                    <!-- Los planes se generarán dinámicamente -->
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button class="update-btn" onclick="saveIndividualChanges()">
+                                        <i class="fas fa-save"></i> Guardar Cambios
+                                    </button>
+                                    <button class="cancel-btn" onclick="hideIndividualUpdate()">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Histórico de cambios -->
+                        <div class="price-history">
+                            <h3><i class="fas fa-history"></i> Histórico de Cambios</h3>
+                            <div class="history-list" id="price-history-list">
+                                <!-- El histórico se generará dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Vista actual de precios -->
+                        <div class="current-prices">
+                            <h3><i class="fas fa-list"></i> Precios Actuales</h3>
+                            <div class="prices-grid" id="current-prices-grid">
+                                <!-- Los precios actuales se mostrarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
+
+        <!-- Botón de acceso administrativo (flotante) -->
+        <div class="admin-access" onclick="showAdminLogin()">
+            <i class="fas fa-cog"></i>
+        </div>
+
+        <!-- Modal de login administrativo -->
+        <div class="admin-modal" id="admin-modal" style="display: none;">
+            <div class="modal-overlay" onclick="hideAdminLogin()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-lock"></i> Acceso Administrativo</h3>
+                    <button class="modal-close" onclick="hideAdminLogin()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="login-form">
+                        <div class="form-group">
+                            <label for="admin-password">Contraseña de administrador</label>
+                            <input type="password" id="admin-password" placeholder="Ingrese la contraseña" />
+                            <div class="error-message" id="admin-error"></div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="login-btn" onclick="validateAdminAccess()">
+                                <i class="fas fa-sign-in-alt"></i> Acceder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
