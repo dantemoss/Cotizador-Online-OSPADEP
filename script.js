@@ -182,7 +182,7 @@ const prestadoresData = {
     
     swissMedical: {
         name: "SWISS MEDICAL",
-        tipoEstructura: "plantilla_sin_descuentos", // Sin descuento para segunda capita
+        tipoEstructura: "plantilla_adultos_solo", // Sin descuentos: todos como adultos
         planes: {
             po62: {
                 name: "PLAN PO62",
@@ -300,11 +300,11 @@ function determinarGrupoEtarioSwiss(edad) {
     return edad <= 65 ? "≤65" : ">65";
 }
 
-// ===== PLANTILLA DE PRECIOS SIN DESCUENTOS (OMINT/SWISS MEDICAL) =====
+// ===== PLANTILLA DE PRECIOS SIN DESCUENTOS =====
 const plantillaSinDescuentos = {
     capitaTitular: 1.00,    // 100% - Precio base
-    segundaCapita: 1.00,    // 100% - Pareja/cónyuge SIN descuento
-    menor: 0.50             // 50% - Hijos menores de 21 años
+    segundaCapita: 1.00,    // 100% - Pareja/cónyuge SIN descuento (OMINT y SWISS MEDICAL)
+    menor: 0.50             // 50% - Solo OMINT tiene descuento para menores (SWISS MEDICAL: 100%)
 };
 
 // ===== PLANTILLA TRADICIONAL (para futuros prestadores) =====
@@ -359,7 +359,7 @@ function calcularPrecioFinalOMINT(planOMINT, composicionFamiliar, edadTitular, e
 }
 
 /**
- * Calcula el precio final para SWISS MEDICAL SIN descuentos para segunda capita
+ * Calcula el precio final para SWISS MEDICAL - TODOS como adultos (sin descuentos específicos para menores)
  * @param {object} planSwiss - Plan SWISS MEDICAL con precios por edad
  * @param {object} composicionFamiliar - Objeto con la composición familiar
  * @param {number} edadTitular - Edad del titular
@@ -383,14 +383,13 @@ function calcularPrecioFinalSwiss(planSwiss, composicionFamiliar, edadTitular, e
         precioTotal += precioBasePareja * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
     }
     
-    // 3. Menores (hijos menores de 21 años - criterio tradicional)
+    // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
+    // SWISS MEDICAL no tiene precios específicos para menores, solo ≤65 y >65
     if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
-        const menoresDe21 = composicionFamiliar.menores.filter(edad => edad < 21);
-        
-        menoresDe21.forEach(edadMenor => {
+        composicionFamiliar.menores.forEach(edadMenor => {
             const grupoEtarioMenor = determinarGrupoEtarioSwiss(edadMenor);
             const precioBaseMenor = planSwiss.preciosPorEdad[grupoEtarioMenor];
-            precioTotal += precioBaseMenor * plantillaSinDescuentos.menor; // Solo menores tienen descuento
+            precioTotal += precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto - NO 50%
         });
     }
     
@@ -426,11 +425,16 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
     
     // Determinar tipo de estructura y usar el cálculo apropiado
     switch (prestador.tipoEstructura) {
+        case "plantilla_adultos_solo":
+            // SWISS MEDICAL: todos cobrados como adultos, sin descuentos para menores
+            return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
         case "plantilla_sin_descuentos":
+            // Para prestadores con descuentos solo en menores pero NO en segunda capita
             return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
         case "plantilla_porcentual":
-            // Para futuros prestadores que SÍ tengan descuentos
+            // Para futuros prestadores que SÍ tengan descuentos en segunda capita
             console.warn('Plantilla con descuentos detectada - implementar cuando sea necesario');
             return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
@@ -620,7 +624,7 @@ function generarDesglosePrecioOMINT(planOMINT, composicionFamiliar, edadTitular,
 }
 
 /**
- * Genera un desglose detallado del precio para planes SWISS MEDICAL (SIN descuentos)
+ * Genera un desglose detallado del precio para planes SWISS MEDICAL (TODOS como adultos)
  * @param {object} planSwiss - Plan SWISS MEDICAL con precios por edad
  * @param {object} composicionFamiliar - Composición familiar
  * @param {number} edadTitular - Edad del titular
@@ -664,21 +668,19 @@ function generarDesglosePrecioSwiss(planSwiss, composicionFamiliar, edadTitular,
         desglose.total += precioPareja;
     }
     
-    // 3. Hijos menores de 21 años (solo estos tienen descuento)
+    // 3. TODOS LOS HIJOS se cobran como ADULTOS (100% - no hay precios específicos para menores)
     if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
-        const menoresDe21 = composicionFamiliar.menores.filter(edad => edad < 21);
-        
-        menoresDe21.forEach((edadMenor, index) => {
+        composicionFamiliar.menores.forEach((edadMenor, index) => {
             const grupoEtarioMenor = determinarGrupoEtarioSwiss(edadMenor);
             const precioBaseMenor = planSwiss.preciosPorEdad[grupoEtarioMenor];
-            const precioMenor = precioBaseMenor * plantillaSinDescuentos.menor;
+            const precioMenor = precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto
             
             desglose.items.push({
                 concepto: `Hijo ${index + 1} (${edadMenor} años - ${grupoEtarioMenor})`,
                 cantidad: 1,
                 precioUnitario: precioMenor,
                 subtotal: precioMenor,
-                porcentaje: "50%" // Solo menores tienen descuento
+                porcentaje: "100%" // SWISS MEDICAL: hijos como adultos
             });
             desglose.total += precioMenor;
         });
@@ -726,11 +728,16 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
     
     // Determinar tipo de estructura y usar el desglose apropiado
     switch (prestador.tipoEstructura) {
+        case "plantilla_adultos_solo":
+            // SWISS MEDICAL: todos cobrados como adultos, sin descuentos para menores
+            return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
         case "plantilla_sin_descuentos":
+            // Para prestadores con descuentos solo en menores pero NO en segunda capita
             return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
         case "plantilla_porcentual":
-            // Para futuros prestadores que SÍ tengan descuentos
+            // Para futuros prestadores que SÍ tengan descuentos en segunda capita
             console.warn('Desglose con descuentos detectado - implementar cuando sea necesario');
             return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
@@ -1022,7 +1029,8 @@ function testNuevaLogicaCotizacion() {
         plan: planSwiss.name,
         precioFinal: precioSwiss,
         grupoEtario: determinarGrupoEtarioSwiss(edadTitular),
-        tipoEstructura: 'plantilla_sin_descuentos',
+        tipoEstructura: 'plantilla_adultos_solo',
+        nota: 'TODOS cobrados como adultos - hijos NO tienen descuento',
         desglose: desgloseSwiss
     });
     
@@ -1059,6 +1067,39 @@ function testNuevaLogicaCotizacion() {
         nota: '⚠️  Segunda capita = 100% (SIN descuento del 75%)',
         verificacion: desgloseSwissPareja.items.find(item => item.concepto.includes('Cónyuge'))?.porcentaje === '100%' ? '✅ Correcto' : '❌ Error',
         desglose: desgloseSwissPareja
+    });
+    
+    // Ejemplo 2.5: VERIFICAR HIJOS MENORES - SWISS vs OMINT
+    console.log('\n--- VERIFICACIÓN CRÍTICA: Hijos menores SWISS vs OMINT ---');
+    
+    const composicionConHijos = {
+        tienePareja: false,
+        menores: [8, 15], // 2 hijos menores
+        mayores: [],
+        resumen: 'Titular con 2 hijos menores'
+    };
+    
+    // OMINT - hijos menores SÍ tienen descuento específico
+    const precioOMINTConHijos = calcularPrecioUnificado('omint', planOMINT, composicionConHijos, 35);
+    const desgloseOMINTConHijos = generarDesgloseUnificado('omint', planOMINT, composicionConHijos, 35);
+    
+    console.log('📋 OMINT - Con hijos menores:', {
+        precioFinal: precioOMINTConHijos,
+        nota: 'Usa precios específicos para hijos (hijo1Menor, hijo2MasMenores)',
+        hijosDetalle: desgloseOMINTConHijos.items.filter(item => item.concepto.includes('Hijo')),
+        desglose: desgloseOMINTConHijos
+    });
+    
+    // SWISS MEDICAL - hijos menores se cobran como ADULTOS
+    const precioSwissConHijos = calcularPrecioUnificado('swissMedical', planSwiss, composicionConHijos, 35);
+    const desgloseSwissConHijos = generarDesgloseUnificado('swissMedical', planSwiss, composicionConHijos, 35);
+    
+    console.log('📋 SWISS MEDICAL - Con hijos menores:', {
+        precioFinal: precioSwissConHijos,
+        nota: '🚨 HIJOS COBRADOS COMO ADULTOS (100% - NO 50%)',
+        verificacionHijos: desgloseSwissConHijos.items.filter(item => item.concepto.includes('Hijo')).every(item => item.porcentaje === '100%') ? '✅ Correcto' : '❌ Error',
+        hijosDetalle: desgloseSwissConHijos.items.filter(item => item.concepto.includes('Hijo')),
+        desglose: desgloseSwissConHijos
     });
     
     // Ejemplo 3: Familia completa - comparación entre prestadores
@@ -1687,7 +1728,8 @@ function showPlans() {
                 
                 // Determinar información de grupo etario según el prestador
                 let grupoEtarioInfo;
-                if (prestador.tipoEstructura === "plantilla_sin_descuentos" || 
+                if (prestador.tipoEstructura === "plantilla_adultos_solo" || 
+                    prestador.tipoEstructura === "plantilla_sin_descuentos" || 
                     prestador.tipoEstructura === "plantilla_porcentual") {
                     grupoEtarioInfo = `Titular: ${determinarGrupoEtarioSwiss(edadTitular)}`;
                 } else {
