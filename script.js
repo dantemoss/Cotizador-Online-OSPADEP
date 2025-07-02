@@ -273,6 +273,148 @@ const prestadoresData = {
                 recommended: false
             }
         }
+    },
+    
+    activaSalud: {
+        name: "ACTIVA SALUD",
+        tipoEstructura: "plantilla_adultos_simple", // Solo 2 grupos etarios, todos como adultos
+        planes: {
+            as300: {
+                name: "PLAN AS300",
+                type: "activa_salud",
+                preciosPorEdad: {
+                    "≤65": 73713,   // Menor de 66 años
+                    ">65": 110571   // Mayor de 65 años
+                },
+                features: [
+                    "Plan integral ACTIVA SALUD",
+                    "Cobertura nacional",
+                    "Emergencias 24hs",
+                    "Consultas médicas",
+                    "Estudios diagnósticos",
+                    "Internación",
+                    "Plan económico y accesible"
+                ],
+                recommended: true
+            }
+        }
+    },
+    
+    medife: {
+        name: "MEDIFE",
+        tipoEstructura: "estructura_matrimonio_hijos", // Estructura específica con categorías MAT/IND y hijos diferenciados
+        planes: {
+            bronce: {
+                name: "PLAN BRONCE",
+                type: "medife",
+                precios: {
+                    individual: {
+                        "0-29": 90903,
+                        "30-39": 119669,
+                        "40-49": 155618,
+                        "50-59": 225737,
+                        "60+": 245907
+                    },
+                    matrimonio: {
+                        "0-29": 167499,
+                        "30-39": 211615,
+                        "40-49": 268349,
+                        "50-59": 334384,
+                        "60+": 363795
+                    },
+                    hijos: {
+                        "primerHijo": 71009,     // 1er H (< a 21)
+                        "segundoHijo": 54677,    // 2do H (< a 21)
+                        "hijoAdulto": 90811,     // H AD (21 a 29)
+                        "familiarCargo": 245907  // FAMILIAR A CARGO
+                    }
+                },
+                features: [
+                    "Plan básico MEDIFE",
+                    "Cobertura integral",
+                    "Red de prestadores MEDIFE",
+                    "Emergencias 24hs",
+                    "Consultas médicas",
+                    "Estudios básicos",
+                    "Plan económico"
+                ],
+                recommended: false
+            },
+            plata: {
+                name: "PLAN PLATA",
+                type: "medife",
+                precios: {
+                    individual: {
+                        "0-29": 114757,
+                        "30-39": 145272,
+                        "40-49": 183248,
+                        "50-59": 287045,
+                        "60+": 312096
+                    },
+                    matrimonio: {
+                        "0-29": 214992,
+                        "30-39": 265279,
+                        "40-49": 345498,
+                        "50-59": 421542,
+                        "60+": 461114
+                    },
+                    hijos: {
+                        "primerHijo": 97534,
+                        "segundoHijo": 71163,
+                        "hijoAdulto": 115064,
+                        "familiarCargo": 312096
+                    }
+                },
+                features: [
+                    "Plan estándar MEDIFE",
+                    "Cobertura ampliada",
+                    "Red de prestadores completa",
+                    "Emergencias 24hs prioritarias",
+                    "Consultas médicas sin límite",
+                    "Estudios de mediana complejidad",
+                    "Cobertura odontológica básica"
+                ],
+                recommended: true
+            },
+            oro: {
+                name: "PLAN ORO",
+                type: "medife",
+                precios: {
+                    individual: {
+                        "0-29": 130414,
+                        "30-39": 167868,
+                        "40-49": 211891,
+                        "50-59": 329350,
+                        "60+": 358637
+                    },
+                    matrimonio: {
+                        "0-29": 245815,
+                        "30-39": 313079,
+                        "40-49": 401495,
+                        "50-59": 487424,
+                        "60+": 530772
+                    },
+                    hijos: {
+                        "primerHijo": 110704,
+                        "segundoHijo": 86727,
+                        "hijoAdulto": 130414,
+                        "familiarCargo": 358637
+                    }
+                },
+                features: [
+                    "Plan premium MEDIFE",
+                    "Cobertura máxima",
+                    "Red de prestadores premium",
+                    "Emergencias 24hs VIP",
+                    "Consultas médicas ilimitadas",
+                    "Estudios de alta complejidad",
+                    "Cobertura odontológica completa",
+                    "Medicina preventiva premium",
+                    "Cobertura internacional"
+                ],
+                recommended: false
+            }
+        }
     }
 };
 
@@ -298,6 +440,28 @@ function determinarGrupoEtario(edad) {
  */
 function determinarGrupoEtarioSwiss(edad) {
     return edad <= 65 ? "≤65" : ">65";
+}
+
+/**
+ * Determina el grupo etario para ACTIVA SALUD (igual que SWISS MEDICAL)
+ * @param {number} edad - Edad de la persona
+ * @returns {string} - Grupo etario correspondiente
+ */
+function determinarGrupoEtarioActiva(edad) {
+    return edad <= 65 ? "≤65" : ">65";
+}
+
+/**
+ * Determina el grupo etario para MEDIFE (rangos específicos)
+ * @param {number} edad - Edad de la persona
+ * @returns {string} - Grupo etario correspondiente
+ */
+function determinarGrupoEtarioMedife(edad) {
+    if (edad <= 29) return "0-29";
+    if (edad <= 39) return "30-39";
+    if (edad <= 49) return "40-49";
+    if (edad <= 59) return "50-59";
+    return "60+";
 }
 
 // ===== PLANTILLA DE PRECIOS SIN DESCUENTOS =====
@@ -408,6 +572,114 @@ function calcularPrecioFinalSwiss(planSwiss, composicionFamiliar, edadTitular, e
 }
 
 /**
+ * Calcula el precio final para ACTIVA SALUD - TODOS como adultos (similar a SWISS MEDICAL)
+ * @param {object} planActiva - Plan ACTIVA SALUD con precios por edad
+ * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular, edadPareja = null) {
+    let precioTotal = 0;
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioActiva(edadTitular);
+    const precioBaseTitular = planActiva.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular (siempre presente)
+    precioTotal += precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento, precio completo
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioActiva(edadPareja);
+        const precioBasePareja = planActiva.preciosPorEdad[grupoEtarioPareja];
+        precioTotal += precioBasePareja * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+    }
+    
+    // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
+    // ACTIVA SALUD no tiene precios específicos para menores, solo ≤65 y >65
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        composicionFamiliar.menores.forEach(edadMenor => {
+            const grupoEtarioMenor = determinarGrupoEtarioActiva(edadMenor);
+            const precioBaseMenor = planActiva.preciosPorEdad[grupoEtarioMenor];
+            precioTotal += precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto - NO 50%
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (se cobran como adultos - precio completo)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach(edadHijo => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioActiva(edadHijo);
+                const precioBaseHijo = planActiva.preciosPorEdad[grupoEtarioHijo];
+                precioTotal += precioBaseHijo * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+            }
+        });
+    }
+    
+    return Math.round(precioTotal);
+}
+
+/**
+ * Calcula el precio final para MEDIFE - Estructura específica con Individual/Matrimonio e hijos diferenciados
+ * @param {object} planMedife - Plan MEDIFE con estructura específica
+ * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioFinalMedife(planMedife, composicionFamiliar, edadTitular, edadPareja = null) {
+    let precioTotal = 0;
+    
+    // Determinar si es Individual o Matrimonio
+    const esMatrimonio = composicionFamiliar.tienePareja;
+    const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
+    
+    if (esMatrimonio) {
+        // Usar precios de MATRIMONIO (ya incluye titular + pareja)
+        const precioMatrimonio = planMedife.precios.matrimonio[grupoEtarioTitular];
+        precioTotal += precioMatrimonio;
+    } else {
+        // Usar precios INDIVIDUALES
+        const precioIndividual = planMedife.precios.individual[grupoEtarioTitular];
+        precioTotal += precioIndividual;
+    }
+    
+    // Procesar hijos menores de 21 años
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        const menoresDe21 = composicionFamiliar.menores.filter(edad => edad < 21);
+        
+        menoresDe21.forEach((edadMenor, index) => {
+            if (index === 0) {
+                // Primer hijo
+                precioTotal += planMedife.precios.hijos.primerHijo;
+            } else if (index === 1) {
+                // Segundo hijo
+                precioTotal += planMedife.precios.hijos.segundoHijo;
+            } else {
+                // Tercer hijo en adelante - usar precio segundo hijo
+                precioTotal += planMedife.precios.hijos.segundoHijo;
+            }
+        });
+    }
+    
+    // Procesar hijos adultos (21-29 años)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach(edadHijo => {
+            if (edadHijo >= 21 && edadHijo <= 29) {
+                // Hijo adulto (21-29)
+                precioTotal += planMedife.precios.hijos.hijoAdulto;
+            } else if (edadHijo > 29) {
+                // Familiar a cargo (mayor de 29)
+                precioTotal += planMedife.precios.hijos.familiarCargo;
+            }
+        });
+    }
+    
+    return Math.round(precioTotal);
+}
+
+/**
  * FUNCIÓN UNIFICADA - Determina automáticamente qué tipo de cálculo usar
  * @param {string} prestadorKey - Clave del prestador (omint, swissMedical, etc.)
  * @param {object} plan - Plan específico del prestador
@@ -428,6 +700,14 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
         case "plantilla_adultos_solo":
             // SWISS MEDICAL: todos cobrados como adultos, sin descuentos para menores
             return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        case "plantilla_adultos_simple":
+            // ACTIVA SALUD: estructura simple como adultos, solo 2 grupos etarios
+            return calcularPrecioFinalActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        case "estructura_matrimonio_hijos":
+            // MEDIFE: estructura específica con precios Individual/Matrimonio e hijos diferenciados
+            return calcularPrecioFinalMedife(plan, composicionFamiliar, edadTitular, edadPareja);
         
         case "plantilla_sin_descuentos":
             // Para prestadores con descuentos solo en menores pero NO en segunda capita
@@ -711,6 +991,199 @@ function generarDesglosePrecioSwiss(planSwiss, composicionFamiliar, edadTitular,
 }
 
 /**
+ * Genera un desglose detallado del precio para planes ACTIVA SALUD (TODOS como adultos)
+ * @param {object} planActiva - Plan ACTIVA SALUD con precios por edad
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesglosePrecioActiva(planActiva, composicionFamiliar, edadTitular, edadPareja = null) {
+    const desglose = {
+        items: [],
+        total: 0
+    };
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioActiva(edadTitular);
+    const precioBaseTitular = planActiva.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular
+    const precioTitular = precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    desglose.items.push({
+        concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
+        cantidad: 1,
+        precioUnitario: precioTitular,
+        subtotal: precioTitular,
+        porcentaje: "100%"
+    });
+    desglose.total += precioTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioActiva(edadPareja);
+        const precioBasePareja = planActiva.preciosPorEdad[grupoEtarioPareja];
+        const precioPareja = precioBasePareja * plantillaSinDescuentos.segundaCapita;
+        
+        desglose.items.push({
+            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
+            cantidad: 1,
+            precioUnitario: precioPareja,
+            subtotal: precioPareja,
+            porcentaje: "100%" // SIN descuento
+        });
+        desglose.total += precioPareja;
+    }
+    
+    // 3. TODOS LOS HIJOS se cobran como ADULTOS (100%)
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        composicionFamiliar.menores.forEach((edadMenor, index) => {
+            const grupoEtarioMenor = determinarGrupoEtarioActiva(edadMenor);
+            const precioBaseMenor = planActiva.preciosPorEdad[grupoEtarioMenor];
+            const precioMenor = precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto
+            
+            desglose.items.push({
+                concepto: `Hijo ${index + 1} (${edadMenor} años - ${grupoEtarioMenor})`,
+                cantidad: 1,
+                precioUnitario: precioMenor,
+                subtotal: precioMenor,
+                porcentaje: "100%" // ACTIVA SALUD: hijos como adultos
+            });
+            desglose.total += precioMenor;
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (precio completo, sin descuento)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioActiva(edadHijo);
+                const precioBaseHijo = planActiva.preciosPorEdad[grupoEtarioHijo];
+                const precioHijoMayor = precioBaseHijo * plantillaSinDescuentos.segundaCapita;
+                
+                desglose.items.push({
+                    concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
+                    cantidad: 1,
+                    precioUnitario: precioHijoMayor,
+                    subtotal: precioHijoMayor,
+                    porcentaje: "100%" // SIN descuento
+                });
+                desglose.total += precioHijoMayor;
+            }
+        });
+    }
+    
+    desglose.total = Math.round(desglose.total);
+    return desglose;
+}
+
+/**
+ * Genera un desglose detallado del precio para planes MEDIFE (Individual/Matrimonio + hijos específicos)
+ * @param {object} planMedife - Plan MEDIFE con estructura específica
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesglosePrecioMedife(planMedife, composicionFamiliar, edadTitular, edadPareja = null) {
+    const desglose = {
+        items: [],
+        total: 0
+    };
+    
+    // Determinar si es Individual o Matrimonio
+    const esMatrimonio = composicionFamiliar.tienePareja;
+    const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
+    
+    if (esMatrimonio) {
+        // Precio MATRIMONIO (incluye titular + pareja)
+        const precioMatrimonio = planMedife.precios.matrimonio[grupoEtarioTitular];
+        desglose.items.push({
+            concepto: `Matrimonio (${edadTitular} años - ${grupoEtarioTitular})`,
+            cantidad: 1,
+            precioUnitario: precioMatrimonio,
+            subtotal: precioMatrimonio,
+            porcentaje: "Precio fijo matrimonio"
+        });
+        desglose.total += precioMatrimonio;
+    } else {
+        // Precio INDIVIDUAL
+        const precioIndividual = planMedife.precios.individual[grupoEtarioTitular];
+        desglose.items.push({
+            concepto: `Individual (${edadTitular} años - ${grupoEtarioTitular})`,
+            cantidad: 1,
+            precioUnitario: precioIndividual,
+            subtotal: precioIndividual,
+            porcentaje: "Precio individual"
+        });
+        desglose.total += precioIndividual;
+    }
+    
+    // Procesar hijos menores de 21 años
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        const menoresDe21 = composicionFamiliar.menores.filter(edad => edad < 21);
+        
+        menoresDe21.forEach((edadMenor, index) => {
+            let precioHijo, conceptoHijo;
+            
+            if (index === 0) {
+                // Primer hijo
+                precioHijo = planMedife.precios.hijos.primerHijo;
+                conceptoHijo = `1er hijo menor (${edadMenor} años)`;
+            } else if (index === 1) {
+                // Segundo hijo
+                precioHijo = planMedife.precios.hijos.segundoHijo;
+                conceptoHijo = `2do hijo menor (${edadMenor} años)`;
+            } else {
+                // Tercer hijo en adelante - usar precio segundo hijo
+                precioHijo = planMedife.precios.hijos.segundoHijo;
+                conceptoHijo = `Hijo ${index + 1} menor (${edadMenor} años)`;
+            }
+            
+            desglose.items.push({
+                concepto: conceptoHijo,
+                cantidad: 1,
+                precioUnitario: precioHijo,
+                subtotal: precioHijo,
+                porcentaje: "Precio específico MEDIFE"
+            });
+            desglose.total += precioHijo;
+        });
+    }
+    
+    // Procesar hijos adultos (21-29 años) y familiares a cargo (>29)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
+            let precioHijo, conceptoHijo;
+            
+            if (edadHijo >= 21 && edadHijo <= 29) {
+                // Hijo adulto (21-29)
+                precioHijo = planMedife.precios.hijos.hijoAdulto;
+                conceptoHijo = `Hijo adulto (${edadHijo} años, 21-29)`;
+            } else if (edadHijo > 29) {
+                // Familiar a cargo (mayor de 29)
+                precioHijo = planMedife.precios.hijos.familiarCargo;
+                conceptoHijo = `Familiar a cargo (${edadHijo} años, >29)`;
+            }
+            
+            if (precioHijo) {
+                desglose.items.push({
+                    concepto: conceptoHijo,
+                    cantidad: 1,
+                    precioUnitario: precioHijo,
+                    subtotal: precioHijo,
+                    porcentaje: "Precio específico MEDIFE"
+                });
+                desglose.total += precioHijo;
+            }
+        });
+    }
+    
+    desglose.total = Math.round(desglose.total);
+    return desglose;
+}
+
+/**
  * FUNCIÓN UNIFICADA DE DESGLOSE - Determina automáticamente qué tipo usar
  * @param {string} prestadorKey - Clave del prestador
  * @param {object} plan - Plan específico del prestador
@@ -731,6 +1204,14 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
         case "plantilla_adultos_solo":
             // SWISS MEDICAL: todos cobrados como adultos, sin descuentos para menores
             return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        case "plantilla_adultos_simple":
+            // ACTIVA SALUD: estructura simple como adultos, solo 2 grupos etarios
+            return generarDesglosePrecioActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        case "estructura_matrimonio_hijos":
+            // MEDIFE: estructura específica con precios Individual/Matrimonio e hijos diferenciados
+            return generarDesglosePrecioMedife(plan, composicionFamiliar, edadTitular, edadPareja);
         
         case "plantilla_sin_descuentos":
             // Para prestadores con descuentos solo en menores pero NO en segunda capita
@@ -993,7 +1474,7 @@ function fixModal() {
 
 // ===== FUNCIONES DE TESTING PARA SISTEMA MULTI-PRESTADOR =====
 function testNuevaLogicaCotizacion() {
-    console.log('🧪 === TESTING SISTEMA MULTI-PRESTADOR (SIN DESCUENTOS) ===');
+    console.log('🧪 === TESTING SISTEMA MULTI-PRESTADOR (4 PRESTADORES) ===');
     
     // Ejemplo 1: OMINT vs SWISS MEDICAL - Plan individual (30 años)
     const composicionSolo = {
@@ -1136,34 +1617,128 @@ function testNuevaLogicaCotizacion() {
         desglose: desgloseFamiliaSwiss
     });
     
-    // Comparación de precios
-    const diferenciaIndividual = Math.abs(precioOMINT - precioSwiss);
-    const diferenciaFamiliar = Math.abs(precioFamiliaOMINT - precioFamiliaSwiss);
+    // NUEVOS PRESTADORES - ACTIVA SALUD y MEDIFE
+    console.log('\n=== TESTING NUEVOS PRESTADORES ===');
     
-    console.log('💰 Comparación de precios:', {
-        individual: {
-            omint: precioOMINT,
-            swiss: precioSwiss,
-            diferencia: diferenciaIndividual,
-            masBarato: precioOMINT < precioSwiss ? 'OMINT' : 'SWISS MEDICAL'
-        },
-        familiar: {
-            omint: precioFamiliaOMINT,
-            swiss: precioFamiliaSwiss,
-            diferencia: diferenciaFamiliar,
-            masBarato: precioFamiliaOMINT < precioFamiliaSwiss ? 'OMINT' : 'SWISS MEDICAL'
-        }
+    // ACTIVA SALUD - Plan individual (30 años)
+    const planActiva = prestadoresData.activaSalud.planes.as300;
+    const precioActiva = calcularPrecioUnificado('activaSalud', planActiva, composicionSolo, edadTitular);
+    const desgloseActiva = generarDesgloseUnificado('activaSalud', planActiva, composicionSolo, edadTitular);
+    
+    console.log('📋 ACTIVA SALUD - Plan individual (30 años):', {
+        prestador: 'ACTIVA SALUD',
+        plan: planActiva.name,
+        precioFinal: precioActiva,
+        grupoEtario: determinarGrupoEtarioActiva(edadTitular),
+        tipoEstructura: 'plantilla_adultos_simple',
+        nota: 'Simple: todos como adultos con 2 grupos etarios',
+        desglose: desgloseActiva
+    });
+    
+    // MEDIFE - Plan PLATA individual (30 años)
+    const planMedife = prestadoresData.medife.planes.plata;
+    const precioMedife = calcularPrecioUnificado('medife', planMedife, composicionSolo, edadTitular);
+    const desgloseMedife = generarDesgloseUnificado('medife', planMedife, composicionSolo, edadTitular);
+    
+    console.log('📋 MEDIFE - Plan PLATA individual (30 años):', {
+        prestador: 'MEDIFE',
+        plan: planMedife.name,
+        precioFinal: precioMedife,
+        grupoEtario: determinarGrupoEtarioMedife(edadTitular),
+        tipoEstructura: 'estructura_matrimonio_hijos',
+        nota: 'Complejo: Individual vs Matrimonio + hijos específicos',
+        desglose: desgloseMedife
+    });
+    
+    // COMPARACIÓN MEDIFE: Individual vs Matrimonio
+    console.log('\n--- MEDIFE: Individual vs Matrimonio (35+32 años) ---');
+    
+    const precioMedifeMatrimonio = calcularPrecioUnificado('medife', planMedife, composicionPareja, 35, edadParejaTest);
+    const desgloseMedifeMatrimonio = generarDesgloseUnificado('medife', planMedife, composicionPareja, 35, edadParejaTest);
+    
+    console.log('📋 MEDIFE - Matrimonio vs Individual:', {
+        individual35: calcularPrecioUnificado('medife', planMedife, composicionSolo, 35),
+        matrimonio: precioMedifeMatrimonio,
+        diferencia: `+$${precioMedifeMatrimonio - calcularPrecioUnificado('medife', planMedife, composicionSolo, 35)}`,
+        nota: 'MEDIFE: precio matrimonio ≠ 2x individual',
+        desglose: desgloseMedifeMatrimonio
+    });
+    
+    // COMPARACIÓN HIJOS: MEDIFE vs otros prestadores
+    console.log('\n--- HIJOS MENORES: Comparación entre 4 prestadores ---');
+    
+    // ACTIVA SALUD con hijos
+    const precioActivaConHijos = calcularPrecioUnificado('activaSalud', planActiva, composicionConHijos, 35);
+    const desgloseActivaConHijos = generarDesgloseUnificado('activaSalud', planActiva, composicionConHijos, 35);
+    
+    // MEDIFE con hijos
+    const precioMedifeConHijos = calcularPrecioUnificado('medife', planMedife, composicionConHijos, 35);
+    const desgloseMedifeConHijos = generarDesgloseUnificado('medife', planMedife, composicionConHijos, 35);
+    
+    console.log('👶 COMPARACIÓN HIJOS MENORES (8 y 15 años):');
+    console.log('- OMINT:', {
+        precio: precioOMINTConHijos,
+        nota: 'Usa precios específicos: hijo1Menor + hijo2MasMenores'
+    });
+    console.log('- SWISS MEDICAL:', {
+        precio: precioSwissConHijos,
+        nota: 'Hijos como adultos 100% (≤65 años)'
+    });
+    console.log('- ACTIVA SALUD:', {
+        precio: precioActivaConHijos,
+        nota: 'Hijos como adultos 100% (≤65 años)',
+        desglose: desgloseActivaConHijos
+    });
+    console.log('- MEDIFE:', {
+        precio: precioMedifeConHijos,
+        nota: 'Precios específicos: 1er hijo + 2do hijo',
+        desglose: desgloseMedifeConHijos
+    });
+    
+    // Comparación de precios entre los 4 prestadores
+    console.log('\n💰 === COMPARACIÓN DE PRECIOS (4 PRESTADORES) ===');
+    
+    const preciosIndividuales = [
+        { prestador: 'OMINT', precio: precioOMINT },
+        { prestador: 'SWISS MEDICAL', precio: precioSwiss },
+        { prestador: 'ACTIVA SALUD', precio: precioActiva },
+        { prestador: 'MEDIFE', precio: precioMedife }
+    ].sort((a, b) => a.precio - b.precio);
+    
+    const preciosFamiliares = [
+        { prestador: 'OMINT', precio: precioFamiliaOMINT },
+        { prestador: 'SWISS MEDICAL', precio: precioFamiliaSwiss },
+        { prestador: 'ACTIVA SALUD', 
+          precio: calcularPrecioUnificado('activaSalud', planActiva, composicionFamilia, edadTitular, edadPareja) },
+        { prestador: 'MEDIFE', 
+          precio: calcularPrecioUnificado('medife', planMedife, composicionFamilia, edadTitular, edadPareja) }
+    ].sort((a, b) => a.precio - b.precio);
+    
+    console.log('🏆 RANKING INDIVIDUAL (30 años):');
+    preciosIndividuales.forEach((item, index) => {
+        const emoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '4️⃣';
+        console.log(`${emoji} ${item.prestador}: $${item.precio.toLocaleString()}`);
+    });
+    
+    console.log('\n🏆 RANKING FAMILIAR (pareja + 2 hijos):');
+    preciosFamiliares.forEach((item, index) => {
+        const emoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '4️⃣';
+        console.log(`${emoji} ${item.prestador}: $${item.precio.toLocaleString()}`);
     });
     
     // Mostrar estructura de prestadores
-    console.log('🏥 Prestadores disponibles:', Object.keys(prestadoresData).map(key => ({
-        key: key,
-        name: prestadoresData[key].name,
-        tipoEstructura: prestadoresData[key].tipoEstructura || 'estructura_compleja',
-        cantidadPlanes: Object.keys(prestadoresData[key].planes).length
-    })));
+    console.log('\n🏥 === PRESTADORES DISPONIBLES ===');
+    Object.keys(prestadoresData).forEach(key => {
+        const prestador = prestadoresData[key];
+        console.log(`📋 ${prestador.name}:`, {
+            key: key,
+            tipoEstructura: prestador.tipoEstructura || 'estructura_compleja',
+            cantidadPlanes: Object.keys(prestador.planes).length,
+            planes: Object.keys(prestador.planes).map(planKey => prestador.planes[planKey].name)
+        });
+    });
     
-    console.log('✅ === FIN DEL TESTING MULTI-PRESTADOR ===');
+    console.log('\n✅ === FIN DEL TESTING MULTI-PRESTADOR ===');
 }
 
 // Función para cargar datos de ejemplo en el formulario
@@ -1227,19 +1802,32 @@ document.addEventListener('DOMContentLoaded', function() {
     window.generarDesgloseUnificado = generarDesgloseUnificado;
     window.calcularPrecioFinalOMINT = calcularPrecioFinalOMINT;
     window.calcularPrecioFinalSwiss = calcularPrecioFinalSwiss;
+    window.calcularPrecioFinalActiva = calcularPrecioFinalActiva;
+    window.calcularPrecioFinalMedife = calcularPrecioFinalMedife;
     window.determinarGrupoEtario = determinarGrupoEtario;
     window.determinarGrupoEtarioSwiss = determinarGrupoEtarioSwiss;
+    window.determinarGrupoEtarioActiva = determinarGrupoEtarioActiva;
+    window.determinarGrupoEtarioMedife = determinarGrupoEtarioMedife;
+    window.generarDesglosePrecioActiva = generarDesglosePrecioActiva;
+    window.generarDesglosePrecioMedife = generarDesglosePrecioMedife;
     window.prestadoresData = prestadoresData;
     window.plantillaPorcentual = plantillaPorcentual;
+    window.plantillaSinDescuentos = plantillaSinDescuentos;
     
-    console.log('🚀 Aplicación iniciada con sistema multi-prestador');
+    console.log('🚀 Aplicación iniciada con sistema multi-prestador (4 prestadores)');
     console.log('💡 Funciones disponibles en consola:');
-    console.log('   - testNuevaLogicaCotizacion(): Ejecuta ejemplos comparativos entre prestadores');
+    console.log('   - testNuevaLogicaCotizacion(): Ejecuta ejemplos comparativos entre 4 prestadores');
     console.log('   - cargarEjemploFormulario("familia"): Carga datos de ejemplo');
     console.log('   - calcularPrecioUnificado(prestadorKey, plan, composicion, edadTitular, edadPareja): Cálculo universal');
     console.log('   - generarDesgloseUnificado(prestadorKey, plan, composicion, edadTitular, edadPareja): Desglose universal');
     console.log('   - prestadoresData: Ver todos los prestadores y planes disponibles');
     console.log('   📊 Prestadores disponibles:', Object.keys(prestadoresData).map(k => `${k} (${prestadoresData[k].name})`).join(', '));
+    console.log('   🏗️  Estructuras:', {
+        'OMINT': 'precios específicos por rol',
+        'SWISS MEDICAL': 'todos como adultos',
+        'ACTIVA SALUD': 'simple (2 grupos etarios)',
+        'MEDIFE': 'Individual/Matrimonio + hijos específicos'
+    });
 });
 
 function initializeApp() {
@@ -1732,6 +2320,10 @@ function showPlans() {
                     prestador.tipoEstructura === "plantilla_sin_descuentos" || 
                     prestador.tipoEstructura === "plantilla_porcentual") {
                     grupoEtarioInfo = `Titular: ${determinarGrupoEtarioSwiss(edadTitular)}`;
+                } else if (prestador.tipoEstructura === "plantilla_adultos_simple") {
+                    grupoEtarioInfo = `Titular: ${determinarGrupoEtarioActiva(edadTitular)}`;
+                } else if (prestador.tipoEstructura === "estructura_matrimonio_hijos") {
+                    grupoEtarioInfo = `Titular: ${determinarGrupoEtarioMedife(edadTitular)}`;
                 } else {
                     grupoEtarioInfo = `Titular: ${determinarGrupoEtario(edadTitular)} años`;
                 }
