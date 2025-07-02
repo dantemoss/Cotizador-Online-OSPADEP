@@ -3,12 +3,762 @@ let selectedOption = null;
 let formData = {};
 let validationErrors = {};
 
-// Datos de planes (simulación de base de datos)
+// ===== DATOS REALES DE PRESTADORES =====
+// Sistema unificado que soporta diferentes estructuras de pricing
+const prestadoresData = {
+    omint: {
+        name: "OMINT",
+        planes: {
+            plan4500: {
+                name: "PLAN 4500",
+                type: "omint",
+                preciosPorEdad: {
+                    "0-25": {
+                        adultoConyugue: 104326,
+                        hijo1Menor: 90830,
+                        hijo2MasMenores: 78392
+                    },
+                    "26-35": {
+                        adultoConyugue: 151236,
+                        hijo1Menor: 90830,  // Para menores se usa el precio de 0-25
+                        hijo2MasMenores: 78392
+                    },
+                    "36-54": {
+                        adultoConyugue: 177542,
+                        hijo1Menor: 90830,
+                        hijo2MasMenores: 78392
+                    },
+                    "55-59": {
+                        adultoConyugue: 306076,
+                        hijo1Menor: 90830,
+                        hijo2MasMenores: 78392
+                    },
+                    "60+": {
+                        adultoConyugue: 464519,
+                        hijo1Menor: 90830,
+                        hijo2MasMenores: 78392
+                    }
+                },
+                features: [
+                    "Cobertura integral OMINT",
+                    "Red de prestadores nivel 4500",
+                    "Internación en habitación privada",
+                    "Consultas médicas sin límite",
+                    "Estudios de diagnóstico incluidos",
+                    "Emergencias 24hs",
+                    "Cobertura odontológica básica"
+                ],
+                recommended: false
+            },
+            plan6500: {
+                name: "PLAN 6500",
+                type: "omint",
+                preciosPorEdad: {
+                    "0-25": {
+                        adultoConyugue: 153107,
+                        hijo1Menor: 133562,
+                        hijo2MasMenores: 116172
+                    },
+                    "26-35": {
+                        adultoConyugue: 218915,
+                        hijo1Menor: 133562,
+                        hijo2MasMenores: 116172
+                    },
+                    "36-54": {
+                        adultoConyugue: 256417,
+                        hijo1Menor: 133562,
+                        hijo2MasMenores: 116172
+                    },
+                    "55-59": {
+                        adultoConyugue: 429692,
+                        hijo1Menor: 133562,
+                        hijo2MasMenores: 116172
+                    },
+                    "60+": {
+                        adultoConyugue: 639812,
+                        hijo1Menor: 133562,
+                        hijo2MasMenores: 116172
+                    }
+                },
+                features: [
+                    "Cobertura integral OMINT",
+                    "Red de prestadores nivel 6500",
+                    "Internación en habitación privada",
+                    "Consultas médicas sin límite",
+                    "Estudios de alta complejidad",
+                    "Emergencias 24hs",
+                    "Cobertura odontológica completa",
+                    "Medicina preventiva"
+                ],
+                recommended: true
+            },
+            plan8500: {
+                name: "PLAN 8500",
+                type: "omint",
+                preciosPorEdad: {
+                    "0-25": {
+                        adultoConyugue: 263260,
+                        hijo1Menor: 230676,
+                        hijo2MasMenores: 201322
+                    },
+                    "26-35": {
+                        adultoConyugue: 350675,
+                        hijo1Menor: 230676,
+                        hijo2MasMenores: 201322
+                    },
+                    "36-54": {
+                        adultoConyugue: 461545,
+                        hijo1Menor: 230676,
+                        hijo2MasMenores: 201322
+                    },
+                    "55-59": {
+                        adultoConyugue: 643311,
+                        hijo1Menor: 230676,
+                        hijo2MasMenores: 201322
+                    },
+                    "60+": {
+                        adultoConyugue: 876659,
+                        hijo1Menor: 230676,
+                        hijo2MasMenores: 201322
+                    }
+                },
+                features: [
+                    "Cobertura premium OMINT",
+                    "Red de prestadores nivel 8500",
+                    "Internación en habitación privada",
+                    "Consultas médicas sin límite",
+                    "Estudios de máxima complejidad",
+                    "Emergencias 24hs prioritarias",
+                    "Cobertura odontológica premium",
+                    "Medicina preventiva avanzada",
+                    "Cobertura internacional",
+                    "Enfermería domiciliaria"
+                ],
+                recommended: false
+            },
+            planComunidad: {
+                name: "PLAN COMUNIDAD SIN COPAGO",
+                type: "omint",
+                preciosPorEdad: {
+                    "0-25": {
+                        adultoConyugue: 78613,
+                        hijo1Menor: 68351,
+                        hijo2MasMenores: 59017
+                    },
+                    "26-35": {
+                        adultoConyugue: 112368,
+                        hijo1Menor: 68351,
+                        hijo2MasMenores: 59017
+                    },
+                    "36-54": {
+                        adultoConyugue: 132792,
+                        hijo1Menor: 68351,
+                        hijo2MasMenores: 59017
+                    },
+                    "55-59": {
+                        adultoConyugue: 224979,
+                        hijo1Menor: 68351,
+                        hijo2MasMenores: 59017
+                    },
+                    "60+": {
+                        adultoConyugue: 349541,
+                        hijo1Menor: 68351,
+                        hijo2MasMenores: 59017
+                    }
+                },
+                features: [
+                    "Plan comunitario OMINT",
+                    "Sin copagos en consultas",
+                    "Red de prestadores comunitarios",
+                    "Cobertura básica integral",
+                    "Emergencias 24hs",
+                    "Estudios básicos incluidos",
+                    "Ideal para familias jóvenes"
+                ],
+                recommended: false
+            }
+        }
+    },
+    
+    swissMedical: {
+        name: "SWISS MEDICAL",
+        tipoEstructura: "plantilla_sin_descuentos", // Sin descuento para segunda capita
+        planes: {
+            po62: {
+                name: "PLAN PO62",
+                type: "swiss_medical",
+                preciosPorEdad: {
+                    "≤65": 219446,  // Capita menor o igual a 65 años
+                    ">65": 636635   // Capita mayor a 65 años
+                },
+                features: [
+                    "Cobertura integral SWISS MEDICAL",
+                    "Red de prestadores PO62",
+                    "Consultas médicas sin límite",
+                    "Internación en habitación privada",
+                    "Emergencias 24hs",
+                    "Estudios de diagnóstico",
+                    "Cobertura odontológica"
+                ],
+                recommended: false
+            },
+            po64: {
+                name: "PLAN PO64",
+                type: "swiss_medical",
+                preciosPorEdad: {
+                    "≤65": 262878,
+                    ">65": 762357
+                },
+                features: [
+                    "Cobertura premium SWISS MEDICAL",
+                    "Red de prestadores PO64",
+                    "Consultas médicas sin límite",
+                    "Internación en habitación privada",
+                    "Emergencias 24hs prioritarias",
+                    "Estudios de alta complejidad",
+                    "Cobertura odontológica completa",
+                    "Medicina preventiva"
+                ],
+                recommended: true
+            },
+            sbo4: {
+                name: "PLAN SBO4",
+                type: "swiss_medical",
+                preciosPorEdad: {
+                    "≤65": 172328,
+                    ">65": 471251
+                },
+                features: [
+                    "Cobertura básica SWISS MEDICAL",
+                    "Red de prestadores SBO4",
+                    "Consultas médicas",
+                    "Emergencias 24hs",
+                    "Estudios básicos",
+                    "Ideal para familias jóvenes"
+                ],
+                recommended: false
+            },
+            sb02: {
+                name: "PLAN SB02",
+                type: "swiss_medical",
+                preciosPorEdad: {
+                    "≤65": 168847,
+                    ">65": 571925
+                },
+                features: [
+                    "Cobertura estándar SWISS MEDICAL",
+                    "Red de prestadores SB02",
+                    "Consultas médicas",
+                    "Internación",
+                    "Emergencias 24hs",
+                    "Estudios diagnósticos"
+                ],
+                recommended: false
+            },
+            ms: {
+                name: "PLAN MS",
+                type: "swiss_medical",
+                preciosPorEdad: {
+                    "≤65": 145256,
+                    ">65": 435756
+                },
+                features: [
+                    "Plan económico SWISS MEDICAL",
+                    "Red de prestadores MS",
+                    "Cobertura básica integral",
+                    "Emergencias 24hs",
+                    "Consultas médicas",
+                    "Ideal para presupuestos ajustados"
+                ],
+                recommended: false
+            }
+        }
+    }
+};
+
+// ===== SISTEMA UNIFICADO DE CÁLCULO DE PRECIOS =====
+
+/**
+ * Determina el grupo etario según la edad para los precios de OMINT
+ * @param {number} edad - Edad de la persona
+ * @returns {string} - Grupo etario correspondiente
+ */
+function determinarGrupoEtario(edad) {
+    if (edad <= 25) return "0-25";
+    if (edad <= 35) return "26-35";
+    if (edad <= 54) return "36-54";
+    if (edad <= 59) return "55-59";
+    return "60+";
+}
+
+/**
+ * Determina el grupo etario para SWISS MEDICAL (estructura simple)
+ * @param {number} edad - Edad de la persona
+ * @returns {string} - Grupo etario correspondiente
+ */
+function determinarGrupoEtarioSwiss(edad) {
+    return edad <= 65 ? "≤65" : ">65";
+}
+
+// ===== PLANTILLA DE PRECIOS SIN DESCUENTOS (OMINT/SWISS MEDICAL) =====
+const plantillaSinDescuentos = {
+    capitaTitular: 1.00,    // 100% - Precio base
+    segundaCapita: 1.00,    // 100% - Pareja/cónyuge SIN descuento
+    menor: 0.50             // 50% - Hijos menores de 21 años
+};
+
+// ===== PLANTILLA TRADICIONAL (para futuros prestadores) =====
+const plantillaPorcentual = {
+    capitaTitular: 1.00,    // 100% - Precio base
+    segundaCapita: 0.75,    // 75% - Pareja/cónyuge CON descuento
+    menor: 0.50             // 50% - Hijos menores de 21 años
+};
+
+/**
+ * Calcula el precio final de un plan OMINT según la composición familiar
+ * @param {object} planOMINT - Plan OMINT con precios por edad
+ * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioFinalOMINT(planOMINT, composicionFamiliar, edadTitular, edadPareja = null) {
+    let precioTotal = 0;
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtario(edadTitular);
+    const preciosGrupoTitular = planOMINT.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular (siempre presente)
+    precioTotal += preciosGrupoTitular.adultoConyugue;
+    
+    // 2. Segunda capita (pareja/cónyuge)
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtario(edadPareja);
+        const preciosGrupoPareja = planOMINT.preciosPorEdad[grupoEtarioPareja];
+        precioTotal += preciosGrupoPareja.adultoConyugue;
+    }
+    
+    // 3. Hijos menores de 25 años (según estructura OMINT)
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        const menoresDe25 = composicionFamiliar.menores.filter(edad => edad < 25);
+        
+        if (menoresDe25.length > 0) {
+            // Primer hijo menor
+            precioTotal += preciosGrupoTitular.hijo1Menor;
+            
+            // Segundo hijo en adelante
+            if (menoresDe25.length > 1) {
+                const hijosAdicionales = menoresDe25.length - 1;
+                precioTotal += preciosGrupoTitular.hijo2MasMenores * hijosAdicionales;
+            }
+        }
+    }
+    
+    return Math.round(precioTotal);
+}
+
+/**
+ * Calcula el precio final para SWISS MEDICAL SIN descuentos para segunda capita
+ * @param {object} planSwiss - Plan SWISS MEDICAL con precios por edad
+ * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioFinalSwiss(planSwiss, composicionFamiliar, edadTitular, edadPareja = null) {
+    let precioTotal = 0;
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioSwiss(edadTitular);
+    const precioBaseTitular = planSwiss.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular (siempre presente)
+    precioTotal += precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento, precio completo
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioSwiss(edadPareja);
+        const precioBasePareja = planSwiss.preciosPorEdad[grupoEtarioPareja];
+        precioTotal += precioBasePareja * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+    }
+    
+    // 3. Menores (hijos menores de 21 años - criterio tradicional)
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        const menoresDe21 = composicionFamiliar.menores.filter(edad => edad < 21);
+        
+        menoresDe21.forEach(edadMenor => {
+            const grupoEtarioMenor = determinarGrupoEtarioSwiss(edadMenor);
+            const precioBaseMenor = planSwiss.preciosPorEdad[grupoEtarioMenor];
+            precioTotal += precioBaseMenor * plantillaSinDescuentos.menor; // Solo menores tienen descuento
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (se cobran como adultos - precio completo)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach(edadHijo => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioSwiss(edadHijo);
+                const precioBaseHijo = planSwiss.preciosPorEdad[grupoEtarioHijo];
+                precioTotal += precioBaseHijo * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+            }
+        });
+    }
+    
+    return Math.round(precioTotal);
+}
+
+/**
+ * FUNCIÓN UNIFICADA - Determina automáticamente qué tipo de cálculo usar
+ * @param {string} prestadorKey - Clave del prestador (omint, swissMedical, etc.)
+ * @param {object} plan - Plan específico del prestador
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTitular, edadPareja = null) {
+    const prestador = prestadoresData[prestadorKey];
+    
+    if (!prestador) {
+        throw new Error(`Prestador no encontrado: ${prestadorKey}`);
+    }
+    
+    // Determinar tipo de estructura y usar el cálculo apropiado
+    switch (prestador.tipoEstructura) {
+        case "plantilla_sin_descuentos":
+            return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        case "plantilla_porcentual":
+            // Para futuros prestadores que SÍ tengan descuentos
+            console.warn('Plantilla con descuentos detectada - implementar cuando sea necesario');
+            return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        default: // OMINT u otros con estructura compleja (precios específicos por rol)
+            return calcularPrecioFinalOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
+    }
+}
+
+/**
+ * Función de compatibilidad para mantener la interfaz anterior
+ * @param {number} basePriceCapitaTitular - Precio base (no usado en nuevas estructuras)
+ * @param {object} composicionFamiliar - Composición familiar
+ * @returns {number} - Precio calculado (retorna 0 como placeholder)
+ */
+function calcularPrecioFinal(basePriceCapitaTitular, composicionFamiliar) {
+    // Esta función se mantiene para compatibilidad pero no se usa con prestadores reales
+    console.warn('Función calcularPrecioFinal() obsoleta. Usar calcularPrecioUnificado()');
+    return 0;
+}
+
+/**
+ * Analiza los datos del formulario y determina la composición familiar 
+ * Nota: Mantiene todas las edades de hijos para que cada prestador aplique su propia lógica
+ * @param {object} formData - Datos del formulario
+ * @returns {object} - Composición familiar estructurada
+ */
+function analizarComposicionFamiliar(formData) {
+    const composicion = {
+        tienePareja: false,
+        menores: [], // Todas las edades de hijos - cada prestador decide qué es "menor"
+        mayores: [], // Hijos que algunos prestadores consideran adultos
+        resumen: ''
+    };
+    
+    const edadTitular = parseInt(formData['edad-titular']);
+    
+    // Analizar según la opción seleccionada
+    switch (selectedOption) {
+        case 'solo':
+            composicion.resumen = 'Plan individual';
+            break;
+            
+        case 'pareja':
+            composicion.tienePareja = true;
+            composicion.resumen = 'Plan para pareja';
+            break;
+            
+        case 'hijos':
+            if (formData['edades-hijos']) {
+                const edadesHijos = formData['edades-hijos'].split(',').map(edad => parseInt(edad.trim()));
+                
+                // Separar por criterio más general (25 años como referencia)
+                // Cada prestador luego aplicará su propia lógica:
+                // - OMINT: menores de 25 años
+                // - SWISS MEDICAL: menores de 21 años
+                composicion.menores = edadesHijos.filter(edad => edad < 25);
+                composicion.mayores = edadesHijos.filter(edad => edad >= 25);
+                
+                const totalHijos = edadesHijos.length;
+                const menoresDe25 = composicion.menores.length;
+                const mayoresDe25 = composicion.mayores.length;
+                
+                if (mayoresDe25 > 0) {
+                    composicion.resumen = `Plan con ${menoresDe25} menor(es) y ${mayoresDe25} hijo(s) mayor(es)`;
+                } else {
+                    composicion.resumen = `Plan con ${menoresDe25} menor(es)`;
+                }
+            }
+            break;
+            
+        case 'familia':
+            composicion.tienePareja = true;
+            if (formData['edades-hijos']) {
+                const edadesHijos = formData['edades-hijos'].split(',').map(edad => parseInt(edad.trim()));
+                composicion.menores = edadesHijos.filter(edad => edad < 25);
+                composicion.mayores = edadesHijos.filter(edad => edad >= 25);
+                
+                const menoresDe25 = composicion.menores.length;
+                const mayoresDe25 = composicion.mayores.length;
+                
+                if (mayoresDe25 > 0) {
+                    composicion.resumen = `Plan familiar con pareja, ${menoresDe25} menor(es) y ${mayoresDe25} hijo(s) mayor(es)`;
+                } else {
+                    composicion.resumen = `Plan familiar con pareja y ${menoresDe25} menor(es)`;
+                }
+            }
+            break;
+    }
+    
+    return composicion;
+}
+
+/**
+ * Genera un desglose detallado del precio para planes OMINT
+ * @param {object} planOMINT - Plan OMINT con precios por edad
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesglosePrecioOMINT(planOMINT, composicionFamiliar, edadTitular, edadPareja = null) {
+    const desglose = {
+        items: [],
+        total: 0
+    };
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtario(edadTitular);
+    const preciosGrupoTitular = planOMINT.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular
+    const precioTitular = preciosGrupoTitular.adultoConyugue;
+    desglose.items.push({
+        concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
+        cantidad: 1,
+        precioUnitario: precioTitular,
+        subtotal: precioTitular
+    });
+    desglose.total += precioTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge)
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtario(edadPareja);
+        const preciosGrupoPareja = planOMINT.preciosPorEdad[grupoEtarioPareja];
+        const precioPareja = preciosGrupoPareja.adultoConyugue;
+        
+        desglose.items.push({
+            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
+            cantidad: 1,
+            precioUnitario: precioPareja,
+            subtotal: precioPareja
+        });
+        desglose.total += precioPareja;
+    }
+    
+    // 3. Hijos menores de 25 años
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        const menoresDe25 = composicionFamiliar.menores.filter(edad => edad < 25);
+        
+        if (menoresDe25.length > 0) {
+            // Primer hijo menor
+            const precioHijo1 = preciosGrupoTitular.hijo1Menor;
+            desglose.items.push({
+                concepto: 'Primer hijo menor de 25 años',
+                cantidad: 1,
+                precioUnitario: precioHijo1,
+                subtotal: precioHijo1
+            });
+            desglose.total += precioHijo1;
+            
+            // Segundo hijo en adelante
+            if (menoresDe25.length > 1) {
+                const hijosAdicionales = menoresDe25.length - 1;
+                const precioHijo2Mas = preciosGrupoTitular.hijo2MasMenores;
+                const subtotalHijos2Mas = precioHijo2Mas * hijosAdicionales;
+                
+                desglose.items.push({
+                    concepto: 'Hijos adicionales menores de 25 años',
+                    cantidad: hijosAdicionales,
+                    precioUnitario: precioHijo2Mas,
+                    subtotal: subtotalHijos2Mas
+                });
+                desglose.total += subtotalHijos2Mas;
+            }
+        }
+    }
+    
+    // 4. Hijos mayores de 25 años (se cobran como adultos)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
+            const grupoEtarioHijo = determinarGrupoEtario(edadHijo);
+            const preciosGrupoHijo = planOMINT.preciosPorEdad[grupoEtarioHijo];
+            const precioHijoMayor = preciosGrupoHijo.adultoConyugue;
+            
+            desglose.items.push({
+                concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
+                cantidad: 1,
+                precioUnitario: precioHijoMayor,
+                subtotal: precioHijoMayor
+            });
+            desglose.total += precioHijoMayor;
+        });
+    }
+    
+    desglose.total = Math.round(desglose.total);
+    return desglose;
+}
+
+/**
+ * Genera un desglose detallado del precio para planes SWISS MEDICAL (SIN descuentos)
+ * @param {object} planSwiss - Plan SWISS MEDICAL con precios por edad
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesglosePrecioSwiss(planSwiss, composicionFamiliar, edadTitular, edadPareja = null) {
+    const desglose = {
+        items: [],
+        total: 0
+    };
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioSwiss(edadTitular);
+    const precioBaseTitular = planSwiss.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular
+    const precioTitular = precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    desglose.items.push({
+        concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
+        cantidad: 1,
+        precioUnitario: precioTitular,
+        subtotal: precioTitular,
+        porcentaje: "100%"
+    });
+    desglose.total += precioTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioSwiss(edadPareja);
+        const precioBasePareja = planSwiss.preciosPorEdad[grupoEtarioPareja];
+        const precioPareja = precioBasePareja * plantillaSinDescuentos.segundaCapita;
+        
+        desglose.items.push({
+            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
+            cantidad: 1,
+            precioUnitario: precioPareja,
+            subtotal: precioPareja,
+            porcentaje: "100%" // SIN descuento
+        });
+        desglose.total += precioPareja;
+    }
+    
+    // 3. Hijos menores de 21 años (solo estos tienen descuento)
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        const menoresDe21 = composicionFamiliar.menores.filter(edad => edad < 21);
+        
+        menoresDe21.forEach((edadMenor, index) => {
+            const grupoEtarioMenor = determinarGrupoEtarioSwiss(edadMenor);
+            const precioBaseMenor = planSwiss.preciosPorEdad[grupoEtarioMenor];
+            const precioMenor = precioBaseMenor * plantillaSinDescuentos.menor;
+            
+            desglose.items.push({
+                concepto: `Hijo ${index + 1} (${edadMenor} años - ${grupoEtarioMenor})`,
+                cantidad: 1,
+                precioUnitario: precioMenor,
+                subtotal: precioMenor,
+                porcentaje: "50%" // Solo menores tienen descuento
+            });
+            desglose.total += precioMenor;
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (precio completo, sin descuento)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioSwiss(edadHijo);
+                const precioBaseHijo = planSwiss.preciosPorEdad[grupoEtarioHijo];
+                const precioHijoMayor = precioBaseHijo * plantillaSinDescuentos.segundaCapita;
+                
+                desglose.items.push({
+                    concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
+                    cantidad: 1,
+                    precioUnitario: precioHijoMayor,
+                    subtotal: precioHijoMayor,
+                    porcentaje: "100%" // SIN descuento
+                });
+                desglose.total += precioHijoMayor;
+            }
+        });
+    }
+    
+    desglose.total = Math.round(desglose.total);
+    return desglose;
+}
+
+/**
+ * FUNCIÓN UNIFICADA DE DESGLOSE - Determina automáticamente qué tipo usar
+ * @param {string} prestadorKey - Clave del prestador
+ * @param {object} plan - Plan específico del prestador
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadTitular, edadPareja = null) {
+    const prestador = prestadoresData[prestadorKey];
+    
+    if (!prestador) {
+        throw new Error(`Prestador no encontrado: ${prestadorKey}`);
+    }
+    
+    // Determinar tipo de estructura y usar el desglose apropiado
+    switch (prestador.tipoEstructura) {
+        case "plantilla_sin_descuentos":
+            return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        case "plantilla_porcentual":
+            // Para futuros prestadores que SÍ tengan descuentos
+            console.warn('Desglose con descuentos detectado - implementar cuando sea necesario');
+            return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+        
+        default: // OMINT u otros con estructura compleja (precios específicos por rol)
+            return generarDesglosePrecioOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
+    }
+}
+
+/**
+ * Función de compatibilidad para el desglose anterior
+ * @param {number} basePriceCapitaTitular - Precio base (no usado en nuevas estructuras)
+ * @param {object} composicionFamiliar - Composición familiar
+ * @returns {object} - Desglose vacío para compatibilidad
+ */
+function generarDesglosePrecio(basePriceCapitaTitular, composicionFamiliar) {
+    // Esta función se mantiene para compatibilidad pero no se usa con prestadores reales
+    console.warn('Función generarDesglosePrecio() obsoleta. Usar generarDesgloseUnificado()');
+    return { items: [], total: 0 };
+}
+
+// ===== DATOS DE PLANES LEGACY (mantener compatibilidad) =====
+// Nota: Esta estructura se mantiene para compatibilidad con el panel admin
+// Los nuevos cálculos usarán prestadoresData
 const planesData = {
     individual: [
         {
             name: "Plan Básico Individual",
-            price: 15000,
+            price: 18000,
             ageRange: "18-35",
             features: [
                 "Consultas médicas generales",
@@ -21,7 +771,7 @@ const planesData = {
         },
         {
             name: "Plan Completo Individual",
-            price: 25000,
+            price: 28000,
             ageRange: "18-50",
             features: [
                 "Todas las prestaciones del Plan Básico",
@@ -34,12 +784,12 @@ const planesData = {
             recommended: true
         },
         {
-            name: "Plan Senior Individual",
-            price: 35000,
+            name: "Plan Premium Individual",
+            price: 42000,
             ageRange: "51+",
             features: [
                 "Todas las prestaciones del Plan Completo",
-                "Cobertura geriátrica especializada",
+                "Cobertura internacional",
                 "Enfermería domiciliaria",
                 "Estudios cardiológicos avanzados",
                 "Rehabilitación kinesiológica",
@@ -234,6 +984,180 @@ function fixModal() {
     }
 }
 
+// ===== FUNCIONES DE TESTING PARA SISTEMA MULTI-PRESTADOR =====
+function testNuevaLogicaCotizacion() {
+    console.log('🧪 === TESTING SISTEMA MULTI-PRESTADOR (SIN DESCUENTOS) ===');
+    
+    // Ejemplo 1: OMINT vs SWISS MEDICAL - Plan individual (30 años)
+    const composicionSolo = {
+        tienePareja: false,
+        menores: [],
+        mayores: [],
+        resumen: 'Plan individual'
+    };
+    
+    const edadTitular = 30;
+    
+    // OMINT - Plan Comunidad
+    const planOMINT = prestadoresData.omint.planes.planComunidad;
+    const precioOMINT = calcularPrecioUnificado('omint', planOMINT, composicionSolo, edadTitular);
+    const desgloseOMINT = generarDesgloseUnificado('omint', planOMINT, composicionSolo, edadTitular);
+    
+    console.log('📋 OMINT - Plan individual (30 años):', {
+        prestador: 'OMINT',
+        plan: planOMINT.name,
+        precioFinal: precioOMINT,
+        grupoEtario: determinarGrupoEtario(edadTitular),
+        tipoEstructura: 'precios_especificos_por_rol',
+        desglose: desgloseOMINT
+    });
+    
+    // SWISS MEDICAL - Plan MS
+    const planSwiss = prestadoresData.swissMedical.planes.ms;
+    const precioSwiss = calcularPrecioUnificado('swissMedical', planSwiss, composicionSolo, edadTitular);
+    const desgloseSwiss = generarDesgloseUnificado('swissMedical', planSwiss, composicionSolo, edadTitular);
+    
+    console.log('📋 SWISS MEDICAL - Plan individual (30 años):', {
+        prestador: 'SWISS MEDICAL',
+        plan: planSwiss.name,
+        precioFinal: precioSwiss,
+        grupoEtario: determinarGrupoEtarioSwiss(edadTitular),
+        tipoEstructura: 'plantilla_sin_descuentos',
+        desglose: desgloseSwiss
+    });
+    
+    // Ejemplo 2: Solo pareja - VERIFICAR SIN DESCUENTOS para segunda capita
+    console.log('\n--- Verificación: Pareja SIN descuentos en segunda capita ---');
+    
+    const composicionPareja = {
+        tienePareja: true,
+        menores: [],
+        mayores: [],
+        resumen: 'Solo pareja sin hijos'
+    };
+    
+    const edadParejaTest = 32;
+    
+    // OMINT - usa precios específicos por rol
+    const precioOMINTPareja = calcularPrecioUnificado('omint', planOMINT, composicionPareja, 35, edadParejaTest);
+    const desgloseOMINTPareja = generarDesgloseUnificado('omint', planOMINT, composicionPareja, 35, edadParejaTest);
+    
+    console.log('📋 OMINT - Pareja (35+32 años):', {
+        precioFinal: precioOMINTPareja,
+        diferencia: `+$${precioOMINTPareja - precioOMINT} vs individual`,
+        nota: 'Usa precios específicos por rol - NO plantilla porcentual',
+        desglose: desgloseOMINTPareja
+    });
+    
+    // SWISS MEDICAL - NO debe aplicar descuento a segunda capita
+    const precioSwissPareja = calcularPrecioUnificado('swissMedical', planSwiss, composicionPareja, 35, edadParejaTest);
+    const desgloseSwissPareja = generarDesgloseUnificado('swissMedical', planSwiss, composicionPareja, 35, edadParejaTest);
+    
+    console.log('📋 SWISS MEDICAL - Pareja (35+32 años):', {
+        precioFinal: precioSwissPareja,
+        diferencia: `+$${precioSwissPareja - precioSwiss} vs individual`,
+        nota: '⚠️  Segunda capita = 100% (SIN descuento del 75%)',
+        verificacion: desgloseSwissPareja.items.find(item => item.concepto.includes('Cónyuge'))?.porcentaje === '100%' ? '✅ Correcto' : '❌ Error',
+        desglose: desgloseSwissPareja
+    });
+    
+    // Ejemplo 3: Familia completa - comparación entre prestadores
+    console.log('\n--- Familia completa - comparación entre prestadores ---');
+    
+    const composicionFamilia = {
+        tienePareja: true,
+        menores: [8, 15], // 2 hijos menores
+        mayores: [],
+        resumen: 'Plan familiar con pareja y 2 menor(es)'
+    };
+    
+    const edadPareja = 32;
+    
+    // OMINT
+    const precioFamiliaOMINT = calcularPrecioUnificado('omint', planOMINT, composicionFamilia, edadTitular, edadPareja);
+    const desgloseFamiliaOMINT = generarDesgloseUnificado('omint', planOMINT, composicionFamilia, edadTitular, edadPareja);
+    
+    console.log('👨‍👩‍👧‍👦 OMINT - Familia completa:', {
+        prestador: 'OMINT',
+        plan: planOMINT.name,
+        precioFinal: precioFamiliaOMINT,
+        desglose: desgloseFamiliaOMINT
+    });
+    
+    // SWISS MEDICAL
+    const precioFamiliaSwiss = calcularPrecioUnificado('swissMedical', planSwiss, composicionFamilia, edadTitular, edadPareja);
+    const desgloseFamiliaSwiss = generarDesgloseUnificado('swissMedical', planSwiss, composicionFamilia, edadTitular, edadPareja);
+    
+    console.log('👨‍👩‍👧‍👦 SWISS MEDICAL - Familia completa:', {
+        prestador: 'SWISS MEDICAL',
+        plan: planSwiss.name,
+        precioFinal: precioFamiliaSwiss,
+        desglose: desgloseFamiliaSwiss
+    });
+    
+    // Comparación de precios
+    const diferenciaIndividual = Math.abs(precioOMINT - precioSwiss);
+    const diferenciaFamiliar = Math.abs(precioFamiliaOMINT - precioFamiliaSwiss);
+    
+    console.log('💰 Comparación de precios:', {
+        individual: {
+            omint: precioOMINT,
+            swiss: precioSwiss,
+            diferencia: diferenciaIndividual,
+            masBarato: precioOMINT < precioSwiss ? 'OMINT' : 'SWISS MEDICAL'
+        },
+        familiar: {
+            omint: precioFamiliaOMINT,
+            swiss: precioFamiliaSwiss,
+            diferencia: diferenciaFamiliar,
+            masBarato: precioFamiliaOMINT < precioFamiliaSwiss ? 'OMINT' : 'SWISS MEDICAL'
+        }
+    });
+    
+    // Mostrar estructura de prestadores
+    console.log('🏥 Prestadores disponibles:', Object.keys(prestadoresData).map(key => ({
+        key: key,
+        name: prestadoresData[key].name,
+        tipoEstructura: prestadoresData[key].tipoEstructura || 'estructura_compleja',
+        cantidadPlanes: Object.keys(prestadoresData[key].planes).length
+    })));
+    
+    console.log('✅ === FIN DEL TESTING MULTI-PRESTADOR ===');
+}
+
+// Función para cargar datos de ejemplo en el formulario
+function cargarEjemploFormulario(tipo = 'familia') {
+    console.log(`🎯 Cargando ejemplo: ${tipo}`);
+    
+    // Seleccionar la opción
+    selectedOption = tipo;
+    selectOption(tipo);
+    
+    // Simular llenar el formulario después de un breve delay
+    setTimeout(() => {
+        const edadTitular = document.getElementById('edad-titular');
+        if (edadTitular) edadTitular.value = '35';
+        
+        if (tipo === 'pareja' || tipo === 'familia') {
+            const edadPareja = document.getElementById('edad-pareja');
+            if (edadPareja) edadPareja.value = '32';
+        }
+        
+        if (tipo === 'hijos' || tipo === 'familia') {
+            const cantidadHijos = document.getElementById('cantidad-hijos');
+            const edadesHijos = document.getElementById('edades-hijos');
+            if (cantidadHijos) cantidadHijos.value = '2';
+            if (edadesHijos) edadesHijos.value = '8, 15';
+        }
+        
+        // Seleccionar situación laboral
+        const situacionLaboral = document.getElementById('situacion-laboral');
+        if (situacionLaboral) situacionLaboral.value = 'dependencia';
+        
+        console.log('✅ Datos de ejemplo cargados. Puedes hacer clic en "Cotizar Plan"');
+    }, 1000);
+}
+
 // Inicialización de la aplicación
 document.addEventListener('DOMContentLoaded', function() {
     // Cargar planes personalizados si existen
@@ -251,6 +1175,30 @@ document.addEventListener('DOMContentLoaded', function() {
             updateUIForLoggedInUser(); // Esto manejará el caso de no usuario correctamente
         }
     }, 100);
+    
+    // ===== NUEVO: Ejecutar test y agregar funciones globales =====
+    testNuevaLogicaCotizacion();
+    
+    // Agregar funciones al window para acceso desde consola
+    window.testNuevaLogicaCotizacion = testNuevaLogicaCotizacion;
+    window.cargarEjemploFormulario = cargarEjemploFormulario;
+    window.calcularPrecioUnificado = calcularPrecioUnificado;
+    window.generarDesgloseUnificado = generarDesgloseUnificado;
+    window.calcularPrecioFinalOMINT = calcularPrecioFinalOMINT;
+    window.calcularPrecioFinalSwiss = calcularPrecioFinalSwiss;
+    window.determinarGrupoEtario = determinarGrupoEtario;
+    window.determinarGrupoEtarioSwiss = determinarGrupoEtarioSwiss;
+    window.prestadoresData = prestadoresData;
+    window.plantillaPorcentual = plantillaPorcentual;
+    
+    console.log('🚀 Aplicación iniciada con sistema multi-prestador');
+    console.log('💡 Funciones disponibles en consola:');
+    console.log('   - testNuevaLogicaCotizacion(): Ejecuta ejemplos comparativos entre prestadores');
+    console.log('   - cargarEjemploFormulario("familia"): Carga datos de ejemplo');
+    console.log('   - calcularPrecioUnificado(prestadorKey, plan, composicion, edadTitular, edadPareja): Cálculo universal');
+    console.log('   - generarDesgloseUnificado(prestadorKey, plan, composicion, edadTitular, edadPareja): Desglose universal');
+    console.log('   - prestadoresData: Ver todos los prestadores y planes disponibles');
+    console.log('   📊 Prestadores disponibles:', Object.keys(prestadoresData).map(k => `${k} (${prestadoresData[k].name})`).join(', '));
 });
 
 function initializeApp() {
@@ -378,7 +1326,7 @@ function generateFormFields(option) {
                 '</div>';
             break;
             
-        case 'hijos':
+                    case 'hijos':
             sections += '<div class="form-section-group">' +
                 '<div class="section-title">' +
                 '<i class="fas fa-baby"></i> Información de tus hijos' +
@@ -391,8 +1339,8 @@ function generateFormFields(option) {
                 '</div>' +
                 '<div class="form-group">' +
                 '<label for="edades-hijos">Edades de los hijos *</label>' +
-                '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12" required>' +
-                '<small class="field-help">Separa las edades con comas</small>' +
+                '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12, 28" required>' +
+                '<small class="field-help">Separa las edades con comas. Menores de 25 años tienen precio especial en OMINT</small>' +
                 '<div class="error-message" id="error-edades-hijos"></div>' +
                 '</div>' +
                 '</div>' +
@@ -434,8 +1382,8 @@ function generateFormFields(option) {
                 '</div>' +
                 '<div class="form-group">' +
                 '<label for="edades-hijos">Edades de los hijos *</label>' +
-                '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12" required>' +
-                '<small class="field-help">Separa las edades con comas</small>' +
+                '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12, 28" required>' +
+                '<small class="field-help">Separa las edades con comas. Menores de 25 años tienen precio especial en OMINT</small>' +
                 '<div class="error-message" id="error-edades-hijos"></div>' +
                 '</div>' +
                 '</div>' +
@@ -540,7 +1488,7 @@ function validateField(field) {
                 errorMessage = 'Este campo es obligatorio';
             } else if (!validateChildrenAges(value)) {
                 isValid = false;
-                errorMessage = 'Las edades deben ser números entre 0 y 25 años, separados por comas';
+                errorMessage = 'Las edades deben ser números entre 0 y 35 años, separados por comas';
             } else {
                 // Validar que coincida con la cantidad de hijos
                 const cantidadInput = document.querySelector('[name="cantidad-hijos"]');
@@ -673,11 +1621,22 @@ function processForm() {
     
     formData.option = selectedOption;
     
+    // ===== NUEVO: Análisis de composición familiar =====
+    formData.composicionFamiliar = analizarComposicionFamiliar(formData);
+    
+    console.log('💰 Datos del formulario procesados:', {
+        option: selectedOption,
+        composicion: formData.composicionFamiliar,
+        edadTitular: formData['edad-titular'],
+        tienePareja: formData.composicionFamiliar.tienePareja,
+        menores: formData.composicionFamiliar.menores
+    });
+    
     // Mostrar indicador de carga
     const submitButton = form.querySelector('.continue-button');
     if (submitButton) {
         submitButton.classList.add('loading');
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculando...';
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculando cotización...';
         submitButton.disabled = true;
         
         // Simular procesamiento
@@ -699,28 +1658,110 @@ function showPlans() {
     detailsSection.style.display = 'none';
     plansSection.style.display = 'block';
     
-    // Determinar qué planes mostrar
-    let planesAMostrar = [];
+    // ===== NUEVO: Generar planes de TODOS los prestadores con sistema unificado =====
+    const planesCalculados = [];
+    const composicionFamiliar = formData.composicionFamiliar;
     const edadTitular = parseInt(formData['edad-titular']);
+    const edadPareja = formData['edad-pareja'] ? parseInt(formData['edad-pareja']) : null;
     
-    if (selectedOption === 'solo') {
-        planesAMostrar = planesData.individual.filter(plan => {
-            if (plan.ageRange === '18-35') return edadTitular >= 18 && edadTitular <= 35;
-            if (plan.ageRange === '18-50') return edadTitular >= 18 && edadTitular <= 50;
-            if (plan.ageRange === '51+') return edadTitular >= 51;
-            return true;
+    console.log('🏥 Generando cotización multi-prestador:', {
+        edadTitular,
+        edadPareja,
+        composicion: composicionFamiliar,
+        prestadoresDisponibles: Object.keys(prestadoresData)
+    });
+    
+    // Iterar por TODOS los prestadores y sus planes
+    Object.keys(prestadoresData).forEach(prestadorKey => {
+        const prestador = prestadoresData[prestadorKey];
+        
+        console.log(`📋 Procesando prestador: ${prestador.name} (${prestador.tipoEstructura || 'estructura_compleja'})`);
+        
+        Object.keys(prestador.planes).forEach(planKey => {
+            const plan = prestador.planes[planKey];
+            
+            try {
+                // Usar sistema unificado de cálculo
+                const precioFinal = calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTitular, edadPareja);
+                const desglose = generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadTitular, edadPareja);
+                
+                // Determinar información de grupo etario según el prestador
+                let grupoEtarioInfo;
+                if (prestador.tipoEstructura === "plantilla_sin_descuentos" || 
+                    prestador.tipoEstructura === "plantilla_porcentual") {
+                    grupoEtarioInfo = `Titular: ${determinarGrupoEtarioSwiss(edadTitular)}`;
+                } else {
+                    grupoEtarioInfo = `Titular: ${determinarGrupoEtario(edadTitular)} años`;
+                }
+                
+                // Crear plan calculado
+                const planCalculado = {
+                    name: `${plan.name}`,
+                    price: precioFinal,
+                    ageRange: grupoEtarioInfo,
+                    features: plan.features,
+                    recommended: plan.recommended,
+                    prestador: prestador.name,
+                    composicion: composicionFamiliar,
+                    desglose: desglose,
+                    // Información adicional para el desglose
+                    planDetails: {
+                        prestadorKey: prestadorKey,
+                        planKey: planKey,
+                        composicionResumen: composicionFamiliar.resumen,
+                        tipoEstructura: prestador.tipoEstructura || 'estructura_compleja'
+                    }
+                };
+                
+                planesCalculados.push(planCalculado);
+                
+                console.log(`✅ ${prestador.name} - ${plan.name} calculado:`, {
+                    precioFinal,
+                    tipoEstructura: prestador.tipoEstructura || 'estructura_compleja',
+                    itemsDesglose: desglose.items.length
+                });
+                
+            } catch (error) {
+                console.error(`❌ Error calculando ${prestador.name} - ${plan.name}:`, error);
+            }
         });
-    } else {
-        planesAMostrar = planesData.familiar;
+    });
+    
+    // Ordenar planes: primero los recomendados, luego por precio
+    planesCalculados.sort((a, b) => {
+        if (a.recommended && !b.recommended) return -1;
+        if (!a.recommended && b.recommended) return 1;
+        return a.price - b.price;
+    });
+    
+    console.log('📋 Planes multi-prestador calculados para mostrar:', {
+        totalPlanes: planesCalculados.length,
+        composicion: composicionFamiliar.resumen,
+        prestadoresProcesados: [...new Set(planesCalculados.map(p => p.prestador))],
+        planesConPrecios: planesCalculados.map(p => ({
+            prestador: p.prestador,
+            name: p.name,
+            precioFinal: p.price,
+            tipoEstructura: p.planDetails.tipoEstructura,
+            itemsDesglose: p.desglose.items.length
+        }))
+    });
+    
+    if (planesCalculados.length === 0) {
+        plansGrid.innerHTML = '<div class="no-plans-message">' +
+            '<h3>⚠️ No se pudieron generar cotizaciones</h3>' +
+            '<p>Por favor, verifica los datos ingresados y vuelve a intentar.</p>' +
+            '</div>';
+        return;
     }
     
     // Generar HTML de los planes
-    plansGrid.innerHTML = planesAMostrar.map(plan => generatePlanCard(plan)).join('');
+    plansGrid.innerHTML = planesCalculados.map(plan => generatePlanCard(plan)).join('');
     
     // Agregar event listeners a botones de selección
     const selectButtons = document.querySelectorAll('.select-plan-btn');
     selectButtons.forEach((btn, index) => {
-        btn.addEventListener('click', () => selectPlan(planesAMostrar[index]));
+        btn.addEventListener('click', () => selectPlan(planesCalculados[index]));
     });
 }
 
@@ -728,12 +1769,67 @@ function generatePlanCard(plan) {
     const recommendedClass = plan.recommended ? 'recommended' : '';
     const features = plan.features.map(feature => '<li>' + feature + '</li>').join('');
     
+    // ===== NUEVO: Determinar color e icono del prestador =====
+    let prestadorColor = '#718096'; // Color por defecto
+    let prestadorIcon = 'fas fa-hospital';
+    
+    if (plan.prestador === 'OMINT') {
+        prestadorColor = '#3182ce'; // Azul
+        prestadorIcon = 'fas fa-heartbeat';
+    } else if (plan.prestador === 'SWISS MEDICAL') {
+        prestadorColor = '#d53f8c'; // Rosa/fucsia
+        prestadorIcon = 'fas fa-plus-circle';
+    }
+    
+    // ===== NUEVO: Generar desglose de precio mejorado =====
+    let desgloseHTML = '';
+    if (plan.desglose && plan.desglose.items) {
+        desgloseHTML = '<div class="price-breakdown">' +
+            '<div class="breakdown-title">' +
+            '<i class="fas fa-calculator"></i> Desglose del precio' +
+            '</div>' +
+            '<div class="breakdown-items">';
+        
+        plan.desglose.items.forEach(item => {
+            const porcentajeInfo = item.porcentaje ? ` (${item.porcentaje})` : '';
+            const precioFormateado = formatCurrency(item.subtotal);
+            desgloseHTML += '<div class="breakdown-item">' +
+                '<span class="breakdown-concept">' + item.concepto + porcentajeInfo + '</span>' +
+                '<span class="breakdown-amount">' + precioFormateado + '</span>' +
+                '</div>';
+        });
+        
+        desgloseHTML += '</div>' +
+            '<div class="breakdown-total">' +
+            '<span class="breakdown-concept"><strong>Total mensual</strong></span>' +
+            '<span class="breakdown-amount"><strong>' + formatCurrency(plan.desglose.total) + '</strong></span>' +
+            '</div>' +
+            '</div>';
+    }
+    
+    // Badge para composición familiar
+    const composicionBadge = plan.composicion ? 
+        '<div class="family-composition-badge">' + plan.composicion.resumen + '</div>' : '';
+    
+    // Badge de recomendado
+    const recommendedBadge = plan.recommended ? 
+        '<div class="recommended-badge"><i class="fas fa-star"></i> Recomendado</div>' : '';
+    
     return '<div class="plan-card ' + recommendedClass + '">' +
-        '<div class="plan-name">' + plan.name + '</div>' +
-        '<div class="plan-price">' +
-        '<span class="currency">$</span>' + plan.price.toLocaleString() +
-        '<div style="font-size: 0.6em; color: #718096; font-weight: 400;">por mes</div>' +
+        recommendedBadge +
+        composicionBadge +
+        '<div class="plan-header">' +
+            '<div class="plan-provider-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
+                '<i class="' + prestadorIcon + '" style="color: ' + prestadorColor + ';"></i>' +
+                '<span style="color: ' + prestadorColor + '; font-weight: 600; font-size: 0.9em;">' + (plan.prestador || '') + '</span>' +
+            '</div>' +
+            '<div class="plan-name">' + plan.name + '</div>' +
         '</div>' +
+        '<div class="plan-price">' +
+            '<span class="currency">$</span>' + plan.price.toLocaleString() +
+            '<div class="price-period">por mes</div>' +
+        '</div>' +
+        desgloseHTML +
         '<ul class="plan-features">' + features + '</ul>' +
         '<button class="select-plan-btn">Seleccionar Plan</button>' +
         '</div>';
@@ -801,7 +1897,7 @@ function validateChildrenAges(agesString) {
     const ages = agesString.split(',').map(age => age.trim());
     
     for (let age of ages) {
-        if (isNaN(age) || age === '' || parseInt(age) < 0 || parseInt(age) > 25) {
+        if (isNaN(age) || age === '' || parseInt(age) < 0 || parseInt(age) > 35) {
             return false;
         }
     }
