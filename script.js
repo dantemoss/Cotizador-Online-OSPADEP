@@ -3,40 +3,81 @@ let selectedOption = null;
 let formData = {};
 let validationErrors = {};
 
-// ===== DATOS REALES DE PRESTADORES =====
-// Sistema unificado que soporta diferentes estructuras de pricing
+// ===== DATOS ACTUALIZADOS JULIO 2025 - PRESTADORES =====
+// Sistema unificado basado en nuevos CSV con precios oficiales
 const prestadoresData = {
     omint: {
         name: "OMINT",
+        tipoEstructura: "estructura_compleja", // Precios específicos por rol
         planes: {
+            plan2500: {
+                name: "PLAN 2500",
+                type: "omint",
+                preciosPorEdad: {
+                    "0-25": {
+                        adultoConyugue: 79782,
+                        hijo1Menor: 69487,
+                        hijo2MasMenores: 60083
+                    },
+                    "26-35": {
+                        adultoConyugue: 114322,
+                        hijo1Menor: 69487,
+                        hijo2MasMenores: 60083
+                    },
+                    "36-54": {
+                        adultoConyugue: 134954,
+                        hijo1Menor: 69487,
+                        hijo2MasMenores: 60083
+                    },
+                    "55-59": {
+                        adultoConyugue: 229880,
+                        hijo1Menor: 69487,
+                        hijo2MasMenores: 60083
+                    },
+                    "60+": {
+                        adultoConyugue: 355439,
+                        hijo1Menor: 69487,
+                        hijo2MasMenores: 60083
+                    }
+                },
+                features: [
+                    "Plan económico OMINT",
+                    "Red de prestadores nivel 2500",
+                    "Consultas médicas",
+                    "Emergencias 24hs",
+                    "Estudios básicos",
+                    "Ideal para presupuestos ajustados"
+                ],
+                recommended: false
+            },
             plan4500: {
                 name: "PLAN 4500",
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 104326,
-                        hijo1Menor: 90830,
-                        hijo2MasMenores: 78392
+                        adultoConyugue: 107430,
+                        hijo1Menor: 93532,
+                        hijo2MasMenores: 80724
                     },
                     "26-35": {
-                        adultoConyugue: 151236,
-                        hijo1Menor: 90830,  // Para menores se usa el precio de 0-25
-                        hijo2MasMenores: 78392
+                        adultoConyugue: 155736,
+                        hijo1Menor: 93532,
+                        hijo2MasMenores: 80724
                     },
                     "36-54": {
-                        adultoConyugue: 177542,
-                        hijo1Menor: 90830,
-                        hijo2MasMenores: 78392
+                        adultoConyugue: 182824,
+                        hijo1Menor: 93532,
+                        hijo2MasMenores: 80724
                     },
                     "55-59": {
-                        adultoConyugue: 306076,
-                        hijo1Menor: 90830,
-                        hijo2MasMenores: 78392
+                        adultoConyugue: 315183,
+                        hijo1Menor: 93532,
+                        hijo2MasMenores: 80724
                     },
                     "60+": {
-                        adultoConyugue: 464519,
-                        hijo1Menor: 90830,
-                        hijo2MasMenores: 78392
+                        adultoConyugue: 478339,
+                        hijo1Menor: 93532,
+                        hijo2MasMenores: 80724
                     }
                 },
                 features: [
@@ -55,29 +96,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 153107,
-                        hijo1Menor: 133562,
-                        hijo2MasMenores: 116172
+                        adultoConyugue: 136401,
+                        hijo1Menor: 119240,
+                        hijo2MasMenores: 103542
                     },
                     "26-35": {
-                        adultoConyugue: 218915,
-                        hijo1Menor: 133562,
-                        hijo2MasMenores: 116172
+                        adultoConyugue: 195188,
+                        hijo1Menor: 119240,
+                        hijo2MasMenores: 103542
                     },
                     "36-54": {
-                        adultoConyugue: 256417,
-                        hijo1Menor: 133562,
-                        hijo2MasMenores: 116172
+                        adultoConyugue: 228584,
+                        hijo1Menor: 119240,
+                        hijo2MasMenores: 103542
                     },
                     "55-59": {
-                        adultoConyugue: 429692,
-                        hijo1Menor: 133562,
-                        hijo2MasMenores: 116172
+                        adultoConyugue: 383140,
+                        hijo1Menor: 119240,
+                        hijo2MasMenores: 103542
                     },
                     "60+": {
-                        adultoConyugue: 639812,
-                        hijo1Menor: 133562,
-                        hijo2MasMenores: 116172
+                        adultoConyugue: 570574,
+                        hijo1Menor: 119240,
+                        hijo2MasMenores: 103542
                     }
                 },
                 features: [
@@ -97,29 +138,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 263260,
-                        hijo1Menor: 230676,
-                        hijo2MasMenores: 201322
+                        adultoConyugue: 234550,
+                        hijo1Menor: 205657,
+                        hijo2MasMenores: 179383
                     },
                     "26-35": {
-                        adultoConyugue: 350675,
-                        hijo1Menor: 230676,
-                        hijo2MasMenores: 201322
+                        adultoConyugue: 312648,
+                        hijo1Menor: 205657,
+                        hijo2MasMenores: 179383
                     },
                     "36-54": {
-                        adultoConyugue: 461545,
-                        hijo1Menor: 230676,
-                        hijo2MasMenores: 201322
+                        adultoConyugue: 411553,
+                        hijo1Menor: 205657,
+                        hijo2MasMenores: 179383
                     },
                     "55-59": {
-                        adultoConyugue: 643311,
-                        hijo1Menor: 230676,
-                        hijo2MasMenores: 201322
+                        adultoConyugue: 573508,
+                        hijo1Menor: 205657,
+                        hijo2MasMenores: 179383
                     },
                     "60+": {
-                        adultoConyugue: 876659,
-                        hijo1Menor: 230676,
-                        hijo2MasMenores: 201322
+                        adultoConyugue: 781761,
+                        hijo1Menor: 205657,
+                        hijo2MasMenores: 179383
                     }
                 },
                 features: [
@@ -141,29 +182,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 78613,
-                        hijo1Menor: 68351,
-                        hijo2MasMenores: 59017
+                        adultoConyugue: 80952,
+                        hijo1Menor: 70384,
+                        hijo2MasMenores: 60773
                     },
                     "26-35": {
-                        adultoConyugue: 112368,
-                        hijo1Menor: 68351,
-                        hijo2MasMenores: 59017
+                        adultoConyugue: 115712,
+                        hijo1Menor: 70384,
+                        hijo2MasMenores: 60773
                     },
                     "36-54": {
-                        adultoConyugue: 132792,
-                        hijo1Menor: 68351,
-                        hijo2MasMenores: 59017
+                        adultoConyugue: 136743,
+                        hijo1Menor: 70384,
+                        hijo2MasMenores: 60773
                     },
                     "55-59": {
-                        adultoConyugue: 224979,
-                        hijo1Menor: 68351,
-                        hijo2MasMenores: 59017
+                        adultoConyugue: 231672,
+                        hijo1Menor: 70384,
+                        hijo2MasMenores: 60773
                     },
                     "60+": {
-                        adultoConyugue: 349541,
-                        hijo1Menor: 68351,
-                        hijo2MasMenores: 59017
+                        adultoConyugue: 359940,
+                        hijo1Menor: 70384,
+                        hijo2MasMenores: 60773
                     }
                 },
                 features: [
@@ -188,8 +229,8 @@ const prestadoresData = {
                 name: "PLAN PO62",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 219446,  // Capita menor o igual a 65 años
-                    ">65": 636635   // Capita mayor a 65 años
+                    "≤65": 238263,  // Capita menor o igual a 65 años
+                    ">65": 692337   // Capita mayor a 65 años
                 },
                 features: [
                     "Cobertura integral SWISS MEDICAL",
@@ -206,8 +247,8 @@ const prestadoresData = {
                 name: "PLAN PO64",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 262878,
-                    ">65": 762357
+                    "≤65": 285705,
+                    ">65": 829031
                 },
                 features: [
                     "Cobertura premium SWISS MEDICAL",
@@ -221,54 +262,70 @@ const prestadoresData = {
                 ],
                 recommended: true
             },
-            sbo4: {
-                name: "PLAN SBO4",
+            sb04: {
+                name: "PLAN SB04",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 172328,
-                    ">65": 471251
+                    "≤65": 187902,
+                    ">65": 513838
                 },
                 features: [
                     "Cobertura básica SWISS MEDICAL",
-                    "Red de prestadores SBO4",
+                    "Red de prestadores SB04",
                     "Consultas médicas",
                     "Emergencias 24hs",
                     "Estudios básicos",
                     "Ideal para familias jóvenes"
                 ],
                 recommended: false
-            },
-            sb02: {
-                name: "PLAN SB02",
-                type: "swiss_medical",
-                preciosPorEdad: {
-                    "≤65": 168847,
-                    ">65": 571925
-                },
-                features: [
-                    "Cobertura estándar SWISS MEDICAL",
-                    "Red de prestadores SB02",
-                    "Consultas médicas",
-                    "Internación",
-                    "Emergencias 24hs",
-                    "Estudios diagnósticos"
-                ],
-                recommended: false
-            },
+            }
+        }
+    },
+    
+    swNubial: {
+        name: "SW NUBIAL",
+        tipoEstructura: "plantilla_adultos_simple", // Solo 2 grupos etarios, todos como adultos
+        planes: {
             ms: {
                 name: "PLAN MS",
-                type: "swiss_medical",
+                type: "sw_nubial",
                 preciosPorEdad: {
-                    "≤65": 145256,
-                    ">65": 435756
+                    "≤65": 157721,   // Menor de 66 años
+                    ">65": 448071    // Mayor de 65 años
                 },
                 features: [
-                    "Plan económico SWISS MEDICAL",
-                    "Red de prestadores MS",
+                    "Plan SW NUBIAL exclusivo",
+                    "Solo Capital Federal y GBA",
                     "Cobertura básica integral",
                     "Emergencias 24hs",
                     "Consultas médicas",
-                    "Ideal para presupuestos ajustados"
+                    "Red específica SW NUBIAL",
+                    "Plan económico para CABA/GBA"
+                ],
+                recommended: false
+            }
+        }
+    },
+    
+    swiss: {
+        name: "SWISS",
+        tipoEstructura: "plantilla_adultos_simple", // Solo 2 grupos etarios, todos como adultos
+        planes: {
+            sb02: {
+                name: "PLAN SB02",
+                type: "swiss",
+                preciosPorEdad: {
+                    "≤65": 183331,   // Por Cápita
+                    ">65": 622048    // Mayor de 65 años
+                },
+                features: [
+                    "Plan SWISS básico",
+                    "Cobertura nacional",
+                    "Emergencias 24hs",
+                    "Consultas médicas",
+                    "Estudios diagnósticos",
+                    "Red SWISS",
+                    "Plan económico"
                 ],
                 recommended: false
             }
@@ -277,25 +334,106 @@ const prestadoresData = {
     
     activaSalud: {
         name: "ACTIVA SALUD",
-        tipoEstructura: "plantilla_adultos_simple", // Solo 2 grupos etarios, todos como adultos
+        tipoEstructura: "estructura_compleja", // Precio único por plan
         planes: {
-            as300: {
-                name: "PLAN AS300",
+            as25: {
+                name: "PLAN AS 25",
                 type: "activa_salud",
-                preciosPorEdad: {
-                    "≤65": 73713,   // Menor de 66 años
-                    ">65": 110571   // Mayor de 65 años
-                },
+                precio: 65000,
                 features: [
-                    "Plan integral ACTIVA SALUD",
-                    "Cobertura nacional",
+                    "Plan básico ACTIVA SALUD",
+                    "Consultas médicas básicas",
                     "Emergencias 24hs",
-                    "Consultas médicas",
-                    "Estudios diagnósticos",
+                    "Estudios de laboratorio",
+                    "Red de prestadores ACTIVA",
+                    "Ideal para jóvenes"
+                ],
+                recommended: false
+            },
+            as150: {
+                name: "PLAN AS 150",
+                type: "activa_salud",
+                precio: 145000,
+                features: [
+                    "Plan premium ACTIVA SALUD",
+                    "Consultas médicas ilimitadas",
+                    "Emergencias 24hs",
+                    "Estudios completos",
                     "Internación",
-                    "Plan económico y accesible"
+                    "Cirugías programadas",
+                    "Red amplia de prestadores"
                 ],
                 recommended: true
+            },
+            as200: {
+                name: "PLAN AS 200",
+                type: "activa_salud",
+                precio: 75000,
+                features: [
+                    "Plan intermedio ACTIVA SALUD",
+                    "Consultas médicas",
+                    "Emergencias 24hs",
+                    "Estudios diagnósticos",
+                    "Cobertura estándar",
+                    "Red de prestadores"
+                ],
+                recommended: false
+            },
+            as300: {
+                name: "PLAN AS 300",
+                type: "activa_salud",
+                precio: 75000,
+                features: [
+                    "Plan AS 300 ACTIVA SALUD",
+                    "Cobertura integral",
+                    "Emergencias 24hs",
+                    "Consultas ilimitadas",
+                    "Estudios diagnósticos",
+                    "Internación completa"
+                ],
+                recommended: false
+            },
+            as700: {
+                name: "PLAN AS 700",
+                type: "activa_salud",
+                precio: 85000,
+                features: [
+                    "Plan AS 700 ACTIVA SALUD",
+                    "Cobertura superior",
+                    "Todas las especialidades",
+                    "Cirugías complejas",
+                    "Medicina de alta complejidad",
+                    "Red premium"
+                ],
+                recommended: false
+            },
+            as800: {
+                name: "PLAN AS 800",
+                type: "activa_salud",
+                precio: 111418,
+                features: [
+                    "Plan AS 800 ACTIVA SALUD",
+                    "Máxima cobertura",
+                    "Sin límites",
+                    "Medicina especializada",
+                    "Tratamientos avanzados",
+                    "VIP access"
+                ],
+                recommended: false
+            },
+            as900: {
+                name: "PLAN AS 900",
+                type: "activa_salud",
+                precio: 105000,
+                features: [
+                    "Plan AS 900 ACTIVA SALUD",
+                    "Cobertura total",
+                    "Medicina de vanguardia",
+                    "Acceso preferencial",
+                    "Todas las prestaciones",
+                    "Máximo nivel"
+                ],
+                recommended: false
             }
         }
     },
@@ -309,23 +447,23 @@ const prestadoresData = {
                 type: "medife",
                 precios: {
                     individual: {
-                        "0-29": 90903,
+                        "0-29": 95203,
                         "30-39": 119669,
                         "40-49": 155618,
                         "50-59": 225737,
                         "60+": 245907
                     },
                     matrimonio: {
-                        "0-29": 167499,
-                        "30-39": 211615,
-                        "40-49": 268349,
-                        "50-59": 334384,
-                        "60+": 363795
+                        "0-29": 177777,  // 95203 + 82574
+                        "30-39": 215919,  // 119669 + 96250
+                        "40-49": 269653,  // 155618 + 114035
+                        "50-59": 346384,  // 225737 + 120647
+                        "60+": 365975    // 245907 + 120068
                     },
                     hijos: {
-                        "primerHijo": 71009,     // 1er H (< a 21)
-                        "segundoHijo": 54677,    // 2do H (< a 21)
-                        "hijoAdulto": 90811,     // H AD (21 a 29)
+                        "primerHijo": 77559,     // 1er H (< a 21)
+                        "segundoHijo": 64077,    // 2do H (< a 21)
+                        "hijoAdulto": 95487,     // H AD (21 a 29)
                         "familiarCargo": 245907  // FAMILIAR A CARGO
                     }
                 },
@@ -352,15 +490,15 @@ const prestadoresData = {
                         "60+": 312096
                     },
                     matrimonio: {
-                        "0-29": 214992,
-                        "30-39": 265279,
-                        "40-49": 345498,
-                        "50-59": 421542,
-                        "60+": 461114
+                        "0-29": 214992,  // 114757 + 100235
+                        "30-39": 265279,  // 145272 + 120007
+                        "40-49": 345498,  // 183248 + 162250
+                        "50-59": 453589,  // 287045 + 166544
+                        "60+": 494341    // 312096 + 182245
                     },
                     hijos: {
                         "primerHijo": 97534,
-                        "segundoHijo": 71163,
+                        "segundoHijo": 71288,    // Corregido de 71163 a 71288
                         "hijoAdulto": 115064,
                         "familiarCargo": 312096
                     }
@@ -388,15 +526,15 @@ const prestadoresData = {
                         "60+": 358637
                     },
                     matrimonio: {
-                        "0-29": 245815,
-                        "30-39": 313079,
-                        "40-49": 401495,
-                        "50-59": 487424,
-                        "60+": 530772
+                        "0-29": 247139,  // 130414 + 116725
+                        "30-39": 311868,  // 167868 + 144000
+                        "40-49": 399538,  // 211891 + 187647
+                        "50-59": 484806,  // 329350 + 155456
+                        "60+": 526360    // 358637 + 167723
                     },
                     hijos: {
-                        "primerHijo": 110704,
-                        "segundoHijo": 86727,
+                        "primerHijo": 112704,
+                        "segundoHijo": 91127,
                         "hijoAdulto": 130414,
                         "familiarCargo": 358637
                     }
@@ -448,6 +586,24 @@ function determinarGrupoEtarioSwiss(edad) {
  * @returns {string} - Grupo etario correspondiente
  */
 function determinarGrupoEtarioActiva(edad) {
+    return edad <= 65 ? "≤65" : ">65";
+}
+
+/**
+ * Determina el grupo etario para SW NUBIAL (igual que SWISS MEDICAL)
+ * @param {number} edad - Edad de la persona
+ * @returns {string} - Grupo etario correspondiente
+ */
+function determinarGrupoEtarioSwNubial(edad) {
+    return edad <= 65 ? "≤65" : ">65";
+}
+
+/**
+ * Determina el grupo etario para SWISS básico (igual que SWISS MEDICAL)
+ * @param {number} edad - Edad de la persona
+ * @returns {string} - Grupo etario correspondiente
+ */
+function determinarGrupoEtarioSwissBasico(edad) {
     return edad <= 65 ? "≤65" : ">65";
 }
 
@@ -621,6 +777,102 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
 }
 
 /**
+ * Calcula el precio final para SW NUBIAL - TODOS como adultos (similar a SWISS MEDICAL)
+ * @param {object} planSwNubial - Plan SW NUBIAL con precios por edad
+ * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioFinalSwNubial(planSwNubial, composicionFamiliar, edadTitular, edadPareja = null) {
+    let precioTotal = 0;
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioSwNubial(edadTitular);
+    const precioBaseTitular = planSwNubial.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular (siempre presente)
+    precioTotal += precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento, precio completo
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioSwNubial(edadPareja);
+        const precioBasePareja = planSwNubial.preciosPorEdad[grupoEtarioPareja];
+        precioTotal += precioBasePareja * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+    }
+    
+    // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        composicionFamiliar.menores.forEach(edadMenor => {
+            const grupoEtarioMenor = determinarGrupoEtarioSwNubial(edadMenor);
+            const precioBaseMenor = planSwNubial.preciosPorEdad[grupoEtarioMenor];
+            precioTotal += precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto - NO 50%
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (se cobran como adultos - precio completo)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach(edadHijo => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioSwNubial(edadHijo);
+                const precioBaseHijo = planSwNubial.preciosPorEdad[grupoEtarioHijo];
+                precioTotal += precioBaseHijo * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+            }
+        });
+    }
+    
+    return Math.round(precioTotal);
+}
+
+/**
+ * Calcula el precio final para SWISS básico - TODOS como adultos (similar a SWISS MEDICAL)
+ * @param {object} planSwissBasico - Plan SWISS básico con precios por edad
+ * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioFinalSwissBasico(planSwissBasico, composicionFamiliar, edadTitular, edadPareja = null) {
+    let precioTotal = 0;
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioSwissBasico(edadTitular);
+    const precioBaseTitular = planSwissBasico.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular (siempre presente)
+    precioTotal += precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento, precio completo
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioSwissBasico(edadPareja);
+        const precioBasePareja = planSwissBasico.preciosPorEdad[grupoEtarioPareja];
+        precioTotal += precioBasePareja * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+    }
+    
+    // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        composicionFamiliar.menores.forEach(edadMenor => {
+            const grupoEtarioMenor = determinarGrupoEtarioSwissBasico(edadMenor);
+            const precioBaseMenor = planSwissBasico.preciosPorEdad[grupoEtarioMenor];
+            precioTotal += precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto - NO 50%
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (se cobran como adultos - precio completo)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach(edadHijo => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioSwissBasico(edadHijo);
+                const precioBaseHijo = planSwissBasico.preciosPorEdad[grupoEtarioHijo];
+                precioTotal += precioBaseHijo * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
+            }
+        });
+    }
+    
+    return Math.round(precioTotal);
+}
+
+/**
  * Calcula el precio final para MEDIFE - Estructura específica con Individual/Matrimonio e hijos diferenciados
  * @param {object} planMedife - Plan MEDIFE con estructura específica
  * @param {object} composicionFamiliar - Objeto con la composición familiar
@@ -702,8 +954,15 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
             return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
         case "plantilla_adultos_simple":
-            // ACTIVA SALUD: estructura simple como adultos, solo 2 grupos etarios
-            return calcularPrecioFinalActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+            // ACTIVA SALUD, SW NUBIAL, SWISS: estructura simple como adultos, solo 2 grupos etarios
+            if (prestadorKey === 'swNubial') {
+                return calcularPrecioFinalSwNubial(plan, composicionFamiliar, edadTitular, edadPareja);
+            } else if (prestadorKey === 'swiss') {
+                return calcularPrecioFinalSwissBasico(plan, composicionFamiliar, edadTitular, edadPareja);
+            } else {
+                // ACTIVA SALUD y otros
+                return calcularPrecioFinalActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+            }
         
         case "estructura_matrimonio_hijos":
             // MEDIFE: estructura específica con precios Individual/Matrimonio e hijos diferenciados
@@ -718,6 +977,7 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
             console.warn('Plantilla con descuentos detectada - implementar cuando sea necesario');
             return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
+        case "estructura_compleja":
         default: // OMINT u otros con estructura compleja (precios específicos por rol)
             return calcularPrecioFinalOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
     }
@@ -1078,6 +1338,180 @@ function generarDesglosePrecioActiva(planActiva, composicionFamiliar, edadTitula
 }
 
 /**
+ * Genera un desglose detallado del precio para planes SW NUBIAL (TODOS como adultos)
+ * @param {object} planSwNubial - Plan SW NUBIAL con precios por edad
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesglosePrecioSwNubial(planSwNubial, composicionFamiliar, edadTitular, edadPareja = null) {
+    const desglose = {
+        items: [],
+        total: 0
+    };
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioSwNubial(edadTitular);
+    const precioBaseTitular = planSwNubial.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular
+    const precioTitular = precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    desglose.items.push({
+        concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
+        cantidad: 1,
+        precioUnitario: precioTitular,
+        subtotal: precioTitular,
+        porcentaje: "100%"
+    });
+    desglose.total += precioTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioSwNubial(edadPareja);
+        const precioBasePareja = planSwNubial.preciosPorEdad[grupoEtarioPareja];
+        const precioPareja = precioBasePareja * plantillaSinDescuentos.segundaCapita;
+        
+        desglose.items.push({
+            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
+            cantidad: 1,
+            precioUnitario: precioPareja,
+            subtotal: precioPareja,
+            porcentaje: "100%" // SIN descuento
+        });
+        desglose.total += precioPareja;
+    }
+    
+    // 3. TODOS LOS HIJOS se cobran como ADULTOS (100%)
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        composicionFamiliar.menores.forEach((edadMenor, index) => {
+            const grupoEtarioMenor = determinarGrupoEtarioSwNubial(edadMenor);
+            const precioBaseMenor = planSwNubial.preciosPorEdad[grupoEtarioMenor];
+            const precioMenor = precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto
+            
+            desglose.items.push({
+                concepto: `Hijo ${index + 1} (${edadMenor} años - ${grupoEtarioMenor})`,
+                cantidad: 1,
+                precioUnitario: precioMenor,
+                subtotal: precioMenor,
+                porcentaje: "100%" // SW NUBIAL: hijos como adultos
+            });
+            desglose.total += precioMenor;
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (precio completo, sin descuento)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioSwNubial(edadHijo);
+                const precioBaseHijo = planSwNubial.preciosPorEdad[grupoEtarioHijo];
+                const precioHijoMayor = precioBaseHijo * plantillaSinDescuentos.segundaCapita;
+                
+                desglose.items.push({
+                    concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
+                    cantidad: 1,
+                    precioUnitario: precioHijoMayor,
+                    subtotal: precioHijoMayor,
+                    porcentaje: "100%" // SIN descuento
+                });
+                desglose.total += precioHijoMayor;
+            }
+        });
+    }
+    
+    desglose.total = Math.round(desglose.total);
+    return desglose;
+}
+
+/**
+ * Genera un desglose detallado del precio para planes SWISS básico (TODOS como adultos)
+ * @param {object} planSwissBasico - Plan SWISS básico con precios por edad
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesglosePrecioSwissBasico(planSwissBasico, composicionFamiliar, edadTitular, edadPareja = null) {
+    const desglose = {
+        items: [],
+        total: 0
+    };
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioSwissBasico(edadTitular);
+    const precioBaseTitular = planSwissBasico.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular
+    const precioTitular = precioBaseTitular * plantillaSinDescuentos.capitaTitular;
+    desglose.items.push({
+        concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
+        cantidad: 1,
+        precioUnitario: precioTitular,
+        subtotal: precioTitular,
+        porcentaje: "100%"
+    });
+    desglose.total += precioTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge) - SIN descuento
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioSwissBasico(edadPareja);
+        const precioBasePareja = planSwissBasico.preciosPorEdad[grupoEtarioPareja];
+        const precioPareja = precioBasePareja * plantillaSinDescuentos.segundaCapita;
+        
+        desglose.items.push({
+            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
+            cantidad: 1,
+            precioUnitario: precioPareja,
+            subtotal: precioPareja,
+            porcentaje: "100%" // SIN descuento
+        });
+        desglose.total += precioPareja;
+    }
+    
+    // 3. TODOS LOS HIJOS se cobran como ADULTOS (100%)
+    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
+        composicionFamiliar.menores.forEach((edadMenor, index) => {
+            const grupoEtarioMenor = determinarGrupoEtarioSwissBasico(edadMenor);
+            const precioBaseMenor = planSwissBasico.preciosPorEdad[grupoEtarioMenor];
+            const precioMenor = precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto
+            
+            desglose.items.push({
+                concepto: `Hijo ${index + 1} (${edadMenor} años - ${grupoEtarioMenor})`,
+                cantidad: 1,
+                precioUnitario: precioMenor,
+                subtotal: precioMenor,
+                porcentaje: "100%" // SWISS: hijos como adultos
+            });
+            desglose.total += precioMenor;
+        });
+    }
+    
+    // 4. Hijos mayores de 21 años (precio completo, sin descuento)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
+            if (edadHijo >= 21) {
+                const grupoEtarioHijo = determinarGrupoEtarioSwissBasico(edadHijo);
+                const precioBaseHijo = planSwissBasico.preciosPorEdad[grupoEtarioHijo];
+                const precioHijoMayor = precioBaseHijo * plantillaSinDescuentos.segundaCapita;
+                
+                desglose.items.push({
+                    concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
+                    cantidad: 1,
+                    precioUnitario: precioHijoMayor,
+                    subtotal: precioHijoMayor,
+                    porcentaje: "100%" // SIN descuento
+                });
+                desglose.total += precioHijoMayor;
+            }
+        });
+    }
+    
+    desglose.total = Math.round(desglose.total);
+    return desglose;
+}
+
+/**
  * Genera un desglose detallado del precio para planes MEDIFE (Individual/Matrimonio + hijos específicos)
  * @param {object} planMedife - Plan MEDIFE con estructura específica
  * @param {object} composicionFamiliar - Composición familiar
@@ -1206,8 +1640,15 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
             return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
         case "plantilla_adultos_simple":
-            // ACTIVA SALUD: estructura simple como adultos, solo 2 grupos etarios
-            return generarDesglosePrecioActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+            // ACTIVA SALUD, SW NUBIAL, SWISS: estructura simple como adultos, solo 2 grupos etarios
+            if (prestadorKey === 'swNubial') {
+                return generarDesglosePrecioSwNubial(plan, composicionFamiliar, edadTitular, edadPareja);
+            } else if (prestadorKey === 'swiss') {
+                return generarDesglosePrecioSwissBasico(plan, composicionFamiliar, edadTitular, edadPareja);
+            } else {
+                // ACTIVA SALUD y otros
+                return generarDesglosePrecioActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+            }
         
         case "estructura_matrimonio_hijos":
             // MEDIFE: estructura específica con precios Individual/Matrimonio e hijos diferenciados
@@ -1222,6 +1663,7 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
             console.warn('Desglose con descuentos detectado - implementar cuando sea necesario');
             return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
         
+        case "estructura_compleja":
         default: // OMINT u otros con estructura compleja (precios específicos por rol)
             return generarDesglosePrecioOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
     }
@@ -2361,10 +2803,59 @@ function showPlans() {
         });
     });
     
-    // Ordenar planes: primero los recomendados, luego por precio
+    // ===== NUEVA LÓGICA: Analizar precios para determinar badges inteligentes =====
+    if (planesCalculados.length > 0) {
+        const preciosOrdenados = planesCalculados.map(p => p.price).sort((a, b) => a - b);
+        const precioMinimo = preciosOrdenados[0];
+        
+        // Mejor precio: el más económico
+        const planMasEconomico = planesCalculados.find(p => p.price === precioMinimo);
+        if (planMasEconomico) {
+            planMasEconomico.isBestPrice = true;
+            console.log('🏆 Plan más económico:', planMasEconomico.prestador, planMasEconomico.name, '$' + planMasEconomico.price.toLocaleString());
+        }
+        
+        // Mejor valor: buen precio + prestador reconocido o segundo más económico
+        if (planesCalculados.length > 1) {
+            // Buscar OMINT o SWISS MEDICAL en el tercio inferior de precios
+            const tercioInferior = preciosOrdenados.slice(0, Math.ceil(preciosOrdenados.length / 3));
+            const planMejorValor = planesCalculados.find(p => 
+                tercioInferior.includes(p.price) && 
+                (p.prestador === 'OMINT' || p.prestador === 'SWISS MEDICAL') &&
+                !p.isBestPrice
+            );
+            
+            if (planMejorValor) {
+                planMejorValor.isBestValue = true;
+                console.log('💎 Mejor valor (prestador reconocido económico):', planMejorValor.prestador, planMejorValor.name, '$' + planMejorValor.price.toLocaleString());
+            } else {
+                // Si no hay prestadores reconocidos económicos, marcar el segundo más barato
+                const segundoMasEconomico = planesCalculados.find(p => 
+                    p.price === preciosOrdenados[1] && !p.isBestPrice
+                );
+                if (segundoMasEconomico) {
+                    segundoMasEconomico.isBestValue = true;
+                    console.log('💎 Mejor valor (segundo más económico):', segundoMasEconomico.prestador, segundoMasEconomico.name, '$' + segundoMasEconomico.price.toLocaleString());
+                }
+            }
+        }
+    }
+
+    // Ordenar planes: recomendados primero, luego mejor precio, luego mejor valor, luego por precio
     planesCalculados.sort((a, b) => {
+        // Primero recomendados
         if (a.recommended && !b.recommended) return -1;
         if (!a.recommended && b.recommended) return 1;
+        
+        // Segundo mejor precio
+        if (a.isBestPrice && !b.isBestPrice) return -1;
+        if (!a.isBestPrice && b.isBestPrice) return 1;
+        
+        // Tercero mejor valor
+        if (a.isBestValue && !b.isBestValue) return -1;
+        if (!a.isBestValue && b.isBestValue) return 1;
+        
+        // Finalmente por precio
         return a.price - b.price;
     });
     
@@ -2403,16 +2894,28 @@ function generatePlanCard(plan) {
     const recommendedClass = plan.recommended ? 'recommended' : '';
     const features = plan.features.map(feature => '<li>' + feature + '</li>').join('');
     
-    // ===== NUEVO: Determinar color e icono del prestador =====
+    // ===== NUEVO: Determinar logo y color del prestador =====
     let prestadorColor = '#718096'; // Color por defecto
-    let prestadorIcon = 'fas fa-hospital';
+    let prestadorLogo = '';
     
     if (plan.prestador === 'OMINT') {
         prestadorColor = '#3182ce'; // Azul
-        prestadorIcon = 'fas fa-heartbeat';
+        prestadorLogo = 'logosEmpresas/omint.png';
     } else if (plan.prestador === 'SWISS MEDICAL') {
         prestadorColor = '#d53f8c'; // Rosa/fucsia
-        prestadorIcon = 'fas fa-plus-circle';
+        prestadorLogo = 'logosEmpresas/swissmedical.png';
+    } else if (plan.prestador === 'SW NUBIAL') {
+        prestadorColor = '#7c2d12'; // Marrón
+        prestadorLogo = 'logosEmpresas/swissmedical.png'; // Usar mismo logo por ahora
+    } else if (plan.prestador === 'SWISS') {
+        prestadorColor = '#475569'; // Gris azulado
+        prestadorLogo = 'logosEmpresas/swissmedical.png'; // Usar mismo logo por ahora
+    } else if (plan.prestador === 'ACTIVA SALUD') {
+        prestadorColor = '#059669'; // Verde
+        prestadorLogo = 'logosEmpresas/activasalud.png';
+    } else if (plan.prestador === 'MEDIFE') {
+        prestadorColor = '#dc2626'; // Rojo
+        prestadorLogo = 'logosEmpresas/medife.png';
     }
     
     // ===== NUEVO: Generar desglose de precio mejorado =====
@@ -2441,21 +2944,32 @@ function generatePlanCard(plan) {
             '</div>';
     }
     
-    // Badge para composición familiar
-    const composicionBadge = plan.composicion ? 
-        '<div class="family-composition-badge">' + plan.composicion.resumen + '</div>' : '';
+    // ===== BADGES ÚNICAMENTE IMPORTANTES =====
+    let badgesHTML = '';
     
-    // Badge de recomendado
-    const recommendedBadge = plan.recommended ? 
-        '<div class="recommended-badge"><i class="fas fa-star"></i> Recomendado</div>' : '';
+    // Solo badges que realmente aportan valor
+    if (plan.isBestPrice) {
+        badgesHTML += '<div class="best-price-badge"><i class="fas fa-dollar-sign"></i> Mejor Precio</div>';
+    }
+    
+    if (plan.isBestValue) {
+        badgesHTML += '<div class="best-value-badge"><i class="fas fa-trophy"></i> Mejor Valor</div>';
+    }
+    
+    if (plan.recommended) {
+        badgesHTML += '<div class="recommended-badge"><i class="fas fa-star"></i> Recomendado</div>';
+    }
     
     return '<div class="plan-card ' + recommendedClass + '">' +
-        recommendedBadge +
-        composicionBadge +
+        badgesHTML +
         '<div class="plan-header">' +
-            '<div class="plan-provider-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
-                '<i class="' + prestadorIcon + '" style="color: ' + prestadorColor + ';"></i>' +
-                '<span style="color: ' + prestadorColor + '; font-weight: 600; font-size: 0.9em;">' + (plan.prestador || '') + '</span>' +
+            '<div class="provider-section">' +
+                '<div class="provider-logo">' +
+                    '<img src="' + prestadorLogo + '" alt="' + plan.prestador + '" class="prestador-logo" />' +
+                '</div>' +
+                '<div class="provider-info">' +
+                    '<span class="provider-name">' + (plan.prestador || '') + '</span>' +
+                '</div>' +
             '</div>' +
             '<div class="plan-name">' + plan.name + '</div>' +
         '</div>' +

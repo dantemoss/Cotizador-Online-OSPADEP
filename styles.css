@@ -565,30 +565,12 @@ h2 i {
 }
 
 .plan-card.recommended {
-    border-color: #1053F3;
-    background: rgba(16, 83, 243, 0.02);
-    box-shadow: 0 4px 20px rgba(16, 83, 243, 0.08);
+    border: 2px solid #10b981;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+    position: relative;
 }
 
-.plan-card.recommended::before {
-    content: 'RECOMENDADO';
-    position: absolute;
-    top: 20px;
-    right: -38px;
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    padding: 8px 42px;
-    font-size: 0.65rem;
-    font-weight: 600;
-    transform: rotate(45deg);
-    transform-origin: center center;
-    font-family: 'DM Sans', sans-serif;
-    letter-spacing: 0.3px;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-    z-index: 1;
-    text-align: center;
-    white-space: nowrap;
-}
+/* Eliminado: sistema anterior de tira diagonal */
 
 .plan-card:hover {
     transform: translateY(-2px);
@@ -2522,5 +2504,325 @@ h2 i {
     
     .modal-body {
         padding: 0 20px 20px 20px;
+    }
+}
+
+/* ===== ESTILOS PARA NUEVA LÓGICA DE COTIZACIÓN ===== */
+
+/* Estilos para el desglose de precios */
+.price-breakdown {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    border: 1px solid #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.breakdown-title {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.breakdown-items {
+    margin-bottom: 12px;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.breakdown-item:last-child {
+    border-bottom: none;
+}
+
+.breakdown-concept {
+    font-weight: 500;
+    color: #475569;
+}
+
+.breakdown-detail {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.85rem;
+}
+
+.breakdown-total {
+    font-weight: 700;
+    color: #1053F3;
+    font-size: 1rem;
+    text-align: center;
+    padding-top: 8px;
+    border-top: 2px solid #cbd5e1;
+}
+
+/* Eliminado: badge de composición familiar redundante */
+
+/* Badge de recomendado mejorado */
+.recommended-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: fadeInScale 0.5s ease-out;
+}
+
+.recommended-badge i {
+    font-size: 0.7rem;
+    color: #fbbf24;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Animación para el badge */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Badge de mejor precio */
+.best-price-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: fadeInScale 0.5s ease-out 0.2s both;
+}
+
+.best-price-badge i {
+    font-size: 0.7rem;
+    color: #fbbf24;
+}
+
+/* Badge de mejor valor */
+.best-value-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: fadeInScale 0.5s ease-out 0.1s both;
+}
+
+.best-value-badge i {
+    font-size: 0.7rem;
+    color: #fbbf24;
+}
+
+/* El plan-card ya tiene sus estilos definidos anteriormente, 
+   solo ajustamos el padding-top para acomodar badges */
+.plan-card {
+    padding-top: 50px !important; /* Más espacio arriba para los badges */
+}
+
+/* Responsive para badges */
+@media (max-width: 768px) {
+    .recommended-badge,
+    .best-price-badge,
+    .best-value-badge {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+        top: 8px;
+    }
+    
+    .recommended-badge {
+        right: 8px;
+    }
+    
+    .best-price-badge,
+    .best-value-badge {
+        left: 8px;
+    }
+    
+    .plan-card {
+        padding-top: 45px;
+    }
+}
+
+/* Mensaje de no planes disponibles */
+.no-plans-message {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border-radius: 16px;
+    border: 2px dashed #fca5a5;
+    color: #991b1b;
+}
+
+.no-plans-message h3 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+    color: #dc2626;
+}
+
+.no-plans-message p {
+    font-size: 1rem;
+    color: #7f1d1d;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* ===== MEJORAS PARA SISTEMA MULTI-PRESTADOR ===== */
+
+/* Estilos mejorados para desglose de precios */
+.breakdown-amount {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.breakdown-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 2px solid #cbd5e1;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* ===== NUEVA CABECERA LIMPIA CON LOGOS ===== */
+.provider-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 8px 0;
+}
+
+.provider-logo {
+    flex-shrink: 0;
+}
+
+.prestador-logo {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.provider-info {
+    flex-grow: 1;
+}
+
+.provider-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #334155;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+/* Bordes distintivos por prestador */
+.plan-card {
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+/* Colores específicos por prestador (aplicados mediante JavaScript) */
+.prestador-omint {
+    border-left-color: #3182ce !important;
+}
+
+.prestador-swiss {
+    border-left-color: #d53f8c !important;
+}
+
+.prestador-swnubial {
+    border-left-color: #7c2d12 !important;
+}
+
+.prestador-swissbasico {
+    border-left-color: #475569 !important;
+}
+
+.prestador-activa {
+    border-left-color: #059669 !important;
+}
+
+.prestador-medife {
+    border-left-color: #dc2626 !important;
+}
+
+/* Hover effects mejorados para múltiples prestadores */
+.plan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-left-width: 6px;
+}
+
+/* Badges de prestador responsivos */
+@media (max-width: 768px) {
+    /* Logos responsivos */
+    .provider-section {
+        gap: 8px;
+        margin-bottom: 8px;
+        padding: 6px 0;
+    }
+    
+    .prestador-logo {
+        width: 35px;
+        height: 35px;
+        padding: 3px;
+    }
+    
+    .provider-name {
+        font-size: 0.85rem;
+    }
+    
+    /* Badges más pequeños en móvil */
+    .plan-card {
+        padding-top: 45px;
     }
 } 
