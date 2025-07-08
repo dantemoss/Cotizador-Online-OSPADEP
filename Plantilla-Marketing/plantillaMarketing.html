@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización OSPADEP</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            /* Colores oficiales OSPADEP según manual */
+            --dominant: #1DB9A0;     /* 60% - Color dominante */
+            --secondary: #00A3C8;    /* 30% - Color secundario */
+            --accent: #1A408C;       /* 10% - Acentos */
+            --detail: #0B3D91;       /* Detalles */
+            
+            /* Colores complementarios */
+            --bg-light: #F8FAFB;
+            --text-dark: #2E3A46;
+            --text-muted: #69707A;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            
+            /* Espaciado y efectos */
+            --border-radius: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 2px 8px rgba(27, 185, 160, 0.08);
+            --shadow-md: 0 4px 16px rgba(27, 185, 160, 0.12);
+            --shadow-lg: 0 8px 32px rgba(27, 185, 160, 0.16);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Header con identidad OSPADEP */
+        .header {
+            background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 70%, var(--accent) 100%);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+            max-width: 75%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-img {
+            width: auto;
+            height: 160px;
+            object-fit: contain;
+            margin-top: -5px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+        }
+
+        .header-text {
+            text-align: right;
+            line-height: 1.4;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-text h1 {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text .meta {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Sección de resumen con colores OSPADEP */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: var(--secondary);
+            position: relative;
+        }
+
+        .summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dominant), var(--accent));
+        }
+
+        .meta-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--border-light);
+        }
+
+        .meta-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--dominant);
+        }
+
+        .meta-icon {
+            font-size: 28px;
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .meta-label {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--detail);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Secciones */
+        .section {
+            padding: 40px 30px;
+        }
+
+        .section-title {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 30px;
+            position: relative;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dominant), var(--secondary));
+            border-radius: 2px;
+        }
+
+        /* Planes OSPADEP */
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .plan {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border: 2px solid transparent;
+        }
+
+        .plan:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--dominant);
+        }
+
+        .plan-header {
+            background: var(--accent);
+            color: #fff;
+            text-align: center;
+            padding: 16px;
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-price {
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--detail);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0 24px;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            margin: 12px 0;
+            font-size: 14px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li i {
+            color: var(--dominant);
+            margin-right: 12px;
+            width: 16px;
+        }
+
+        .plan-footer {
+            background: var(--secondary);
+            color: #fff;
+            text-align: center;
+            padding: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Tabla comparativa mejorada */
+        .comparison-section {
+            padding: 50px 30px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .comparison-intro {
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .comparison-intro p {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            min-width: 700px;
+        }
+
+        .comparison-table th {
+            background: var(--accent);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-table th:first-child {
+            text-align: left;
+            background: var(--detail);
+        }
+
+        .comparison-table th.ospadep-header {
+            background: var(--dominant);
+            position: relative;
+        }
+
+        .comparison-table th.ospadep-header::before {
+            content: '⭐';
+            position: absolute;
+            top: -8px;
+            right: 8px;
+            font-size: 16px;
+        }
+
+        .comparison-table td {
+            padding: 16px 15px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(26, 64, 140, 0.02);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(29, 185, 160, 0.03);
+        }
+
+        .comparison-table .ospadep-cell {
+            background: rgba(29, 185, 160, 0.08);
+            font-weight: 600;
+            color: var(--detail);
+            border-left: 3px solid var(--dominant);
+        }
+
+        .check-icon {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .star-icon {
+            color: var(--dominant);
+            font-weight: bold;
+        }
+
+        .info-icon {
+            font-size: 14px;
+        }
+
+        /* Beneficios únicos */
+        .benefits-section {
+            padding: 50px 30px;
+            background: var(--card-bg);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .benefit-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dominant), var(--secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--dominant);
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--dominant), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: white;
+            font-size: 24px;
+            transition: var(--transition);
+        }
+
+        .benefit-card:hover .benefit-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .benefit-title {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .benefit-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Contacto */
+        .contact-section {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--detail) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .contact-section .section-title {
+            color: white;
+        }
+
+        .contact-section .section-title::after {
+            background: linear-gradient(90deg, var(--dominant), var(--secondary));
+        }
+
+        .contact-info {
+            font-size: 16px;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-info strong {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--detail);
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .section {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .comparison-table {
+                font-size: 12px;
+                min-width: 600px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 12px 8px;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .plan, .benefit-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .plan:nth-child(1) { animation-delay: 0.1s; }
+        .plan:nth-child(2) { animation-delay: 0.2s; }
+        .plan:nth-child(3) { animation-delay: 0.3s; }
+
+        .benefit-card:nth-child(1) { animation-delay: 0.1s; }
+        .benefit-card:nth-child(2) { animation-delay: 0.2s; }
+        .benefit-card:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="https://i.ibb.co/5XVr8K2M/Logo-OSPADEP.png" alt="Logo OSPADEP" class="logo-img">
+            </div>
+            <div class="header-text">
+                <h1>Cotización OSP-2025-001</h1>
+                <div class="meta">02/07/2025 &nbsp;|&nbsp; Vigencia: 72 hs hábiles</div>
+            </div>
+        </div>
+
+        <!-- Resumen -->
+        <div class="summary">
+            <div class="meta-card">
+                <i class="meta-icon fa-solid fa-user-doctor"></i>
+                <div class="meta-label">Beneficiario</div>
+                <div class="meta-value">Individual</div>
+            </div>
+            <div class="meta-card">
+                <i class="meta-icon fa-solid fa-birthday-cake"></i>
+                <div class="meta-label">Edad</div>
+                <div class="meta-value">18 – 29 años</div>
+            </div>
+            <div class="meta-card">
+                <i class="meta-icon fa-solid fa-file-medical"></i>
+                <div class="meta-label">Afiliación</div>
+                <div class="meta-value">Adherente</div>
+            </div>
+            <div class="meta-card">
+                <i class="meta-icon fa-solid fa-hospital"></i>
+                <div class="meta-label">Cobertura</div>
+                <div class="meta-value">CABA y GBA</div>
+            </div>
+        </div>
+
+        <!-- Planes OSPADEP -->
+        <div class="section">
+            <div class="section-title">Planes OSPADEP Disponibles</div>
+            <div class="plans">
+                <div class="plan">
+                    <div class="plan-header">Plan 200</div>
+                    <div class="plan-price">$85.510</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Cobertura CABA y GBA</li>
+                        <li><i class="fas fa-check"></i> Videoconsultas 24/7</li>
+                        <li><i class="fas fa-check"></i> Red de centros propios</li>
+                        <li><i class="fas fa-check"></i> App móvil incluida</li>
+                        <li><i class="fas fa-check"></i> Sin coseguros</li>
+                    </ul>
+                    <div class="plan-footer">Ideal para jóvenes profesionales</div>
+                </div>
+                <div class="plan">
+                    <div class="plan-header">Plan 300</div>
+                    <div class="plan-price">$0</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Cubierto por aportes</li>
+                        <li><i class="fas fa-check"></i> Cobertura completa</li>
+                        <li><i class="fas fa-check"></i> Sin coseguros</li>
+                        <li><i class="fas fa-check"></i> Atención premium</li>
+                        <li><i class="fas fa-check"></i> Red de excelencia</li>
+                    </ul>
+                    <div class="plan-footer">¡Recomendado!</div>
+                </div>
+                <div class="plan">
+                    <div class="plan-header">Plan 400</div>
+                    <div class="plan-price">$58.536</div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Descuento 15%</li>
+                        <li><i class="fas fa-check"></i> Cobertura extendida</li>
+                        <li><i class="fas fa-check"></i> Beneficios adicionales</li>
+                        <li><i class="fas fa-check"></i> Promoción vigente</li>
+                        <li><i class="fas fa-check"></i> Máxima cobertura</li>
+                    </ul>
+                    <div class="plan-footer">Máxima cobertura</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla Comparativa de Servicios -->
+        <div class="comparison-section">
+            <div class="section-title">Comparativa de Servicios</div>
+            <div class="comparison-intro">
+                <p>Comparación detallada de servicios para ayudarle a identificar las características que mejor se adapten a sus necesidades específicas.</p>
+            </div>
+            
+            <div style="overflow-x: auto; margin-top: 30px;">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="min-width: 200px;">Servicio / Beneficio</th>
+                            <th class="ospadep-header" style="min-width: 150px;">
+                                OSPADEP
+                            </th>
+                            <th style="min-width: 130px;">Swiss Medical</th>
+                            <th style="min-width: 130px;">Medifé</th>
+                            <th style="min-width: 130px;">OMINT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Videoconsultas Médicas</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">⭐</span> 24/7 Sin límites
+                            </td>
+                            <td><span class="check-icon">✓</span> 24/7</td>
+                            <td><span class="check-icon">✓</span> 24/7</td>
+                            <td><span class="check-icon">✓</span> 24/7</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Aplicación Móvil</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">⭐</span> Turnos + Consultas
+                            </td>
+                            <td><span class="check-icon">✓</span> Disponible</td>
+                            <td><span class="check-icon">✓</span> Disponible</td>
+                            <td><span class="check-icon">✓</span> Disponible</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cobertura Geográfica</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">🎯</span> CABA y GBA Especializada
+                            </td>
+                            <td><span class="check-icon">✓</span> Nacional</td>
+                            <td><span class="check-icon">✓</span> Nacional</td>
+                            <td><span class="info-icon">🎯</span> CABA y GBA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Red de Prestadores</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">⭐</span> Alta Complejidad
+                            </td>
+                            <td><span class="check-icon">✓</span> Red Propia</td>
+                            <td><span class="check-icon">✓</span> Red Asociada</td>
+                            <td><span class="check-icon">✓</span> Red Propia</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Coseguros</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">⭐</span> SIN COSEGUROS
+                            </td>
+                            <td><span class="info-icon">ℹ️</span> Según plan</td>
+                            <td><span class="info-icon">ℹ️</span> Según plan</td>
+                            <td><span class="info-icon">ℹ️</span> Según plan</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Atención Personalizada</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">⭐</span> Servicio Cercano
+                            </td>
+                            <td><span class="info-icon">🏢</span> Corporativo</td>
+                            <td><span class="info-icon">🏢</span> Masivo</td>
+                            <td><span class="info-icon">🏢</span> Corporativo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Centros de Excelencia</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">⭐</span> Hospital Naval, Sirio Libanés, IMAC
+                            </td>
+                            <td><span class="check-icon">✓</span> Swiss Centers</td>
+                            <td><span class="check-icon">✓</span> Finochietto, CEMIC</td>
+                            <td><span class="check-icon">✓</span> Santa Isabel, Bazterrica</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Relación Precio-Beneficio</strong></td>
+                            <td class="ospadep-cell">
+                                <span class="star-icon">⭐</span> EXCELENTE
+                            </td>
+                            <td><span class="info-icon">💰</span> Premium</td>
+                            <td><span class="info-icon">💰</span> Variable</td>
+                            <td><span class="info-icon">💰</span> Premium</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Beneficios Únicos OSPADEP -->
+        <div class="benefits-section">
+            <div class="section-title">¿Por qué elegir OSPADEP?</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="benefit-title">Atención Personalizada</h3>
+                    <p class="benefit-description">
+                        Servicio cercano y humano, enfocado en las necesidades individuales de cada afiliado con un trato personalizado.
+                    </p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="benefit-title">Sin Coseguros</h3>
+                    <p class="benefit-description">
+                        Cobertura completa sin pagos adicionales en consultas y procedimientos. Tu tranquilidad es nuestra prioridad.
+                    </p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <h3 class="benefit-title">Red de Excelencia</h3>
+                    <p class="benefit-description">
+                        Acceso a instituciones de alta complejidad como Hospital Naval, Sirio Libanés e IMAC con reconocido prestigio médico.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacto -->
+        <div class="contact-section">
+            <div class="section-title">Contacto Comercial</div>
+            <div class="contact-info">
+                <strong>OSPADEP</strong>
+                <strong>Obra Social del Personal de Aeronavegación de Entes Privados</strong>
+                Venezuela 900, CABA<br>
+                Tel (011) 1234-5678 | ventas@ospadep.com.ar<br>
+                www.ospadep.com
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            © 2025 OSPADEP. Todos los derechos reservados.
+        </div>
+    </div>
+
+    <script>
+        // Animaciones al hacer scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observar elementos animados
+            const animatedElements = document.querySelectorAll('.plan, .benefit-card, .meta-card');
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // Efecto hover en tabla
+            const tableRows = document.querySelectorAll('.comparison-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.01)';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

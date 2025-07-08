@@ -339,7 +339,7 @@ const prestadoresData = {
             as25: {
                 name: "PLAN AS 25",
                 type: "activa_salud",
-                precio: 65000,
+                preciosPorEdad: { "≤100": 65000 },
                 features: [
                     "Plan básico ACTIVA SALUD",
                     "Consultas médicas básicas",
@@ -353,7 +353,7 @@ const prestadoresData = {
             as150: {
                 name: "PLAN AS 150",
                 type: "activa_salud",
-                precio: 145000,
+                preciosPorEdad: { "≤100": 145000 },
                 features: [
                     "Plan premium ACTIVA SALUD",
                     "Consultas médicas ilimitadas",
@@ -368,7 +368,7 @@ const prestadoresData = {
             as200: {
                 name: "PLAN AS 200",
                 type: "activa_salud",
-                precio: 75000,
+                preciosPorEdad: { "≤100": 75000 },
                 features: [
                     "Plan intermedio ACTIVA SALUD",
                     "Consultas médicas",
@@ -382,7 +382,7 @@ const prestadoresData = {
             as300: {
                 name: "PLAN AS 300",
                 type: "activa_salud",
-                precio: 75000,
+                preciosPorEdad: { "≤100": 75000 },
                 features: [
                     "Plan AS 300 ACTIVA SALUD",
                     "Cobertura integral",
@@ -396,7 +396,7 @@ const prestadoresData = {
             as700: {
                 name: "PLAN AS 700",
                 type: "activa_salud",
-                precio: 85000,
+                preciosPorEdad: { "≤100": 85000 },
                 features: [
                     "Plan AS 700 ACTIVA SALUD",
                     "Cobertura superior",
@@ -410,7 +410,7 @@ const prestadoresData = {
             as800: {
                 name: "PLAN AS 800",
                 type: "activa_salud",
-                precio: 111418,
+                preciosPorEdad: { "≤100": 111418 },
                 features: [
                     "Plan AS 800 ACTIVA SALUD",
                     "Máxima cobertura",
@@ -424,7 +424,7 @@ const prestadoresData = {
             as900: {
                 name: "PLAN AS 900",
                 type: "activa_salud",
-                precio: 105000,
+                preciosPorEdad: { "≤100": 105000 },
                 features: [
                     "Plan AS 900 ACTIVA SALUD",
                     "Cobertura total",
@@ -586,7 +586,8 @@ function determinarGrupoEtarioSwiss(edad) {
  * @returns {string} - Grupo etario correspondiente
  */
 function determinarGrupoEtarioActiva(edad) {
-    return edad <= 65 ? "≤65" : ">65";
+    // Para planes de ActivaSalud, solo hay un grupo etario universal
+    return '≤100';
 }
 
 /**
@@ -643,6 +644,10 @@ const plantillaPorcentual = {
  * @returns {number} - Precio total calculado
  */
 function calcularPrecioFinalOMINT(planOMINT, composicionFamiliar, edadTitular, edadPareja = null) {
+    if (!planOMINT || !planOMINT.preciosPorEdad) {
+        console.warn('Plan OMINT sin preciosPorEdad:', planOMINT);
+        return 0;
+    }
     let precioTotal = 0;
     
     // Determinar grupo etario del titular
@@ -687,6 +692,10 @@ function calcularPrecioFinalOMINT(planOMINT, composicionFamiliar, edadTitular, e
  * @returns {number} - Precio total calculado
  */
 function calcularPrecioFinalSwiss(planSwiss, composicionFamiliar, edadTitular, edadPareja = null) {
+    if (!planSwiss.preciosPorEdad) {
+        console.warn('Plan sin preciosPorEdad:', planSwiss);
+        return 0;
+    }
     let precioTotal = 0;
     
     // Determinar grupo etario del titular
@@ -736,6 +745,10 @@ function calcularPrecioFinalSwiss(planSwiss, composicionFamiliar, edadTitular, e
  * @returns {number} - Precio total calculado
  */
 function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular, edadPareja = null) {
+    if (!planActiva || !planActiva.preciosPorEdad) {
+        console.warn('Plan Activa sin preciosPorEdad:', planActiva);
+        return 0;
+    }
     let precioTotal = 0;
     
     // Determinar grupo etario del titular
@@ -764,7 +777,7 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
     
     // 4. Hijos mayores de 21 años (se cobran como adultos - precio completo)
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
-        composicionFamiliar.mayores.forEach(edadHijo => {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
             if (edadHijo >= 21) {
                 const grupoEtarioHijo = determinarGrupoEtarioActiva(edadHijo);
                 const precioBaseHijo = planActiva.preciosPorEdad[grupoEtarioHijo];
@@ -785,6 +798,10 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
  * @returns {number} - Precio total calculado
  */
 function calcularPrecioFinalSwNubial(planSwNubial, composicionFamiliar, edadTitular, edadPareja = null) {
+    if (!planSwNubial || !planSwNubial.preciosPorEdad) {
+        console.warn('Plan SwNubial sin preciosPorEdad:', planSwNubial);
+        return 0;
+    }
     let precioTotal = 0;
     
     // Determinar grupo etario del titular
@@ -803,7 +820,7 @@ function calcularPrecioFinalSwNubial(planSwNubial, composicionFamiliar, edadTitu
     
     // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
     if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
-        composicionFamiliar.menores.forEach(edadMenor => {
+        composicionFamiliar.menores.forEach((edadMenor, index) => {
             const grupoEtarioMenor = determinarGrupoEtarioSwNubial(edadMenor);
             const precioBaseMenor = planSwNubial.preciosPorEdad[grupoEtarioMenor];
             precioTotal += precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto - NO 50%
@@ -812,7 +829,7 @@ function calcularPrecioFinalSwNubial(planSwNubial, composicionFamiliar, edadTitu
     
     // 4. Hijos mayores de 21 años (se cobran como adultos - precio completo)
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
-        composicionFamiliar.mayores.forEach(edadHijo => {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
             if (edadHijo >= 21) {
                 const grupoEtarioHijo = determinarGrupoEtarioSwNubial(edadHijo);
                 const precioBaseHijo = planSwNubial.preciosPorEdad[grupoEtarioHijo];
@@ -827,12 +844,16 @@ function calcularPrecioFinalSwNubial(planSwNubial, composicionFamiliar, edadTitu
 /**
  * Calcula el precio final para SWISS básico - TODOS como adultos (similar a SWISS MEDICAL)
  * @param {object} planSwissBasico - Plan SWISS básico con precios por edad
- * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {object} composicionFamiliar - Composición familiar
  * @param {number} edadTitular - Edad del titular
  * @param {number} edadPareja - Edad de la pareja (opcional)
- * @returns {number} - Precio total calculado
+ * @returns {object} - Desglose detallado
  */
 function calcularPrecioFinalSwissBasico(planSwissBasico, composicionFamiliar, edadTitular, edadPareja = null) {
+    if (!planSwissBasico || !planSwissBasico.preciosPorEdad) {
+        console.warn('Plan SwissBasico sin preciosPorEdad:', planSwissBasico);
+        return 0;
+    }
     let precioTotal = 0;
     
     // Determinar grupo etario del titular
@@ -851,7 +872,7 @@ function calcularPrecioFinalSwissBasico(planSwissBasico, composicionFamiliar, ed
     
     // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
     if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
-        composicionFamiliar.menores.forEach(edadMenor => {
+        composicionFamiliar.menores.forEach((edadMenor, index) => {
             const grupoEtarioMenor = determinarGrupoEtarioSwissBasico(edadMenor);
             const precioBaseMenor = planSwissBasico.preciosPorEdad[grupoEtarioMenor];
             precioTotal += precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto - NO 50%
@@ -860,7 +881,7 @@ function calcularPrecioFinalSwissBasico(planSwissBasico, composicionFamiliar, ed
     
     // 4. Hijos mayores de 21 años (se cobran como adultos - precio completo)
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
-        composicionFamiliar.mayores.forEach(edadHijo => {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
             if (edadHijo >= 21) {
                 const grupoEtarioHijo = determinarGrupoEtarioSwissBasico(edadHijo);
                 const precioBaseHijo = planSwissBasico.preciosPorEdad[grupoEtarioHijo];
@@ -875,12 +896,16 @@ function calcularPrecioFinalSwissBasico(planSwissBasico, composicionFamiliar, ed
 /**
  * Calcula el precio final para MEDIFE - Estructura específica con Individual/Matrimonio e hijos diferenciados
  * @param {object} planMedife - Plan MEDIFE con estructura específica
- * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {object} composicionFamiliar - Composición familiar
  * @param {number} edadTitular - Edad del titular
  * @param {number} edadPareja - Edad de la pareja (opcional)
  * @returns {number} - Precio total calculado
  */
 function calcularPrecioFinalMedife(planMedife, composicionFamiliar, edadTitular, edadPareja = null) {
+    if (!planMedife || !planMedife.precios) {
+        console.warn('Plan Medife sin precios:', planMedife);
+        return 0;
+    }
     let precioTotal = 0;
     
     // Determinar si es Individual o Matrimonio
@@ -942,45 +967,79 @@ function calcularPrecioFinalMedife(planMedife, composicionFamiliar, edadTitular,
  */
 function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTitular, edadPareja = null) {
     const prestador = prestadoresData[prestadorKey];
-    
     if (!prestador) {
         throw new Error(`Prestador no encontrado: ${prestadorKey}`);
     }
-    
-    // Determinar tipo de estructura y usar el cálculo apropiado
-    switch (prestador.tipoEstructura) {
-        case "plantilla_adultos_solo":
-            // SWISS MEDICAL: todos cobrados como adultos, sin descuentos para menores
-            return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "plantilla_adultos_simple":
-            // ACTIVA SALUD, SW NUBIAL, SWISS: estructura simple como adultos, solo 2 grupos etarios
-            if (prestadorKey === 'swNubial') {
-                return calcularPrecioFinalSwNubial(plan, composicionFamiliar, edadTitular, edadPareja);
-            } else if (prestadorKey === 'swiss') {
-                return calcularPrecioFinalSwissBasico(plan, composicionFamiliar, edadTitular, edadPareja);
-            } else {
-                // ACTIVA SALUD y otros
-                return calcularPrecioFinalActiva(plan, composicionFamiliar, edadTitular, edadPareja);
-            }
-        
-        case "estructura_matrimonio_hijos":
-            // MEDIFE: estructura específica con precios Individual/Matrimonio e hijos diferenciados
-            return calcularPrecioFinalMedife(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "plantilla_sin_descuentos":
-            // Para prestadores con descuentos solo en menores pero NO en segunda capita
-            return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "plantilla_porcentual":
-            // Para futuros prestadores que SÍ tengan descuentos en segunda capita
-            console.warn('Plantilla con descuentos detectada - implementar cuando sea necesario');
-            return calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "estructura_compleja":
-        default: // OMINT u otros con estructura compleja (precios específicos por rol)
-            return calcularPrecioFinalOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
+    // Calcular precio base según lógica original
+    let precioBase;
+    if (prestadorKey === 'activaSalud') {
+        precioBase = calcularPrecioFinalActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+    } else {
+        switch (prestador.tipoEstructura) {
+            case "plantilla_adultos_solo":
+                precioBase = calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "plantilla_adultos_simple":
+                if (prestadorKey === 'swNubial') {
+                    precioBase = calcularPrecioFinalSwNubial(plan, composicionFamiliar, edadTitular, edadPareja);
+                } else if (prestadorKey === 'swiss') {
+                    precioBase = calcularPrecioFinalSwissBasico(plan, composicionFamiliar, edadTitular, edadPareja);
+                } else {
+                    precioBase = calcularPrecioFinalActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+                }
+                break;
+            case "estructura_matrimonio_hijos":
+                precioBase = calcularPrecioFinalMedife(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "plantilla_sin_descuentos":
+                precioBase = calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "plantilla_porcentual":
+                console.warn('Plantilla con descuentos detectada - implementar cuando sea necesario');
+                precioBase = calcularPrecioFinalSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "estructura_compleja":
+            default:
+                precioBase = calcularPrecioFinalOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
+        }
     }
+    // === CORREGIDO: Descuento de aportes ===
+    let aporteTitular = 0;
+    let aportePareja = 0;
+    // Titular
+    if (formData['aporte-titular']) {
+        aporteTitular = parseFloat(formData['aporte-titular']); // Usar el valor ingresado directamente
+    } else if (formData['sueldo-titular']) {
+        aporteTitular = parseFloat(formData['sueldo-titular']) * 0.0765;
+    }
+    // Pareja (si corresponde)
+    if (formData['aporte-pareja']) {
+        aportePareja = parseFloat(formData['aporte-pareja']); // Usar el valor ingresado directamente
+    } else if (formData['sueldo-pareja']) {
+        aportePareja = parseFloat(formData['sueldo-pareja']) * 0.0765;
+    }
+    // Sumar ambos aportes
+    let totalAportes = 0;
+    if (!isNaN(aporteTitular)) totalAportes += aporteTitular;
+    if (!isNaN(aportePareja)) totalAportes += aportePareja;
+    // Calcular precio final
+    let precioFinal = Math.max(0, Math.round(precioBase - totalAportes));
+    // Descuento especial
+    let descuentoEspecial = 0;
+    if (formData['aplicar-descuento'] === 'on' && formData['porcentaje-descuento']) {
+        const porcentaje = parseFloat(formData['porcentaje-descuento']);
+        if (!isNaN(porcentaje) && porcentaje > 0 && porcentaje < 100) {
+            descuentoEspecial = Math.round(precioFinal * (porcentaje / 100));
+            precioFinal = Math.max(0, precioFinal - descuentoEspecial);
+        }
+    }
+    // Guardar info para visualización (precio base, descuento de aportes y especial)
+    plan._precioBase = precioBase;
+    plan._totalAportes = totalAportes;
+    plan._descuentoEspecial = descuentoEspecial;
+    plan._porcentajeDescuento = formData['porcentaje-descuento'] || 0;
+    plan._precioFinal = precioFinal;
+    return precioFinal;
 }
 
 /**
@@ -1355,7 +1414,7 @@ function generarDesglosePrecioSwNubial(planSwNubial, composicionFamiliar, edadTi
     const grupoEtarioTitular = determinarGrupoEtarioSwNubial(edadTitular);
     const precioBaseTitular = planSwNubial.preciosPorEdad[grupoEtarioTitular];
     
-    // 1. Capita titular
+    // 1. Capita titular (siempre presente)
     const precioTitular = precioBaseTitular * plantillaSinDescuentos.capitaTitular;
     desglose.items.push({
         concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
@@ -1633,40 +1692,73 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
         throw new Error(`Prestador no encontrado: ${prestadorKey}`);
     }
     
-    // Determinar tipo de estructura y usar el desglose apropiado
-    switch (prestador.tipoEstructura) {
-        case "plantilla_adultos_solo":
-            // SWISS MEDICAL: todos cobrados como adultos, sin descuentos para menores
-            return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "plantilla_adultos_simple":
-            // ACTIVA SALUD, SW NUBIAL, SWISS: estructura simple como adultos, solo 2 grupos etarios
-            if (prestadorKey === 'swNubial') {
-                return generarDesglosePrecioSwNubial(plan, composicionFamiliar, edadTitular, edadPareja);
-            } else if (prestadorKey === 'swiss') {
-                return generarDesglosePrecioSwissBasico(plan, composicionFamiliar, edadTitular, edadPareja);
-            } else {
-                // ACTIVA SALUD y otros
-                return generarDesglosePrecioActiva(plan, composicionFamiliar, edadTitular, edadPareja);
-            }
-        
-        case "estructura_matrimonio_hijos":
-            // MEDIFE: estructura específica con precios Individual/Matrimonio e hijos diferenciados
-            return generarDesglosePrecioMedife(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "plantilla_sin_descuentos":
-            // Para prestadores con descuentos solo en menores pero NO en segunda capita
-            return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "plantilla_porcentual":
-            // Para futuros prestadores que SÍ tengan descuentos en segunda capita
-            console.warn('Desglose con descuentos detectado - implementar cuando sea necesario');
-            return generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
-        
-        case "estructura_compleja":
-        default: // OMINT u otros con estructura compleja (precios específicos por rol)
-            return generarDesglosePrecioOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
+    // Obtener el desglose base del prestador específico
+    let desglose;
+    if (prestadorKey === 'activaSalud') {
+        desglose = generarDesglosePrecioActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+    } else {
+        switch (prestador.tipoEstructura) {
+            case "plantilla_adultos_solo":
+                desglose = generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "plantilla_adultos_simple":
+                if (prestadorKey === 'swNubial') {
+                    desglose = generarDesglosePrecioSwNubial(plan, composicionFamiliar, edadTitular, edadPareja);
+                } else if (prestadorKey === 'swiss') {
+                    desglose = generarDesglosePrecioSwissBasico(plan, composicionFamiliar, edadTitular, edadPareja);
+                } else {
+                    desglose = generarDesglosePrecioActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+                }
+                break;
+            case "estructura_matrimonio_hijos":
+                desglose = generarDesglosePrecioMedife(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "plantilla_sin_descuentos":
+                desglose = generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "plantilla_porcentual":
+                console.warn('Desglose con descuentos detectado - implementar cuando sea necesario');
+                desglose = generarDesglosePrecioSwiss(plan, composicionFamiliar, edadTitular, edadPareja);
+                break;
+            case "estructura_compleja":
+            default:
+                desglose = generarDesglosePrecioOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
+        }
     }
+
+    // Agregar descuento de aportes si existe
+    if (plan._totalAportes && plan._totalAportes > 0 && plan._precioBase) {
+        desglose.items.push({
+            concepto: 'Subtotal sin descuento',
+            cantidad: 1,
+            precioUnitario: plan._precioBase,
+            subtotal: plan._precioBase,
+            porcentaje: 'Precio base'
+        });
+        desglose.items.push({
+            concepto: 'Aportes descontados',
+            cantidad: 1,
+            precioUnitario: -plan._totalAportes,
+            subtotal: -plan._totalAportes,
+            porcentaje: 'Descuento'
+        });
+    }
+
+    // Agregar descuento especial si existe
+    if (plan._descuentoEspecial && plan._descuentoEspecial > 0) {
+        desglose.items.push({
+            concepto: `Descuento especial (${plan._porcentajeDescuento}%)`,
+            cantidad: 1,
+            precioUnitario: -plan._descuentoEspecial,
+            subtotal: -plan._descuentoEspecial,
+            porcentaje: 'Descuento especial'
+        });
+    }
+
+    // Actualizar el total final
+    desglose.total = plan._precioFinal || desglose.total;
+    
+    return desglose;
 }
 
 /**
@@ -2368,6 +2460,30 @@ function generateFormFields(option) {
         '<div class="error-message" id="error-situacion-laboral"></div>' +
         '</div>' +
         '</div>' +
+        // NUEVO: Checkboxes excluyentes para sueldo bruto o aporte
+        '<div class="form-row">' +
+        '<div class="form-group">' +
+        '<label>¿Tenés sueldo bruto o dato de aporte?</label>' +
+        '<div class="aporte-toggle-group">' +
+        '<label class="aporte-toggle"><input type="radio" name="aporte-titular-toggle" value="sueldo"> Sueldo bruto</label>' +
+        '<label class="aporte-toggle"><input type="radio" name="aporte-titular-toggle" value="aporte"> Dato de aporte</label>' +
+        '</div>' +
+        '<input type="number" id="sueldo-titular" name="sueldo-titular" placeholder="Ingresá tu sueldo bruto" style="display:none; margin-top:8px;">' +
+        '<input type="number" id="aporte-titular" name="aporte-titular" placeholder="Ingresá tu aporte" style="display:none; margin-top:8px;">' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        // Agregar sección de descuento especial
+        '<div class="form-row">' +
+        '<div class="form-group">' +
+        '<label>Descuento especial</label>' +
+        '<div class="form-check">' +
+        '<input type="checkbox" id="aplicar-descuento" name="aplicar-descuento" class="form-check-input">' +
+        '<label class="form-check-label" for="aplicar-descuento">¿Aplicar descuento?</label>' +
+        '</div>' +
+        '<input type="number" id="porcentaje-descuento" name="porcentaje-descuento" min="1" max="99" placeholder="Porcentaje de descuento" style="display:none; margin-top:8px;">' +
+        '</div>' +
+        '</div>' +
         '</div>';
     
     // Secciones adicionales según la opción
@@ -2394,30 +2510,20 @@ function generateFormFields(option) {
                 '<div class="error-message" id="error-situacion-pareja"></div>' +
                 '</div>' +
                 '</div>' +
-                '</div>';
-            break;
-            
-                    case 'hijos':
-            sections += '<div class="form-section-group">' +
-                '<div class="section-title">' +
-                '<i class="fas fa-baby"></i> Información de tus hijos' +
-                '</div>' +
+                // NUEVO: Checkboxes excluyentes para pareja
                 '<div class="form-row">' +
                 '<div class="form-group">' +
-                '<label for="cantidad-hijos">Cantidad de hijos *</label>' +
-                '<input type="number" id="cantidad-hijos" name="cantidad-hijos" min="1" max="10" placeholder="Ej: 2" required>' +
-                '<div class="error-message" id="error-cantidad-hijos"></div>' +
+                '<label>¿Tu pareja tiene sueldo bruto o dato de aporte?</label>' +
+                '<div class="aporte-toggle-group">' +
+                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="sueldo"> Sueldo bruto</label>' +
+                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="aporte"> Dato de aporte</label>' +
                 '</div>' +
-                '<div class="form-group">' +
-                '<label for="edades-hijos">Edades de los hijos *</label>' +
-                '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12, 28" required>' +
-                '<small class="field-help">Separa las edades con comas. Menores de 25 años tienen precio especial en OMINT</small>' +
-                '<div class="error-message" id="error-edades-hijos"></div>' +
+                '<input type="number" id="sueldo-pareja" name="sueldo-pareja" placeholder="Ingresá el sueldo bruto de tu pareja" style="display:none; margin-top:8px;">' +
+                '<input type="number" id="aporte-pareja" name="aporte-pareja" placeholder="Ingresá el aporte de tu pareja" style="display:none; margin-top:8px;">' +
                 '</div>' +
                 '</div>' +
                 '</div>';
             break;
-            
         case 'familia':
             sections += '<div class="form-section-group">' +
                 '<div class="section-title">' +
@@ -2440,8 +2546,41 @@ function generateFormFields(option) {
                 '<div class="error-message" id="error-situacion-pareja"></div>' +
                 '</div>' +
                 '</div>' +
+                // NUEVO: Checkboxes excluyentes para pareja
+                '<div class="form-row">' +
+                '<div class="form-group">' +
+                '<label>¿Tu pareja tiene sueldo bruto o dato de aporte?</label>' +
+                '<div class="aporte-toggle-group">' +
+                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="sueldo"> Sueldo bruto</label>' +
+                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="aporte"> Dato de aporte</label>' +
                 '</div>' +
-                '<div class="form-section-group">' +
+                '<input type="number" id="sueldo-pareja" name="sueldo-pareja" placeholder="Ingresá el sueldo bruto de tu pareja" style="display:none; margin-top:8px;">' +
+                '<input type="number" id="aporte-pareja" name="aporte-pareja" placeholder="Ingresá el aporte de tu pareja" style="display:none; margin-top:8px;">' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+            // hijos igual que antes
+            sections += '<div class="form-section-group">' +
+                '<div class="section-title">' +
+                '<i class="fas fa-baby"></i> Información de tus hijos' +
+                '</div>' +
+                '<div class="form-row">' +
+                '<div class="form-group">' +
+                '<label for="cantidad-hijos">Cantidad de hijos *</label>' +
+                '<input type="number" id="cantidad-hijos" name="cantidad-hijos" min="1" max="10" placeholder="Ej: 2" required>' +
+                '<div class="error-message" id="error-cantidad-hijos"></div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label for="edades-hijos">Edades de los hijos *</label>' +
+                '<input type="text" id="edades-hijos" name="edades-hijos" placeholder="Ej: 5, 8, 12, 28" required>' +
+                '<small class="field-help">Separa las edades con comas. Menores de 25 años tienen precio especial en OMINT</small>' +
+                '<div class="error-message" id="error-edades-hijos"></div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+            break;
+        case 'hijos':
+            sections += '<div class="form-section-group">' +
                 '<div class="section-title">' +
                 '<i class="fas fa-baby"></i> Información de tus hijos' +
                 '</div>' +
@@ -2461,12 +2600,60 @@ function generateFormFields(option) {
                 '</div>';
             break;
     }
-    
-    // Después de generar los campos, configurar validaciones en tiempo real
+    // Después de generar los campos, configurar validaciones y lógica de toggles
     setTimeout(() => {
         setupFieldValidations();
+        // Lógica de toggles excluyentes para titular
+        const sueldoTitular = document.getElementById('sueldo-titular');
+        const aporteTitular = document.getElementById('aporte-titular');
+        const radiosTitular = document.getElementsByName('aporte-titular-toggle');
+        radiosTitular.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'sueldo') {
+                    sueldoTitular.style.display = 'block';
+                    aporteTitular.style.display = 'none';
+                    aporteTitular.value = '';
+                } else if (this.value === 'aporte') {
+                    aporteTitular.style.display = 'block';
+                    sueldoTitular.style.display = 'none';
+                    sueldoTitular.value = '';
+                }
+            });
+        });
+
+        // Lógica de toggles excluyentes para pareja (si existe)
+        const sueldoPareja = document.getElementById('sueldo-pareja');
+        const aportePareja = document.getElementById('aporte-pareja');
+        const radiosPareja = document.getElementsByName('aporte-pareja-toggle');
+        if (radiosPareja && radiosPareja.length) {
+            radiosPareja.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'sueldo') {
+                        sueldoPareja.style.display = 'block';
+                        aportePareja.style.display = 'none';
+                        aportePareja.value = '';
+                    } else if (this.value === 'aporte') {
+                        aportePareja.style.display = 'block';
+                        sueldoPareja.style.display = 'none';
+                        sueldoPareja.value = '';
+                    }
+                });
+            });
+
+        }
+        // Lógica para mostrar/ocultar input de descuento
+        const aplicarDescuento = document.getElementById('aplicar-descuento');
+        const porcentajeDescuento = document.getElementById('porcentaje-descuento');
+        
+        if (aplicarDescuento && porcentajeDescuento) {
+            aplicarDescuento.addEventListener('change', function() {
+                porcentajeDescuento.style.display = this.checked ? 'block' : 'none';
+                if (!this.checked) {
+                    porcentajeDescuento.value = '';
+                }
+            });
+        }
     }, 100);
-    
     return sections;
 }
 
@@ -2570,6 +2757,16 @@ function validateField(field) {
                         isValid = false;
                         errorMessage = `Debes ingresar exactamente ${expectedCount} edad${expectedCount > 1 ? 'es' : ''}`;
                     }
+                }
+            }
+            break;
+
+        case 'porcentaje-descuento':
+            if (value) {
+                const porcentaje = parseFloat(value);
+                if (isNaN(porcentaje) || porcentaje < 1 || porcentaje > 99) {
+                    isValid = false;
+                    errorMessage = 'El porcentaje debe estar entre 1 y 99';
                 }
             }
             break;
@@ -2780,6 +2977,10 @@ function showPlans() {
                     prestador: prestador.name,
                     composicion: composicionFamiliar,
                     desglose: desglose,
+                    // NUEVO: incluir los campos de descuento de aportes
+                    _precioBase: plan._precioBase,
+                    _totalAportes: plan._totalAportes,
+                    _precioFinal: plan._precioFinal,
                     // Información adicional para el desglose
                     planDetails: {
                         prestadorKey: prestadorKey,
@@ -2936,10 +3137,28 @@ function generatePlanCard(plan) {
                 '</div>';
         });
         
+        // Si hay descuento de aportes, mostrar el precio original tachado y el descuento
+        if (plan._totalAportes && plan._totalAportes > 0 && plan._precioBase) {
+            desgloseHTML += '<div class="breakdown-item">' +
+                '<span class="breakdown-concept" style="color:#888;">Subtotal sin descuento</span>' +
+                '<span class="breakdown-amount" style="text-decoration:line-through;color:#888;">' + formatCurrency(plan._precioBase) + '</span>' +
+                '</div>';
+            desgloseHTML += '<div class="breakdown-item">' +
+                '<span class="breakdown-concept" style="color:#059669;">Aportes descontados</span>' +
+                '<span class="breakdown-amount" style="color:#059669;">- ' + formatCurrency(plan._totalAportes) + '</span>' +
+                '</div>';
+        }
+        // NUEVO: Descuento especial
+        if (plan._descuentoEspecial && plan._descuentoEspecial > 0) {
+            desgloseHTML += '<div class="breakdown-item">' +
+                '<span class="breakdown-concept" style="color:#a21caf;">Descuento especial (' + plan._porcentajeDescuento + '%)</span>' +
+                '<span class="breakdown-amount" style="color:#a21caf;">- ' + formatCurrency(plan._descuentoEspecial) + '</span>' +
+                '</div>';
+        }
         desgloseHTML += '</div>' +
             '<div class="breakdown-total">' +
             '<span class="breakdown-concept"><strong>Total mensual</strong></span>' +
-            '<span class="breakdown-amount"><strong>' + formatCurrency(plan.desglose.total) + '</strong></span>' +
+            `<span class="breakdown-amount" style="color:${plan._totalAportes && plan._totalAportes > 0 ? '#16a34a' : '#222'};font-weight:700;">` + formatCurrency(plan._precioFinal || plan.desglose.total) + '</span>' +
             '</div>' +
             '</div>';
     }
@@ -2960,6 +3179,21 @@ function generatePlanCard(plan) {
         badgesHTML += '<div class="recommended-badge"><i class="fas fa-star"></i> Recomendado</div>';
     }
     
+    // ===== NUEVO: Visualización de precio con descuento de aportes =====
+    let priceHTML = '';
+    if (plan._totalAportes && plan._totalAportes > 0 && plan._precioBase) {
+        priceHTML = `<div class="plan-price">
+            <span class="original-price" style="text-decoration:line-through;color:#888;font-size:18px;">${formatCurrency(plan._precioBase)}</span><br>
+            <span class="discounted-price" style="color:#16a34a;font-size:32px;font-weight:700;">${formatCurrency(plan._precioFinal)}</span>
+            <div class="price-period">por mes</div>
+            <div class="aporte-descuento" style="color:#059669;font-size:13px;">Aportes descontados: -${formatCurrency(plan._totalAportes)}</div>
+        </div>`;
+    } else {
+        priceHTML = `<div class="plan-price">
+            <span class="currency">$</span>${plan.price.toLocaleString()}
+            <div class="price-period">por mes</div>
+        </div>`;
+    }
     return '<div class="plan-card ' + recommendedClass + '">' +
         badgesHTML +
         '<div class="plan-header">' +
@@ -2973,10 +3207,7 @@ function generatePlanCard(plan) {
             '</div>' +
             '<div class="plan-name">' + plan.name + '</div>' +
         '</div>' +
-        '<div class="plan-price">' +
-            '<span class="currency">$</span>' + plan.price.toLocaleString() +
-            '<div class="price-period">por mes</div>' +
-        '</div>' +
+        priceHTML +
         desgloseHTML +
         '<ul class="plan-features">' + features + '</ul>' +
         '<button class="select-plan-btn">Seleccionar Plan</button>' +
@@ -2984,7 +3215,8 @@ function generatePlanCard(plan) {
 }
 
 function selectPlan(plan) {
-    alert('¡Excelente elección! Has seleccionado el ' + plan.name + '.\n\nUn miembro de nuestro equipo de ventas se contactará contigo en las próximas horas para finalizar la afiliación.\n\n¡Gracias por elegir OSPADEP!');
+    // Antes: alert('¡Excelente elección! Has seleccionado el ' + plan.name + '.\n\nUn miembro de nuestro equipo de ventas se contactará contigo en las próximas horas para finalizar la afiliación.\n\n¡Gracias por elegir OSPADEP!');
+    // Ahora: no hacer nada (la selección se maneja con la barra lateral)
 }
 
 function goBack() {
@@ -4525,3 +4757,230 @@ function saveUser() {
         errorElement.textContent = error.message;
     }
 } 
+
+// ===== SELECCIÓN MÚLTIPLE Y SIDEBAR DE PLANES SELECCIONADOS =====
+
+// Lista global de planes seleccionados
+let selectedPlans = [];
+
+// Renderizar la barra lateral de planes seleccionados
+function renderSelectedPlansSidebar() {
+    let sidebar = document.getElementById('selected-plans-sidebar');
+    if (!sidebar) {
+        // Crear el sidebar si no existe
+        sidebar = document.createElement('div');
+        sidebar.id = 'selected-plans-sidebar';
+        sidebar.className = 'selected-plans-sidebar';
+        document.body.appendChild(sidebar);
+    }
+
+    // Mostrar/ocultar según cantidad de seleccionados
+    if (selectedPlans.length === 0) {
+        sidebar.style.right = '-420px'; // Oculto
+        removeSidebarFloatingButton();
+        return;
+    } else {
+        sidebar.style.right = '0'; // Visible
+        removeSidebarFloatingButton();
+    }
+
+    // Generar HTML de los planes seleccionados
+    let html = '<div class="sidebar-header">' +
+        '<i class="fas fa-list-ul sidebar-menu-btn" title="Cerrar barra" style="cursor:pointer;" onclick="closeSelectedPlansSidebar()"></i> Planes seleccionados' +
+        '<button class="close-sidebar-btn" title="Cerrar" onclick="closeSelectedPlansSidebar()"><i class="fas fa-times"></i></button>' +
+        '</div>';
+    html += '<div class="sidebar-plans-list">';
+    selectedPlans.forEach((plan, idx) => {
+        html += `<div class="sidebar-plan-item">
+            <div class="sidebar-plan-header">
+                <span class="sidebar-plan-name">${plan.name}</span>
+                <button class="remove-plan-btn" title="Quitar" onclick="removePlanFromSelected(${idx})"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="sidebar-plan-prestador">${plan.prestador}</div>
+            <div class="sidebar-plan-price">$${plan.price.toLocaleString()}</div>
+            <div class="sidebar-plan-features">${plan.features.slice(0,2).map(f=>'<span>'+f+'</span>').join('')}</div>
+        </div>`;
+    });
+    html += '</div>';
+    html += '<button class="generate-report-btn" onclick="generateSelectedPlansReport()"><i class="fas fa-file-alt"></i> Generar informe</button>';
+    sidebar.innerHTML = html;
+}
+
+function closeSelectedPlansSidebar() {
+    const sidebar = document.getElementById('selected-plans-sidebar');
+    if (sidebar) sidebar.style.right = '-420px';
+    // Mostrar el botón flotante para abrir la barra si hay planes seleccionados
+    if (selectedPlans.length > 0) {
+        showSidebarFloatingButton();
+    }
+}
+
+function showSidebarFloatingButton() {
+    if (document.getElementById('sidebar-floating-btn')) return;
+    const btn = document.createElement('button');
+    btn.id = 'sidebar-floating-btn';
+    btn.className = 'sidebar-floating-btn';
+    btn.innerHTML = '<i class="fas fa-list-ul"></i>';
+    btn.title = 'Ver planes seleccionados';
+    btn.onclick = function() {
+        const sidebar = document.getElementById('selected-plans-sidebar');
+        if (sidebar) sidebar.style.right = '0';
+        removeSidebarFloatingButton();
+    };
+    document.body.appendChild(btn);
+}
+
+function removeSidebarFloatingButton() {
+    const btn = document.getElementById('sidebar-floating-btn');
+    if (btn) btn.remove();
+}
+
+// Agregar o quitar plan de la lista de seleccionados
+function togglePlanSelection(plan) {
+    const idx = selectedPlans.findIndex(p => p.name === plan.name && p.prestador === plan.prestador);
+    if (idx === -1) {
+        selectedPlans.push(plan);
+    } else {
+        selectedPlans.splice(idx, 1);
+    }
+    renderSelectedPlansSidebar();
+    updatePlanCardsSelection();
+}
+
+// Quitar plan por índice
+function removePlanFromSelected(idx) {
+    selectedPlans.splice(idx, 1);
+    renderSelectedPlansSidebar();
+    updatePlanCardsSelection();
+}
+
+// Actualizar el estado de los botones en las tarjetas de planes
+function updatePlanCardsSelection() {
+    const cards = document.querySelectorAll('.plan-card');
+    cards.forEach(card => {
+        const name = card.querySelector('.plan-name')?.textContent;
+        const prestador = card.querySelector('.provider-name')?.textContent;
+        const btn = card.querySelector('.select-plan-btn');
+        if (!btn) return;
+        const isSelected = selectedPlans.some(p => p.name === name && p.prestador === prestador);
+        if (isSelected) {
+            btn.classList.add('selected');
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Quitar';
+        } else {
+            btn.classList.remove('selected');
+            btn.innerHTML = '<i class="fas fa-plus-circle"></i> Seleccionar Plan';
+        }
+    });
+}
+
+// Modificar generatePlanCard para usar togglePlanSelection
+const originalGeneratePlanCard = generatePlanCard;
+generatePlanCard = function(plan) {
+    // Llamar al original para obtener el HTML
+    let cardHTML = originalGeneratePlanCard(plan);
+    // Modificar el botón para usar togglePlanSelection
+    // Reemplazar el botón por uno con onclick
+    cardHTML = cardHTML.replace(
+        /<button class=\"select-plan-btn\">[^<]*<\/button>/,
+        `<button class="select-plan-btn" onclick='togglePlanSelection(${JSON.stringify(plan)})'><i class="fas fa-plus-circle"></i> Seleccionar Plan</button>`
+    );
+    return cardHTML;
+};
+
+// Llamar a updatePlanCardsSelection después de mostrar los planes
+const originalShowPlans = showPlans;
+showPlans = function() {
+    originalShowPlans.apply(this, arguments);
+    updatePlanCardsSelection();
+};
+
+// Placeholder para la generación de informe
+function generateSelectedPlansReport() {
+    if (!selectedPlans.length) {
+        alert('No hay planes seleccionados.');
+        return;
+    }
+    fetch('Plantilla-Marketing/plantillaMarketing.html')
+        .then(response => response.text())
+        .then(template => {
+            // Generar Cards de los planes seleccionados
+            let plansHTML = '';
+            selectedPlans.forEach(plan => {
+                plansHTML += `
+                <div class="plan">
+                    <div class="plan-header">${plan.name}</div>
+                    <div class="plan-price">${formatCurrency(plan.price)}</div>
+                    <ul class="plan-features">
+                        ${plan.features.map(f => `<li><i class='fas fa-check'></i> ${f}</li>`).join('')}
+                    </ul>
+                    <div class="plan-footer">${plan.footer || ''}</div>
+                </div>`;
+            });
+            // Usar DOMParser para reemplazar el contenido de .plans de forma segura
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(template, 'text/html');
+            const plansDiv = doc.querySelector('.plans');
+            if (plansDiv) {
+                plansDiv.innerHTML = plansHTML;
+            }
+            // Serializar el HTML final
+            const finalHtml = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+            // Descargar el HTML
+            const blob = new Blob([finalHtml], {type: 'text/html'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'cotizacion-ospadep.html';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+}
+
+// Utilidad: icono para beneficio
+function getBenefitIcon(text) {
+    const l = text.toLowerCase();
+    if (/odont|dental|diente/.test(l)) return 'fa-tooth';
+    if (/psico|mental/.test(l)) return 'fa-heart-pulse';
+    if (/médico|doctor|profesional/.test(l)) return 'fa-user-doctor';
+    if (/clínica|sanatorio|hospital|centro|consultorio/.test(l)) return 'fa-hospital';
+    if (/premium/.test(l)) return 'fa-star';
+    if (/especialista|consulta|turno/.test(l)) return 'fa-stethoscope';
+    if (/cobertura|seguro|sin coseguro|100%|total|completa|ampliada|prioritaria/.test(l)) return 'fa-shield-heart';
+    if (/internación/.test(l)) return 'fa-bed-pulse';
+    if (/emergencia|urgencia/.test(l)) return 'fa-truck-medical';
+    if (/anticonceptivo/.test(l)) return 'fa-capsules';
+    if (/farmacia/.test(l)) return 'fa-percent';
+    if (/vacuna/.test(l)) return 'fa-syringe';
+    if (/reintegro/.test(l)) return 'fa-arrow-rotate-left';
+    if (/medicación|medicamento/.test(l)) return 'fa-prescription-bottle-medical';
+    if (/preventiva/.test(l)) return 'fa-heart-pulse';
+    if (/parto|maternidad/.test(l)) return 'fa-baby';
+    if (/servicio|app|digital|online|virtual/.test(l)) return 'fa-concierge-bell';
+    if (/diagnóstico|laboratorio|estudio|microscopio/.test(l)) return 'fa-microscope';
+    return 'fa-circle-info';
+}
+
+// === NUEVO: Renderizar solo la Card del plan seleccionado en el informe de marketing ===
+function renderSelectedPlanInMarketingTemplate(plan) {
+    // Buscar el contenedor de planes en la plantilla
+    const plansSection = document.querySelector('.plans');
+    if (!plansSection) return;
+    
+    // Limpiar cualquier Card de ejemplo
+    plansSection.innerHTML = '';
+
+    // Generar la Card con la estructura de la plantilla
+    const planCard = document.createElement('div');
+    planCard.className = 'plan';
+    planCard.innerHTML = `
+        <div class="plan-header">${plan.name}</div>
+        <div class="plan-price">${formatCurrency(plan.price)}</div>
+        <ul class="plan-features">
+            ${plan.features.map(f => `<li><i class='fas fa-check'></i> ${f}</li>`).join('')}
+        </ul>
+        <div class="plan-footer">${plan.footer || ''}</div>
+    `;
+    plansSection.appendChild(planCard);
+}
+
+
