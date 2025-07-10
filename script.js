@@ -792,7 +792,7 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
 /**
  * Calcula el precio final para SW NUBIAL - TODOS como adultos (similar a SWISS MEDICAL)
  * @param {object} planSwNubial - Plan SW NUBIAL con precios por edad
- * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {object} composicionFamiliar - Composición familiar
  * @param {number} edadTitular - Edad del titular
  * @param {number} edadPareja - Edad de la pareja (opcional)
  * @returns {number} - Precio total calculado
@@ -940,9 +940,9 @@ function calcularPrecioFinalMedife(planMedife, composicionFamiliar, edadTitular,
         });
     }
     
-    // Procesar hijos adultos (21-29 años)
+    // Procesar hijos adultos (21-29 años) y familiares a cargo (>29)
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
-        composicionFamiliar.mayores.forEach(edadHijo => {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
             if (edadHijo >= 21 && edadHijo <= 29) {
                 // Hijo adulto (21-29)
                 precioTotal += planMedife.precios.hijos.hijoAdulto;
@@ -2368,27 +2368,35 @@ function initializeApp() {
     // Agregar event listeners a las opciones del formulario
     const optionItems = document.querySelectorAll('.option-item');
     optionItems.forEach(item => {
-        item.addEventListener('click', function() {
-            selectOption(this.dataset.option);
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const option = this.dataset.option;
+            if (option) {
+                selectOption(option);
+            }
         });
     });
 
     // Event listener para el botón continuar
     const continueBtn = document.getElementById('continue-btn');
-    continueBtn.addEventListener('click', function() {
-        if (selectedOption) {
-            showDetailsForm(selectedOption);
-        }
-    });
+    if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+            if (selectedOption) {
+                showDetailsForm(selectedOption);
+            }
+        });
+    }
 
     // Event listener para el formulario de cotización
     const cotizationForm = document.getElementById('cotization-form');
-    cotizationForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (validateForm()) {
-            processForm();
-        }
-    });
+    if (cotizationForm) {
+        cotizationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (validateForm()) {
+                processForm();
+            }
+        });
+    }
 
     // Event listeners para botones de contacto
     setupContactButtons();
@@ -2400,15 +2408,18 @@ function selectOption(option) {
     // Actualizar visualización de opciones seleccionadas
     const optionItems = document.querySelectorAll('.option-item');
     optionItems.forEach(item => {
-        item.classList.remove('selected');
+        if (item.dataset.option === option) {
+            item.classList.add('selected');
+        } else {
+            item.classList.remove('selected');
+        }
     });
-    
-    const selectedItem = document.querySelector('[data-option="' + option + '"]');
-    selectedItem.classList.add('selected');
     
     // Habilitar botón continuar
     const continueBtn = document.getElementById('continue-btn');
-    continueBtn.disabled = false;
+    if (continueBtn) {
+        continueBtn.disabled = false;
+    }
 }
 
 function showDetailsForm(option) {
@@ -2460,28 +2471,22 @@ function generateFormFields(option) {
         '<div class="error-message" id="error-situacion-laboral"></div>' +
         '</div>' +
         '</div>' +
-        // NUEVO: Checkboxes excluyentes para sueldo bruto o aporte
+        // Radio buttons para sueldo bruto o aporte
         '<div class="form-row">' +
         '<div class="form-group">' +
         '<label>¿Tenés sueldo bruto o dato de aporte?</label>' +
         '<div class="aporte-toggle-group">' +
-        '<label class="aporte-toggle"><input type="radio" name="aporte-titular-toggle" value="sueldo"> Sueldo bruto</label>' +
-        '<label class="aporte-toggle"><input type="radio" name="aporte-titular-toggle" value="aporte"> Dato de aporte</label>' +
+        '<label class="aporte-toggle">' +
+        '<input type="radio" name="aporte-titular-toggle" value="sueldo">' +
+        '<i class="fas fa-dollar-sign"></i> Sueldo bruto' +
+        '</label>' +
+        '<label class="aporte-toggle">' +
+        '<input type="radio" name="aporte-titular-toggle" value="aporte">' +
+        '<i class="fas fa-percentage"></i> Dato de aporte' +
+        '</label>' +
         '</div>' +
-        '<input type="number" id="sueldo-titular" name="sueldo-titular" placeholder="Ingresá tu sueldo bruto" style="display:none; margin-top:8px;">' +
-        '<input type="number" id="aporte-titular" name="aporte-titular" placeholder="Ingresá tu aporte" style="display:none; margin-top:8px;">' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        // Agregar sección de descuento especial
-        '<div class="form-row">' +
-        '<div class="form-group">' +
-        '<label>Descuento especial</label>' +
-        '<div class="form-check">' +
-        '<input type="checkbox" id="aplicar-descuento" name="aplicar-descuento" class="form-check-input">' +
-        '<label class="form-check-label" for="aplicar-descuento">¿Aplicar descuento?</label>' +
-        '</div>' +
-        '<input type="number" id="porcentaje-descuento" name="porcentaje-descuento" min="1" max="99" placeholder="Porcentaje de descuento" style="display:none; margin-top:8px;">' +
+        '<input type="number" id="sueldo-titular" name="sueldo-titular" placeholder="Ingresá tu sueldo bruto" style="display:none;">' +
+        '<input type="number" id="aporte-titular" name="aporte-titular" placeholder="Ingresá tu aporte" style="display:none;">' +
         '</div>' +
         '</div>' +
         '</div>';
@@ -2510,16 +2515,22 @@ function generateFormFields(option) {
                 '<div class="error-message" id="error-situacion-pareja"></div>' +
                 '</div>' +
                 '</div>' +
-                // NUEVO: Checkboxes excluyentes para pareja
+                // Radio buttons para sueldo bruto o aporte de la pareja
                 '<div class="form-row">' +
                 '<div class="form-group">' +
                 '<label>¿Tu pareja tiene sueldo bruto o dato de aporte?</label>' +
                 '<div class="aporte-toggle-group">' +
-                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="sueldo"> Sueldo bruto</label>' +
-                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="aporte"> Dato de aporte</label>' +
+                '<label class="aporte-toggle">' +
+                '<input type="radio" name="aporte-pareja-toggle" value="sueldo">' +
+                '<i class="fas fa-dollar-sign"></i> Sueldo bruto' +
+                '</label>' +
+                '<label class="aporte-toggle">' +
+                '<input type="radio" name="aporte-pareja-toggle" value="aporte">' +
+                '<i class="fas fa-percentage"></i> Dato de aporte' +
+                '</label>' +
                 '</div>' +
-                '<input type="number" id="sueldo-pareja" name="sueldo-pareja" placeholder="Ingresá el sueldo bruto de tu pareja" style="display:none; margin-top:8px;">' +
-                '<input type="number" id="aporte-pareja" name="aporte-pareja" placeholder="Ingresá el aporte de tu pareja" style="display:none; margin-top:8px;">' +
+                '<input type="number" id="sueldo-pareja" name="sueldo-pareja" placeholder="Ingresá el sueldo bruto de tu pareja" style="display:none;">' +
+                '<input type="number" id="aporte-pareja" name="aporte-pareja" placeholder="Ingresá el aporte de tu pareja" style="display:none;">' +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -2546,20 +2557,26 @@ function generateFormFields(option) {
                 '<div class="error-message" id="error-situacion-pareja"></div>' +
                 '</div>' +
                 '</div>' +
-                // NUEVO: Checkboxes excluyentes para pareja
+                // Radio buttons para sueldo bruto o aporte de la pareja
                 '<div class="form-row">' +
                 '<div class="form-group">' +
                 '<label>¿Tu pareja tiene sueldo bruto o dato de aporte?</label>' +
                 '<div class="aporte-toggle-group">' +
-                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="sueldo"> Sueldo bruto</label>' +
-                '<label class="aporte-toggle"><input type="radio" name="aporte-pareja-toggle" value="aporte"> Dato de aporte</label>' +
+                '<label class="aporte-toggle">' +
+                '<input type="radio" name="aporte-pareja-toggle" value="sueldo">' +
+                '<i class="fas fa-dollar-sign"></i> Sueldo bruto' +
+                '</label>' +
+                '<label class="aporte-toggle">' +
+                '<input type="radio" name="aporte-pareja-toggle" value="aporte">' +
+                '<i class="fas fa-percentage"></i> Dato de aporte' +
+                '</label>' +
                 '</div>' +
-                '<input type="number" id="sueldo-pareja" name="sueldo-pareja" placeholder="Ingresá el sueldo bruto de tu pareja" style="display:none; margin-top:8px;">' +
-                '<input type="number" id="aporte-pareja" name="aporte-pareja" placeholder="Ingresá el aporte de tu pareja" style="display:none; margin-top:8px;">' +
+                '<input type="number" id="sueldo-pareja" name="sueldo-pareja" placeholder="Ingresá el sueldo bruto de tu pareja" style="display:none;">' +
+                '<input type="number" id="aporte-pareja" name="aporte-pareja" placeholder="Ingresá el aporte de tu pareja" style="display:none;">' +
                 '</div>' +
                 '</div>' +
                 '</div>';
-            // hijos igual que antes
+            // Sección de hijos igual que antes
             sections += '<div class="form-section-group">' +
                 '<div class="section-title">' +
                 '<i class="fas fa-baby"></i> Información de tus hijos' +
@@ -2600,6 +2617,30 @@ function generateFormFields(option) {
                 '</div>';
             break;
     }
+
+    // Agregar sección de descuento especial (común para todas las opciones)
+    sections += '<div class="form-section-group">' +
+        '<div class="section-title">' +
+        '<i class="fas fa-percent"></i> Descuento Especial (Opcional)' +
+        '</div>' +
+        '<div class="form-row">' +
+        '<div class="form-group">' +
+        '<label>' +
+        '<input type="checkbox" id="aplicar-descuento" name="aplicar-descuento" class="form-check-input">' +
+        '<span class="form-check-label">Aplicar descuento especial</span>' +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '<div class="form-row" id="descuento-row" style="display:none;">' +
+        '<div class="form-group">' +
+        '<label for="porcentaje-descuento">Porcentaje de descuento (%)</label>' +
+        '<input type="number" id="porcentaje-descuento" name="porcentaje-descuento" min="1" max="99" step="0.1" placeholder="Ej: 15">' +
+        '<small class="field-help">Ingresa un porcentaje entre 1% y 99%</small>' +
+        '<div class="error-message" id="error-porcentaje-descuento"></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
     // Después de generar los campos, configurar validaciones y lógica de toggles
     setTimeout(() => {
         setupFieldValidations();
@@ -2639,21 +2680,26 @@ function generateFormFields(option) {
                     }
                 });
             });
-
         }
-        // Lógica para mostrar/ocultar input de descuento
-        const aplicarDescuento = document.getElementById('aplicar-descuento');
-        const porcentajeDescuento = document.getElementById('porcentaje-descuento');
+
+        // Lógica para mostrar/ocultar el campo de descuento especial
+        const checkboxDescuento = document.getElementById('aplicar-descuento');
+        const descuentoRow = document.getElementById('descuento-row');
+        const porcentajeInput = document.getElementById('porcentaje-descuento');
         
-        if (aplicarDescuento && porcentajeDescuento) {
-            aplicarDescuento.addEventListener('change', function() {
-                porcentajeDescuento.style.display = this.checked ? 'block' : 'none';
-                if (!this.checked) {
-                    porcentajeDescuento.value = '';
+        if (checkboxDescuento && descuentoRow && porcentajeInput) {
+            checkboxDescuento.addEventListener('change', function() {
+                if (this.checked) {
+                    descuentoRow.style.display = 'block';
+                    porcentajeInput.focus();
+                } else {
+                    descuentoRow.style.display = 'none';
+                    porcentajeInput.value = '';
                 }
             });
         }
-    }, 100);
+    }, 0);
+
     return sections;
 }
 
@@ -3087,7 +3133,7 @@ function showPlans() {
     // Agregar event listeners a botones de selección
     const selectButtons = document.querySelectorAll('.select-plan-btn');
     selectButtons.forEach((btn, index) => {
-        btn.addEventListener('click', () => selectPlan(planesCalculados[index]));
+        btn.addEventListener('click', () => togglePlanSelection(planesCalculados[index]));
     });
 }
 
@@ -3194,7 +3240,7 @@ function generatePlanCard(plan) {
             <div class="price-period">por mes</div>
         </div>`;
     }
-    return '<div class="plan-card ' + recommendedClass + '">' +
+    return '<div class="plan-card ' + recommendedClass + '" data-plan-name="' + plan.name + '" data-prestador="' + (plan.prestador || '') + '">' +
         badgesHTML +
         '<div class="plan-header">' +
             '<div class="provider-section">' +
@@ -3210,7 +3256,7 @@ function generatePlanCard(plan) {
         priceHTML +
         desgloseHTML +
         '<ul class="plan-features">' + features + '</ul>' +
-        '<button class="select-plan-btn">Seleccionar Plan</button>' +
+        '<button class="select-plan-btn"><i class="fas fa-plus-circle"></i> Seleccionar Plan</button>' +
         '</div>';
 }
 
@@ -4760,57 +4806,85 @@ function saveUser() {
 
 // ===== SELECCIÓN MÚLTIPLE Y SIDEBAR DE PLANES SELECCIONADOS =====
 
-// Lista global de planes seleccionados
-let selectedPlans = [];
+// Definir selectedPlans como variable global
+window.selectedPlans = [];
 
 // Renderizar la barra lateral de planes seleccionados
 function renderSelectedPlansSidebar() {
-    let sidebar = document.getElementById('selected-plans-sidebar');
-    if (!sidebar) {
-        // Crear el sidebar si no existe
-        sidebar = document.createElement('div');
-        sidebar.id = 'selected-plans-sidebar';
-        sidebar.className = 'selected-plans-sidebar';
-        document.body.appendChild(sidebar);
+    // Remover sidebar existente
+    const existingSidebar = document.querySelector('.selected-plans-sidebar');
+    if (existingSidebar) {
+        existingSidebar.remove();
     }
-
-    // Mostrar/ocultar según cantidad de seleccionados
-    if (selectedPlans.length === 0) {
-        sidebar.style.right = '-420px'; // Oculto
-        removeSidebarFloatingButton();
+    
+    // Si no hay planes seleccionados, ocultar la barra
+    if (window.selectedPlans.length === 0) {
         return;
-    } else {
-        sidebar.style.right = '0'; // Visible
-        removeSidebarFloatingButton();
     }
-
-    // Generar HTML de los planes seleccionados
+    
+    // Crear nueva sidebar
+    const sidebar = document.createElement('div');
+    sidebar.className = 'selected-plans-sidebar';
+    
+    // Construir el contenido de la barra lateral
     let html = '<div class="sidebar-header">' +
         '<i class="fas fa-list-ul sidebar-menu-btn" title="Cerrar barra" style="cursor:pointer;" onclick="closeSelectedPlansSidebar()"></i> Planes seleccionados' +
         '<button class="close-sidebar-btn" title="Cerrar" onclick="closeSelectedPlansSidebar()"><i class="fas fa-times"></i></button>' +
-        '</div>';
-    html += '<div class="sidebar-plans-list">';
-    selectedPlans.forEach((plan, idx) => {
-        html += `<div class="sidebar-plan-item">
-            <div class="sidebar-plan-header">
-                <span class="sidebar-plan-name">${plan.name}</span>
-                <button class="remove-plan-btn" title="Quitar" onclick="removePlanFromSelected(${idx})"><i class="fas fa-trash"></i></button>
+        '</div>' +
+        '<div class="sidebar-plans-list">';
+    
+    // Agregar cada plan seleccionado
+    window.selectedPlans.forEach((plan, idx) => {
+        // Obtener el precio correcto
+        const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
+        const precioFormateado = typeof precio === 'number' ? 
+            precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : 
+            '$' + precio.toString();
+            
+        html += `
+            <div class="sidebar-plan-item">
+                <div class="sidebar-plan-header">
+                    <span class="sidebar-plan-name">${plan.name}</span>
+                    <button class="remove-plan-btn" onclick="removePlanFromSelected(${idx})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="sidebar-plan-prestador">${plan.prestador}</div>
+                <div class="sidebar-plan-price">${precioFormateado}</div>
+                <div class="sidebar-plan-features">
+                    ${plan.features ? plan.features.slice(0,2).map(f=>'<span>'+f+'</span>').join('') : ''}
+                </div>
             </div>
-            <div class="sidebar-plan-prestador">${plan.prestador}</div>
-            <div class="sidebar-plan-price">$${plan.price.toLocaleString()}</div>
-            <div class="sidebar-plan-features">${plan.features.slice(0,2).map(f=>'<span>'+f+'</span>').join('')}</div>
-        </div>`;
+        `;
     });
+    
     html += '</div>';
+    
+    // Agregar botón para generar informe
     html += '<button class="generate-report-btn" onclick="generateSelectedPlansReport()"><i class="fas fa-file-alt"></i> Generar informe</button>';
+    
     sidebar.innerHTML = html;
+    document.body.appendChild(sidebar);
+    
+    // Mostrar la sidebar animándola desde la derecha
+    setTimeout(() => {
+        sidebar.style.right = '0';
+    }, 10);
 }
 
 function closeSelectedPlansSidebar() {
-    const sidebar = document.getElementById('selected-plans-sidebar');
-    if (sidebar) sidebar.style.right = '-420px';
-    // Mostrar el botón flotante para abrir la barra si hay planes seleccionados
-    if (selectedPlans.length > 0) {
+    const sidebar = document.querySelector('.selected-plans-sidebar');
+    if (sidebar) {
+        // Animar hacia fuera
+        sidebar.style.right = '-420px';
+        // Remover después de la animación
+        setTimeout(() => {
+            sidebar.remove();
+        }, 350);
+    }
+    
+    // Mostrar botón flotante si hay planes seleccionados
+    if (window.selectedPlans.length > 0) {
         showSidebarFloatingButton();
     }
 }
@@ -4823,8 +4897,7 @@ function showSidebarFloatingButton() {
     btn.innerHTML = '<i class="fas fa-list-ul"></i>';
     btn.title = 'Ver planes seleccionados';
     btn.onclick = function() {
-        const sidebar = document.getElementById('selected-plans-sidebar');
-        if (sidebar) sidebar.style.right = '0';
+        renderSelectedPlansSidebar();
         removeSidebarFloatingButton();
     };
     document.body.appendChild(btn);
@@ -4837,38 +4910,58 @@ function removeSidebarFloatingButton() {
 
 // Agregar o quitar plan de la lista de seleccionados
 function togglePlanSelection(plan) {
-    const idx = selectedPlans.findIndex(p => p.name === plan.name && p.prestador === plan.prestador);
-    if (idx === -1) {
-        selectedPlans.push(plan);
-    } else {
-        selectedPlans.splice(idx, 1);
+    // Asegurar que el plan tenga el campo 'type' necesario para el informe
+    if (!plan.type && plan.prestador) {
+        // Mapear el prestador al tipo requerido por la función de informe
+        const prestadorMap = {
+            'OMINT': 'omint',
+            'SWISS MEDICAL': 'swiss_medical',
+            'SW NUBIAL': 'swiss_medical', // Usar el mismo tipo
+            'SWISS': 'swiss_medical',
+            'ACTIVA SALUD': 'activa_salud',
+            'MEDIFE': 'medife'
+        };
+        plan.type = prestadorMap[plan.prestador] || 'omint';
     }
+    
+    // Asegurar que el plan tenga el precio final
+    if (!plan.precioFinal && plan.price) {
+        plan.precioFinal = plan.price;
+    } else if (!plan.precioFinal && plan._precioFinal) {
+        plan.precioFinal = plan._precioFinal;
+    }
+    
+    const idx = window.selectedPlans.findIndex(p => p.name === plan.name && p.prestador === plan.prestador);
+    
+    if (idx === -1) {
+        window.selectedPlans.push(plan);
+        console.log('Plan agregado:', plan);
+    } else {
+        window.selectedPlans.splice(idx, 1);
+        console.log('Plan removido:', plan);
+    }
+    
     renderSelectedPlansSidebar();
     updatePlanCardsSelection();
 }
 
-// Quitar plan por índice
 function removePlanFromSelected(idx) {
-    selectedPlans.splice(idx, 1);
+    window.selectedPlans.splice(idx, 1);
     renderSelectedPlansSidebar();
     updatePlanCardsSelection();
 }
 
-// Actualizar el estado de los botones en las tarjetas de planes
 function updatePlanCardsSelection() {
-    const cards = document.querySelectorAll('.plan-card');
-    cards.forEach(card => {
-        const name = card.querySelector('.plan-name')?.textContent;
-        const prestador = card.querySelector('.provider-name')?.textContent;
-        const btn = card.querySelector('.select-plan-btn');
-        if (!btn) return;
-        const isSelected = selectedPlans.some(p => p.name === name && p.prestador === prestador);
+    const planCards = document.querySelectorAll('.plan-card');
+    planCards.forEach(card => {
+        const name = card.getAttribute('data-plan-name');
+        const prestador = card.getAttribute('data-prestador');
+        const isSelected = window.selectedPlans.some(p => p.name === name && p.prestador === prestador);
+        
         if (isSelected) {
-            btn.classList.add('selected');
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> Quitar';
+            card.classList.add('selected');
         } else {
-            btn.classList.remove('selected');
-            btn.innerHTML = '<i class="fas fa-plus-circle"></i> Seleccionar Plan';
+            card.classList.remove('selected');
         }
     });
 }
@@ -4894,93 +4987,2205 @@ showPlans = function() {
     updatePlanCardsSelection();
 };
 
-// Placeholder para la generación de informe
+// Función para generar el informe HTML
+function generarInformeHTML(datosCliente, plan) {
+    const fechaActual = new Date();
+    const numeroReferencia = generateRandomRef();
+    
+    return `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Cotización Personalizada OSPADEP</title>
+            <meta name="color-scheme" content="light">
+            <meta name="supported-color-schemes" content="light">
+            <style>
+                @media print {
+                    body {
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+                    
+                    @page {
+                        size: A4;
+                        margin: 0.8cm;
+                        /* Eliminar headers y footers del navegador */
+                        @top-left { content: ""; }
+                        @top-center { content: ""; }
+                        @top-right { content: ""; }
+                        @bottom-left { content: ""; }
+                        @bottom-center { content: ""; }
+                        @bottom-right { content: ""; }
+                    }
+                    
+                    /* Ocultar elementos que pueden aparecer en print */
+                    .no-print {
+                        display: none !important;
+                    }
+                    
+                    /* Optimizar espaciado para evitar páginas en blanco */
+                    .container {
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }
+                    
+                    .benefits-section {
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }
+                    
+                    .comparison-section {
+                        page-break-before: auto;
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }
+                    
+                    .footer {
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                        margin-top: 20px !important;
+                        display: block !important;
+                        visibility: visible !important;
+                    }
+                    
+                    /* Reducir espaciado en print */
+                    .header {
+                        padding: 20px !important;
+                    }
+                    
+                    .plan-section {
+                        padding: 20px !important;
+                    }
+                    
+                    .benefits-section {
+                        padding: 20px !important;
+                    }
+                    
+                    .comparison-section {
+                        padding: 20px !important;
+                    }
+                    
+                    /* Asegurar que las tablas no se rompan */
+                    .comparison-table {
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }
+                    
+                    /* Forzar transparencia del logo en PDF */
+                    .logo-container {
+                        background: transparent !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                    }
+                    
+                    .logo-img {
+                        background: transparent !important;
+                        background-color: transparent !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                        mix-blend-mode: multiply;
+                        filter: none !important;
+                    }
+                    
+                    /* Forzar estilos del nuevo header en PDF */
+                    .header {
+                        padding: 30px 30px 20px 30px !important;
+                        margin-bottom: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        background: linear-gradient(135deg, #1DB9A0 0%, #00A3C8 70%, #1A408C 100%) !important;
+                    }
+                    
+                    .header-row {
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: space-between !important;
+                        gap: 30px !important;
+                    }
+                    
+                    .logo-section {
+                        flex: 0 0 auto !important;
+                        min-width: 200px !important;
+                    }
+                    
+                    .title-section {
+                        flex: 1 !important;
+                        text-align: right !important;
+                    }
+                    
+                    .header-title {
+                        font-size: 28px !important;
+                        font-weight: 700 !important;
+                        margin: 0 0 4px 0 !important;
+                        text-align: right !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .header-subtitle {
+                        font-size: 15px !important;
+                        font-weight: 400 !important;
+                        margin: 0 !important;
+                        opacity: 0.9 !important;
+                        text-align: right !important;
+                        line-height: 1.2 !important;
+                    }
+                    
+                    .info-block {
+                        padding: 20px 30px !important;
+                        margin-bottom: 30px !important;
+                        margin-top: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        background: linear-gradient(135deg, #00A3C8 0%, #1A408C 100%) !important;
+                    }
+                    
+                    .header-cards {
+                        display: flex !important;
+                        justify-content: center !important;
+                        gap: 20px !important;
+                        flex-wrap: wrap !important;
+                    }
+                    
+                    .info-card {
+                        background: rgba(255, 255, 255, 0.15) !important;
+                        border-radius: 8px !important;
+                        padding: 15px !important;
+                        flex: 1 !important;
+                        min-width: 140px !important;
+                        max-width: 180px !important;
+                        text-align: center !important;
+                    }
+                }
+                
+                :root {
+                    --dominant: #1DB9A0;
+                    --secondary: #00A3C8;
+                    --accent: #1A408C;
+                    --detail: #0B3D91;
+                    --bg-light: #F8FAFB;
+                    --text-dark: #2E3A46;
+                    --text-muted: #69707A;
+                    --card-bg: #FFFFFF;
+                    --border-light: #E2E8F0;
+                }
+                
+                *, *::before, *::after {
+                    box-sizing: border-box;
+                }
+                
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+                    background: var(--bg-light);
+                    color: var(--text-dark);
+                    line-height: 1.6;
+                }
+                
+                .container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background: var(--card-bg);
+                    overflow: hidden;
+                }
+                
+                /* Header principal */
+                .header {
+                    background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 70%, var(--accent) 100%);
+                    color: #fff;
+                    padding: 30px 30px 20px 30px;
+                    margin-bottom: 0;
+                }
+                
+                .header-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 30px;
+                }
+                
+                .logo-section {
+                    flex: 0 0 auto;
+                    min-width: 200px;
+                }
+                
+                .logo-container {
+                    background: transparent;
+                    padding: 0;
+                    text-align: left;
+                }
+                
+                .logo-img {
+                    max-width: 180px;
+                    max-height: 80px;
+                    background: transparent !important;
+                    mix-blend-mode: multiply;
+                    opacity: 1;
+                }
+                
+                .title-section {
+                    flex: 1;
+                    text-align: right;
+                }
+                
+                .header-title {
+                    font-size: 28px;
+                    font-weight: 700;
+                    margin: 0 0 4px 0;
+                    text-align: right;
+                    line-height: 1.1;
+                }
+                
+                .header-subtitle {
+                    font-size: 15px;
+                    font-weight: 400;
+                    margin: 0;
+                    opacity: 0.9;
+                    text-align: right;
+                    line-height: 1.2;
+                }
+                
+                /* Bloque de información */
+                .info-block {
+                    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+                    color: #fff;
+                    padding: 20px 30px;
+                    margin-bottom: 30px;
+                    margin-top: 0;
+                }
+                
+                .header-cards {
+                    display: flex;
+                    justify-content: center;
+                    gap: 20px;
+                    flex-wrap: wrap;
+                    max-width: 100%;
+                }
+                
+                .info-card {
+                    background: rgba(255, 255, 255, 0.15);
+                    border-radius: 8px;
+                    padding: 15px;
+                    flex: 1;
+                    min-width: 140px;
+                    max-width: 180px;
+                    text-align: center;
+                }
+                
+                .card-icon {
+                    font-size: 24px;
+                    margin-bottom: 8px;
+                }
+                
+                .card-label {
+                    font-size: 11px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    opacity: 0.8;
+                    margin-bottom: 4px;
+                    letter-spacing: 0.5px;
+                }
+                
+                .card-value {
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+                
+                /* Plan seleccionado */
+                .plan-section {
+                    background: linear-gradient(135deg, var(--dominant), var(--secondary));
+                    color: white;
+                    padding: 30px;
+                    display: table;
+                    width: 100%;
+                }
+                
+                .plan-row {
+                    display: table-row;
+                }
+                
+                .plan-info {
+                    display: table-cell;
+                    vertical-align: middle;
+                    width: 60%;
+                    padding-right: 30px;
+                }
+                
+                .plan-name {
+                    font-size: 24px;
+                    font-weight: 700;
+                    margin: 0 0 8px 0;
+                }
+                
+                .plan-prestador {
+                    font-size: 18px;
+                    opacity: 0.9;
+                    margin: 0;
+                }
+                
+                .plan-price {
+                    display: table-cell;
+                    vertical-align: middle;
+                    text-align: right;
+                    width: 40%;
+                }
+                
+                .price-amount {
+                    font-size: 36px;
+                    font-weight: 700;
+                    line-height: 1;
+                    display: block;
+                }
+                
+                .price-period {
+                    font-size: 14px;
+                    opacity: 0.9;
+                    margin-top: 5px;
+                }
+                
+                /* Beneficios */
+                .benefits-section {
+                    padding: 30px;
+                }
+                
+                .section-title {
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: var(--accent);
+                    margin: 0 0 20px 0;
+                    text-align: center;
+                }
+                
+                .benefits-grid {
+                    display: table;
+                    width: 100%;
+                    border-collapse: separate;
+                    border-spacing: 15px;
+                }
+                
+                .benefits-row {
+                    display: table-row;
+                }
+                
+                .benefit-card {
+                    display: table-cell;
+                    background: #f8fafc;
+                    border: 1px solid var(--border-light);
+                    border-radius: 8px;
+                    padding: 20px;
+                    width: 50%;
+                    vertical-align: top;
+                }
+                
+                .benefit-icon {
+                    background: var(--dominant);
+                    color: white;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 8px;
+                    display: inline-block;
+                    text-align: center;
+                    line-height: 40px;
+                    font-size: 18px;
+                    margin-bottom: 10px;
+                }
+                
+                .benefit-title {
+                    color: var(--accent);
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin: 0 0 8px 0;
+                }
+                
+                .benefit-description {
+                    color: var(--text-muted);
+                    font-size: 14px;
+                    line-height: 1.4;
+                    margin: 0;
+                }
+                
+                /* Tabla comparativa */
+                .comparison-section {
+                    padding: 30px;
+                    background: #f8fafc;
+                }
+                
+                .comparison-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: white;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 8px rgba(27, 185, 160, 0.08);
+                }
+                
+                .comparison-table th {
+                    background: var(--accent);
+                    color: white;
+                    padding: 15px;
+                    text-align: left;
+                    font-weight: 600;
+                }
+                
+                .comparison-table td {
+                    padding: 12px 15px;
+                    border-bottom: 1px solid var(--border-light);
+                    vertical-align: top;
+                }
+                
+                .comparison-table tr:last-child td {
+                    border-bottom: none;
+                }
+                
+                .comparison-check {
+                    color: var(--dominant);
+                    font-weight: bold;
+                }
+                
+                /* Footer */
+                .footer {
+                    background: var(--detail);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                }
+                
+                .footer p {
+                    margin: 0 0 10px 0;
+                    line-height: 1.5;
+                }
+                
+                .footer strong {
+                    color: var(--dominant);
+                }
+                
+                /* Responsivo para email */
+                @media screen and (max-width: 600px) {
+                    .header, .plan-section {
+                        display: block !important;
+                    }
+                    
+                    .logo-cell, .header-content, .plan-info, .plan-price {
+                        display: block !important;
+                        width: 100% !important;
+                        padding: 0 !important;
+                        text-align: center !important;
+                        margin-bottom: 15px;
+                    }
+                    
+                    .benefits-grid {
+                        display: block !important;
+                    }
+                    
+                    .benefit-card {
+                        display: block !important;
+                        width: 100% !important;
+                        margin-bottom: 15px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="main-container">
+                <div class="container">
+                    <!-- Header principal -->
+                    <div class="header">
+                        <div class="header-row">
+                            <div class="logo-section">
+                                <div class="logo-container">
+                                    <img src="https://i.postimg.cc/qBhxQhRv/482cc3df-6285-4fa0-93ea-8d1f008f9dbf.png" alt="OSPADEP" class="logo-img" 
+                                         style="background: transparent !important; mix-blend-mode: multiply;"
+                                         onerror="this.outerHTML='<div style=&quot;background: var(--dominant); color: white; padding: 20px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 18px;&quot;>OSPADEP</div>'"
+                                         crossorigin="anonymous">
+                                </div>
+                            </div>
+                            
+                            <div class="title-section">
+                                <h1 class="header-title">Cotización OSP-${numeroReferencia}</h1>
+                            <div class="header-subtitle">
+                                ${formatDate(fechaActual)} | Vigencia: 72 hs hábiles
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bloque de información -->
+                <div class="info-block">
+                    <div class="header-cards">
+                        <div class="info-card">
+                            <div class="card-icon">👤</div>
+                            <div class="card-label">BENEFICIARIO</div>
+                            <div class="card-value">${getTipoPlanLabel(datosCliente.tipoCobertura)}</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-icon">🎂</div>
+                            <div class="card-label">EDAD</div>
+                            <div class="card-value">${datosCliente.edadTitular || '25'} años</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-icon">➕</div>
+                            <div class="card-label">AFILIACIÓN</div>
+                            <div class="card-value">Adherente</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-icon">🏢</div>
+                            <div class="card-label">COBERTURA</div>
+                            <div class="card-value">CABA y GBA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan seleccionado -->
+                <div class="plan-section">
+                    <div class="plan-row">
+                        <div class="plan-info">
+                            <h2 class="plan-name">${plan.name}</h2>
+                            <p class="plan-prestador">${getPrestadorLabel(plan.type)}</p>
+                        </div>
+                        <div class="plan-price">
+                            <span class="price-amount">$${(plan.precioFinal || plan.price || 0).toLocaleString('es-AR')}</span>
+                            <div class="price-period">por mes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beneficios -->
+                <div class="benefits-section">
+                    <h2 class="section-title">Beneficios Incluidos</h2>
+                    <div class="benefits-grid">
+                        ${generateBenefitsHTMLForEmail(plan)}
+                    </div>
+                </div>
+
+                <!-- Tabla comparativa -->
+                <div class="comparison-section">
+                    <h2 class="section-title">Comparación de Características</h2>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Características</th>
+                                <th>${plan.name}</th>
+                                <th>Otros Planes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${generateComparisonTableHTML(plan)}
+                        </tbody>
+                    </table>
+                </div>
+
+                </div>
+                
+                <!-- Footer compacto -->
+                <div class="footer">
+                    <p><strong>Cotización válida por 30 días.</strong> Contáctenos: 📞 <strong>0800-999-OSPADEP</strong> | 📧 <strong>ventas@ospadep.com.ar</strong> | 📱 <strong>+54 11 1234-5678</strong></p>
+                    <p><em>Obra Social del Personal de Aeronavegación de Entes Privados</em></p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+}
+
+// ... existing code ...
+
+function generateBenefitsHTML(plan) {
+    // Beneficios específicos según el prestador
+    const benefitsByProvider = {
+        'omint': [
+            {
+                icon: 'hospital',
+                title: 'Red OMINT Exclusiva',
+                description: 'Acceso a la red de sanatorios y centros médicos propios de OMINT, con tecnología de última generación.'
+            },
+            {
+                icon: 'mobile-alt',
+                title: 'OMINT App',
+                description: 'Gestiona tu plan desde la app: turnos online, credencial digital y cartilla médica actualizada.'
+            },
+            {
+                icon: 'user-md',
+                title: 'Médicos de Prestigio',
+                description: 'Atención con profesionales de reconocida trayectoria en todas las especialidades.'
+            },
+            {
+                icon: 'globe',
+                title: 'Cobertura Internacional',
+                description: 'Asistencia médica en el exterior y convenios con prestadores internacionales.'
+            }
+        ],
+        'swiss_medical': [
+            {
+                icon: 'hospital',
+                title: 'Red Swiss Medical',
+                description: 'Acceso a Clínica y Maternidad Suizo Argentina y toda la red Swiss Medical Group.'
+            },
+            {
+                icon: 'heartbeat',
+                title: 'Programas Preventivos',
+                description: 'Plan Materno Infantil y programas de prevención cardiovascular exclusivos.'
+            },
+            {
+                icon: 'tooth',
+                title: 'Odontología Integral',
+                description: 'Cobertura odontológica completa incluyendo ortodoncia e implantes.'
+            },
+            {
+                icon: 'star',
+                title: 'Beneficios Exclusivos',
+                description: 'Descuentos en farmacias, ópticas y centros de estética de la red.'
+            }
+        ],
+        'activa_salud': [
+            {
+                icon: 'hospital',
+                title: 'Red de Prestadores',
+                description: 'Amplia red de prestadores en todo el país con los mejores centros médicos.'
+            },
+            {
+                icon: 'calendar',
+                title: 'Turnos 24/7',
+                description: 'Sistema de turnos online disponible las 24 horas, los 365 días del año.'
+            },
+            {
+                icon: 'heart',
+                title: 'Programas de Salud',
+                description: 'Programas de prevención y seguimiento personalizado de patologías crónicas.'
+            },
+            {
+                icon: 'pills',
+                title: 'Farmacia',
+                description: 'Importantes descuentos en medicamentos en farmacias adheridas.'
+            }
+        ],
+        'medife': [
+            {
+                icon: 'hospital',
+                title: 'Red Medifé',
+                description: 'Acceso a los mejores centros médicos y sanatorios del país.'
+            },
+            {
+                icon: 'user-md',
+                title: 'Médico de Cabecera',
+                description: 'Seguimiento personalizado con tu médico de cabecera asignado.'
+            },
+            {
+                icon: 'mobile-alt',
+                title: 'App Mi Medifé',
+                description: 'Gestiona tu plan desde el celular: turnos, autorizaciones y credencial digital.'
+            },
+            {
+                icon: 'ambulance',
+                title: 'Urgencias Premium',
+                description: 'Servicio de urgencias y emergencias con unidades de alta complejidad.'
+            }
+        ]
+    };
+
+    // Obtener los beneficios específicos del prestador o usar beneficios genéricos
+    const benefits = benefitsByProvider[plan.type] || [
+        {
+            icon: 'hospital',
+            title: 'Red de Prestadores Premium',
+            description: 'Acceso a una extensa red de centros médicos y profesionales de primer nivel.'
+        },
+        {
+            icon: 'mobile-alt',
+            title: 'Tecnología y Comodidad',
+            description: 'App móvil exclusiva, turnos online y credencial digital.'
+        },
+        {
+            icon: 'user-md',
+            title: 'Atención Especializada',
+            description: 'Cobertura integral en todas las especialidades médicas.'
+        },
+        {
+            icon: 'ambulance',
+            title: 'Atención 24/7',
+            description: 'Servicio de urgencias y emergencias las 24 horas.'
+        }
+    ];
+
+    return benefits.map(benefit => `
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fas fa-${benefit.icon}"></i>
+            </div>
+            <div class="benefit-content">
+                <h3>${benefit.title}</h3>
+                <p>${benefit.description}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function generateComparisonTableHTML(plan) {
+    // Características específicas según el prestador
+    const comparisonsByProvider = {
+        'omint': [
+            {
+                feature: 'Cobertura Nacional',
+                planValue: '100% del país',
+                otherValue: 'Según plan'
+            },
+            {
+                feature: 'Centros Propios',
+                planValue: 'Red exclusiva OMINT',
+                otherValue: 'Variable'
+            },
+            {
+                feature: 'Habitación Internación',
+                planValue: 'Individual con acompañante',
+                otherValue: 'Según disponibilidad'
+            },
+            {
+                feature: 'Cobertura Medicamentos',
+                planValue: '100% PMI, 60% ambulatorio',
+                otherValue: '40-50% ambulatorio'
+            },
+            {
+                feature: 'Asistencia al Viajero',
+                planValue: 'Internacional',
+                otherValue: 'Nacional'
+            }
+        ],
+        'swiss_medical': [
+            {
+                feature: 'Red de Atención',
+                planValue: 'Swiss Medical Group',
+                otherValue: 'Prestadores varios'
+            },
+            {
+                feature: 'Clínicas Principales',
+                planValue: 'Suizo Americana y red SMG',
+                otherValue: 'Según cartilla'
+            },
+            {
+                feature: 'Cobertura Odontológica',
+                planValue: 'Integral con ortodoncia',
+                otherValue: 'Básica'
+            },
+            {
+                feature: 'Plan Materno Infantil',
+                planValue: 'Cobertura extendida',
+                otherValue: 'Básica'
+            },
+            {
+                feature: 'Descuentos Farmacia',
+                planValue: '60% ambulatorio',
+                otherValue: '40% ambulatorio'
+            }
+        ],
+        'activa_salud': [
+            {
+                feature: 'Cartilla Médica',
+                planValue: 'Amplia red nacional',
+                otherValue: 'Red limitada'
+            },
+            {
+                feature: 'Consultas Médicas',
+                planValue: 'Sin límites',
+                otherValue: 'Según plan'
+            },
+            {
+                feature: 'Programas Preventivos',
+                planValue: 'Incluidos sin cargo',
+                otherValue: 'Cargo adicional'
+            },
+            {
+                feature: 'Emergencias',
+                planValue: 'Unidades propias',
+                otherValue: 'Tercerizado'
+            },
+            {
+                feature: 'Descuentos Especiales',
+                planValue: 'Toda la red',
+                otherValue: 'Limitados'
+            }
+        ],
+        'medife': [
+            {
+                feature: 'Cobertura Nacional',
+                planValue: 'Red Medifé completa',
+                otherValue: 'Según plan'
+            },
+            {
+                feature: 'Médico de Cabecera',
+                planValue: 'Asignación personalizada',
+                otherValue: 'No disponible'
+            },
+            {
+                feature: 'App Móvil',
+                planValue: 'Funcionalidad completa',
+                otherValue: 'Básica'
+            },
+            {
+                feature: 'Urgencias',
+                planValue: 'Flota propia',
+                otherValue: 'Tercerizado'
+            },
+            {
+                feature: 'Programas de Salud',
+                planValue: 'Incluidos',
+                otherValue: 'Cargo adicional'
+            }
+        ]
+    };
+
+    // Normalizar el tipo de prestador para hacer la búsqueda
+    const normalizedType = plan.type?.toLowerCase().replace(/[\s_-]/g, '');
+    let prestadorKey = plan.type?.toLowerCase();
+    
+    // Mapear nombres de prestadores
+    if (normalizedType === 'activasalud' || normalizedType === 'activa') {
+        prestadorKey = 'activa_salud';
+    } else if (normalizedType === 'swissmedical' || normalizedType === 'swiss') {
+        prestadorKey = 'swiss_medical';
+    }
+    
+    // Obtener las comparaciones específicas del prestador o usar comparaciones genéricas
+    const comparisons = comparisonsByProvider[prestadorKey] || [
+        {
+            feature: 'Cobertura Nacional',
+            planValue: 'Completa',
+            otherValue: 'Limitada'
+        },
+        {
+            feature: 'Centros Médicos',
+            planValue: 'Primera línea',
+            otherValue: 'Variables'
+        },
+        {
+            feature: 'Tecnología Digital',
+            planValue: 'Avanzada',
+            otherValue: 'Básica'
+        },
+        {
+            feature: 'Atención Personalizada',
+            planValue: 'Preferencial',
+            otherValue: 'Estándar'
+        },
+        {
+            feature: 'Descuentos Farmacia',
+            planValue: '40-60%',
+            otherValue: '30-40%'
+        }
+    ];
+
+    return comparisons.map(comp => `
+        <tr>
+            <td>${comp.feature}</td>
+            <td>${comp.planValue}</td>
+            <td>${comp.otherValue}</td>
+        </tr>
+    `).join('');
+}
+
+// ... existing code ...
+
 function generateSelectedPlansReport() {
-    if (!selectedPlans.length) {
-        alert('No hay planes seleccionados.');
+    // Obtener los planes seleccionados
+    const selectedPlans = window.selectedPlans || [];
+    
+    if (selectedPlans.length === 0) {
+        alert('Por favor, selecciona al menos un plan para generar el informe.');
         return;
     }
-    fetch('Plantilla-Marketing/plantillaMarketing.html')
-        .then(response => response.text())
-        .then(template => {
-            // Generar Cards de los planes seleccionados
-            let plansHTML = '';
-            selectedPlans.forEach(plan => {
-                plansHTML += `
-                <div class="plan">
-                    <div class="plan-header">${plan.name}</div>
-                    <div class="plan-price">${formatCurrency(plan.price)}</div>
-                    <ul class="plan-features">
-                        ${plan.features.map(f => `<li><i class='fas fa-check'></i> ${f}</li>`).join('')}
-                    </ul>
-                    <div class="plan-footer">${plan.footer || ''}</div>
-                </div>`;
-            });
-            // Usar DOMParser para reemplazar el contenido de .plans de forma segura
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(template, 'text/html');
-            const plansDiv = doc.querySelector('.plans');
-            if (plansDiv) {
-                plansDiv.innerHTML = plansHTML;
-            }
-            // Serializar el HTML final
-            const finalHtml = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-            // Descargar el HTML
-            const blob = new Blob([finalHtml], {type: 'text/html'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'cotizacion-ospadep.html';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-}
 
-// Utilidad: icono para beneficio
-function getBenefitIcon(text) {
-    const l = text.toLowerCase();
-    if (/odont|dental|diente/.test(l)) return 'fa-tooth';
-    if (/psico|mental/.test(l)) return 'fa-heart-pulse';
-    if (/médico|doctor|profesional/.test(l)) return 'fa-user-doctor';
-    if (/clínica|sanatorio|hospital|centro|consultorio/.test(l)) return 'fa-hospital';
-    if (/premium/.test(l)) return 'fa-star';
-    if (/especialista|consulta|turno/.test(l)) return 'fa-stethoscope';
-    if (/cobertura|seguro|sin coseguro|100%|total|completa|ampliada|prioritaria/.test(l)) return 'fa-shield-heart';
-    if (/internación/.test(l)) return 'fa-bed-pulse';
-    if (/emergencia|urgencia/.test(l)) return 'fa-truck-medical';
-    if (/anticonceptivo/.test(l)) return 'fa-capsules';
-    if (/farmacia/.test(l)) return 'fa-percent';
-    if (/vacuna/.test(l)) return 'fa-syringe';
-    if (/reintegro/.test(l)) return 'fa-arrow-rotate-left';
-    if (/medicación|medicamento/.test(l)) return 'fa-prescription-bottle-medical';
-    if (/preventiva/.test(l)) return 'fa-heart-pulse';
-    if (/parto|maternidad/.test(l)) return 'fa-baby';
-    if (/servicio|app|digital|online|virtual/.test(l)) return 'fa-concierge-bell';
-    if (/diagnóstico|laboratorio|estudio|microscopio/.test(l)) return 'fa-microscope';
-    return 'fa-circle-info';
-}
-
-// === NUEVO: Renderizar solo la Card del plan seleccionado en el informe de marketing ===
-function renderSelectedPlanInMarketingTemplate(plan) {
-    // Buscar el contenedor de planes en la plantilla
-    const plansSection = document.querySelector('.plans');
-    if (!plansSection) return;
+    // Obtener los datos del cliente desde el estado global o el formulario
+    let datosCliente = window.datosFormulario || {};
     
-    // Limpiar cualquier Card de ejemplo
-    plansSection.innerHTML = '';
+    // Si no están en el estado global, intentar obtenerlos del formulario
+    if (!datosCliente.tipoCobertura) {
+        const form = document.getElementById('cotization-form');
+        if (form) {
+            const formData = new FormData(form);
+            datosCliente = {
+                tipoCobertura: formData.get('tipo-cobertura') || window.selectedOption || 'solo',
+                edadTitular: formData.get('edad-titular') || formData.get('edad'),
+                edadPareja: formData.get('edad-pareja') || formData.get('edadPareja'),
+                cantidadHijos: formData.get('cantidad-hijos') || formData.get('cantidadHijos'),
+                edadesHijos: formData.get('edades-hijos') || formData.get('edadesHijos')
+            };
+        } else {
+            // Usar datos por defecto
+            datosCliente = {
+                tipoCobertura: window.selectedOption || 'solo',
+                edadTitular: 30,
+                edadPareja: null,
+                cantidadHijos: 0,
+                edadesHijos: ''
+            };
+        }
+    }
 
-    // Generar la Card con la estructura de la plantilla
-    const planCard = document.createElement('div');
-    planCard.className = 'plan';
-    planCard.innerHTML = `
-        <div class="plan-header">${plan.name}</div>
-        <div class="plan-price">${formatCurrency(plan.price)}</div>
-        <ul class="plan-features">
-            ${plan.features.map(f => `<li><i class='fas fa-check'></i> ${f}</li>`).join('')}
-        </ul>
-        <div class="plan-footer">${plan.footer || ''}</div>
+    console.log('Datos del cliente:', datosCliente);
+    console.log('Planes seleccionados:', selectedPlans);
+
+    // Generar un solo informe consolidado con todos los planes seleccionados
+    const informeHTML = generarInformeConsolidado(datosCliente, selectedPlans);
+
+    // Crear un contenedor para el informe consolidado
+    const allReportsContainer = document.createElement('div');
+    allReportsContainer.innerHTML = informeHTML;
+
+    // Crear documento HTML optimizado para PDF
+    const optimizedHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Cotización OSPADEP</title>
+            <meta charset="UTF-8">
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+                
+                @media print {
+                    html, body {
+                        width: 210mm;
+                        height: 297mm;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        font-size: 12px;
+                    }
+                    
+                    @page {
+                        size: A4;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        /* Eliminar completamente headers y footers */
+                        @top-left { content: ""; }
+                        @top-center { content: ""; }
+                        @top-right { content: ""; }
+                        @bottom-left { content: ""; }
+                        @bottom-center { content: ""; }
+                        @bottom-right { content: ""; }
+                        @top-left-corner { content: ""; }
+                        @top-right-corner { content: ""; }
+                        @bottom-left-corner { content: ""; }
+                        @bottom-right-corner { content: ""; }
+                    }
+                    
+                    body {
+                        margin: 15mm !important;
+                        padding: 0 !important;
+                        background: white !important;
+                    }
+                    
+                    .container {
+                        page-break-after: always;
+                        height: 267mm; /* A4 height minus margins */
+                        overflow: hidden;
+                    }
+                    
+                    .container:last-child {
+                        page-break-after: avoid;
+                        height: auto;
+                    }
+                    
+                    /* Optimizar espaciado para una sola página */
+                    .header {
+                        padding: 15px !important;
+                        margin-bottom: 10px !important;
+                    }
+                    
+                    .plan-section {
+                        padding: 15px !important;
+                        margin-bottom: 10px !important;
+                    }
+                    
+                    .benefits-section {
+                        padding: 15px !important;
+                        margin-bottom: 10px !important;
+                        page-break-inside: avoid;
+                    }
+                    
+                    .comparison-section {
+                        padding: 15px !important;
+                        margin-bottom: 10px !important;
+                        page-break-inside: avoid;
+                    }
+                    
+                    .footer {
+                        padding: 10px !important;
+                        margin-top: 10px !important;
+                        page-break-inside: avoid !important;
+                        display: block !important;
+                        visibility: visible !important;
+                        position: relative !important;
+                        bottom: 0 !important;
+                        width: 100% !important;
+                        background: white !important;
+                    }
+                    
+                    /* Reducir tamaños de fuente para que quepa más contenido */
+                    h1 { font-size: 20px !important; }
+                    h2 { font-size: 16px !important; }
+                    h3 { font-size: 14px !important; }
+                    p, td, th { font-size: 11px !important; }
+                    
+                    /* Tablas más compactas */
+                    .comparison-table th,
+                    .comparison-table td {
+                        padding: 6px !important;
+                        font-size: 10px !important;
+                    }
+                    
+                    /* Benefits más compactos */
+                    .benefit-card {
+                        margin-bottom: 8px !important;
+                        padding: 8px !important;
+                    }
+                    
+                    .benefit-title {
+                        font-size: 12px !important;
+                    }
+                    
+                    .benefit-description {
+                        font-size: 10px !important;
+                    }
+                }
+                
+                @media screen {
+                    body {
+                        font-family: Arial, sans-serif;
+                        background: #f5f5f5;
+                        padding: 20px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            ${allReportsContainer.innerHTML}
+        </body>
+        </html>
     `;
-    plansSection.appendChild(planCard);
+    
+    // Crear nueva ventana con configuración especial para PDF
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(optimizedHTML);
+    printWindow.document.close();
+
+    // Configurar la ventana para impresión óptima
+    printWindow.onload = function() {
+        printWindow.focus();
+        
+        // Agregar CSS adicional para suprimir headers/footers del navegador
+        const additionalCSS = printWindow.document.createElement('style');
+        additionalCSS.innerHTML = `
+            @media print {
+                html, body {
+                    -webkit-print-color-adjust: exact !important;
+                    color-adjust: exact !important;
+                }
+                
+                /* Configuración de página sin headers/footers */
+                @page {
+                    size: A4;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                
+                /* Forzar visibilidad del footer */
+                .footer {
+                    display: block !important;
+                    visibility: visible !important;
+                    position: relative !important;
+                    margin-top: auto !important;
+                    page-break-inside: avoid !important;
+                }
+                
+                /* Suprimir URL y títulos del navegador */
+                @page :first {
+                    margin-top: 0 !important;
+                }
+                
+                @page :left {
+                    margin-left: 0 !important;
+                }
+                
+                @page :right {
+                    margin-right: 0 !important;
+                }
+                
+                body {
+                    margin: 15mm !important;
+                    padding: 0 !important;
+                    min-height: 267mm !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                }
+                
+                .main-container {
+                    flex: 1 !important;
+                }
+                
+                .footer {
+                    margin-top: auto !important;
+                    flex-shrink: 0 !important;
+                }
+            }
+        `;
+        printWindow.document.head.appendChild(additionalCSS);
+        
+        // Suprimir title para evitar que aparezca en header
+        printWindow.document.title = '';
+        
+        // El informe consolidado ya está optimizado para una sola página
+        
+        // Pequeño delay para asegurar que los estilos se apliquen correctamente
+        setTimeout(() => {
+            printWindow.print();
+            
+            // Cerrar la ventana después de imprimir
+            printWindow.addEventListener('afterprint', function() {
+                printWindow.close();
+            });
+        }, 800);
+    };
+}
+
+// ... existing code ...
+
+// Función para generar informe consolidado de múltiples planes
+function generarInformeConsolidado(datosCliente, planes) {
+    const fechaActual = new Date();
+    const numeroReferencia = generateRandomRef();
+    
+    // Generar resumen de planes
+    const planesResumen = planes.map(plan => {
+        const precio = typeof plan.price === 'number' ? plan.price : parseFloat(plan.price) || 0;
+        return `
+            <div class="plan-summary-item">
+                <div class="plan-summary-info">
+                    <h4>${getPrestadorLabel(plan.type)} - ${plan.name}</h4>
+                    <p class="plan-coverage">${getTipoPlanLabel(datosCliente.tipoCobertura)} • ${plan.cobertura || 'Cobertura integral'}</p>
+                </div>
+                <div class="plan-summary-price">
+                    <span class="price-amount">$${precio.toLocaleString('es-AR')}</span>
+                    <span class="price-period">por mes</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Calcular información de aportes OSPADEP
+    const aportesPorcentaje = datosCliente.aportes || 0;
+    const tieneAportes = aportesPorcentaje > 0;
+    const montoAportes = tieneAportes ? (aportesPorcentaje * 100).toFixed(1) : 0;
+
+    // Generar beneficios consolidados (únicos) - organizados en filas
+    const todosLosBeneficios = planes.flatMap(plan => generateBenefitsForPlan(plan));
+    const beneficiosUnicos = todosLosBeneficios.filter((beneficio, index, arr) => 
+        arr.findIndex(b => b.title === beneficio.title) === index
+    ).slice(0, 6); // Limitar a 6 beneficios
+
+    // Organizar beneficios en filas de 3
+    let beneficiosHTML = '';
+    for (let i = 0; i < beneficiosUnicos.length; i += 3) {
+        beneficiosHTML += '<div class="benefits-row">';
+        
+        for (let j = i; j < Math.min(i + 3, beneficiosUnicos.length); j++) {
+            const beneficio = beneficiosUnicos[j];
+            beneficiosHTML += `
+                <div class="benefit-card-compact">
+                    <div class="benefit-icon">${beneficio.icon}</div>
+                    <div class="benefit-content">
+                        <h4 class="benefit-title">${beneficio.title}</h4>
+                        <p class="benefit-description">${beneficio.description}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        beneficiosHTML += '</div>';
+    }
+
+    return `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Cotización Comparativa OSPADEP</title>
+            <meta name="color-scheme" content="light">
+            <meta name="supported-color-schemes" content="light">
+            <style>
+                @media print {
+                    * {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        box-sizing: border-box !important;
+                    }
+                    
+                    html, body {
+                        width: 210mm !important;
+                        height: 297mm !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        font-size: 11px;
+                        overflow: hidden !important;
+                    }
+                    
+                    @page {
+                        size: A4 portrait;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        @top-left { content: ""; }
+                        @top-center { content: ""; }
+                        @top-right { content: ""; }
+                        @bottom-left { content: ""; }
+                        @bottom-center { content: ""; }
+                        @bottom-right { content: ""; }
+                    }
+                    
+                    body {
+                        margin: 0 !important;
+                        padding: 15mm !important;
+                        background: white !important;
+                        width: 210mm !important;
+                        height: 297mm !important;
+                        max-height: 297mm !important;
+                        overflow: hidden !important;
+                        box-sizing: border-box !important;
+                    }
+                    
+                    .container {
+                        width: 100% !important;
+                        height: 267mm !important;
+                        max-height: 267mm !important;
+                        display: block !important;
+                        overflow: hidden !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+                    
+                    .header {
+                        height: 70mm !important;
+                        padding: 5mm !important;
+                        margin: 0 0 3mm 0 !important;
+                        display: block !important;
+                    }
+                    
+                    .content-area {
+                        height: 174mm !important;
+                        max-height: 174mm !important;
+                        overflow: hidden !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+                    
+                    .plans-section {
+                        height: auto !important;
+                        max-height: 120mm !important;
+                        padding: 6mm !important;
+                        margin: 0 0 3mm 0 !important;
+                        overflow: visible !important;
+                    }
+                    
+                    .benefits-section {
+                        height: auto !important;
+                        max-height: 55mm !important;
+                        padding: 6mm !important;
+                        margin: 0 !important;
+                        overflow: hidden !important;
+                        page-break-after: auto !important;
+                    }
+                    
+                    .footer {
+                        height: 20mm !important;
+                        padding: 5mm !important;
+                        margin: 0 !important;
+                        overflow: visible !important;
+                        position: relative !important;
+                        bottom: 0 !important;
+                        display: block !important;
+                        visibility: visible !important;
+                        width: 100% !important;
+                        background: white !important;
+                        page-break-inside: avoid !important;
+                        page-break-before: auto !important;
+                    }
+                    
+                    /* Tamaños de fuente optimizados */
+                    h1 { 
+                        font-size: 16px !important; 
+                        margin: 0 0 3mm 0 !important; 
+                        line-height: 1.2 !important;
+                    }
+                    h2 { 
+                        font-size: 13px !important; 
+                        margin: 0 0 2mm 0 !important; 
+                        line-height: 1.2 !important;
+                    }
+                    h3 { 
+                        font-size: 11px !important; 
+                        margin: 0 0 1mm 0 !important; 
+                        line-height: 1.2 !important;
+                    }
+                    h4 { 
+                        font-size: 10px !important; 
+                        margin: 0 0 1mm 0 !important; 
+                        line-height: 1.1 !important;
+                    }
+                    p { 
+                        font-size: 9px !important; 
+                        margin: 0 0 1mm 0 !important; 
+                        line-height: 1.2 !important;
+                    }
+                    
+                    /* Header específico */
+                    .header {
+                        padding: 5mm !important;
+                        height: 70mm !important;
+                    }
+                    
+                    .header-title {
+                        font-size: 18px !important;
+                        margin: 0 !important;
+                        text-align: center !important;
+                    }
+                    
+                    .logo-cell {
+                        width: 60mm !important;
+                        padding-right: 5mm !important;
+                    }
+                    
+                    .logo-container {
+                        height: 50mm !important;
+                        padding: 3mm !important;
+                    }
+                    
+                    .logo-img {
+                        max-width: 54mm !important;
+                        max-height: 44mm !important;
+                    }
+                    
+                    .header-content {
+                        width: auto !important;
+                        text-align: center !important;
+                    }
+                    
+                    .header-meta-right {
+                        width: 60mm !important;
+                        padding-left: 5mm !important;
+                    }
+                    
+                    .meta-item {
+                        padding: 2mm 3mm !important;
+                        margin-bottom: 1mm !important;
+                        background: rgba(255, 255, 255, 0.15) !important;
+                    }
+                    
+                    .meta-label {
+                        font-size: 8px !important;
+                        display: block !important;
+                    }
+                    
+                    .meta-value {
+                        font-size: 10px !important;
+                        display: block !important;
+                        font-weight: 600 !important;
+                    }
+                    
+                    /* Planes section */
+                    .section-title {
+                        font-size: 14px !important;
+                        margin: 0 0 3mm 0 !important;
+                        padding-bottom: 1mm !important;
+                    }
+                    
+                    .plan-summary-item {
+                        margin: 0 0 1.5mm 0 !important;
+                        padding: 2mm !important;
+                        height: auto !important;
+                        min-height: auto !important;
+                    }
+                    
+                    .plan-summary-info h4 {
+                        font-size: 10px !important;
+                        margin: 0 0 0.5mm 0 !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .plan-coverage {
+                        font-size: 8px !important;
+                        margin: 0 !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .price-amount {
+                        font-size: 12px !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .price-period {
+                        font-size: 7px !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    /* Aportes section */
+                    .aportes-section {
+                        margin: 2mm 0 0 0 !important;
+                    }
+                    
+                    .aportes-info {
+                        padding: 3mm !important;
+                    }
+                    
+                    .aportes-title {
+                        font-size: 11px !important;
+                        margin: 0 0 1mm 0 !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .aportes-amount {
+                        font-size: 14px !important;
+                        margin: 0 0 0.5mm 0 !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .aportes-description {
+                        font-size: 8px !important;
+                        margin: 0 !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .aportes-cta {
+                        font-size: 9px !important;
+                        margin: 0.5mm 0 0 0 !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    /* Benefits section */
+                    .benefits-row {
+                        margin: 0 0 2mm 0 !important;
+                        height: auto !important;
+                    }
+                    
+                    .benefit-card-compact {
+                        padding: 2mm !important;
+                        margin-right: 2mm !important;
+                        height: auto !important;
+                    }
+                    
+                    .benefit-icon {
+                        font-size: 14px !important;
+                        margin: 0 0 1mm 0 !important;
+                    }
+                    
+                    .benefit-title { 
+                        font-size: 9px !important;
+                        margin: 0 0 1mm 0 !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .benefit-description { 
+                        font-size: 8px !important;
+                        margin: 0 !important;
+                        line-height: 1.2 !important;
+                    }
+                    
+                    /* Footer */
+                    .footer {
+                        font-size: 8px !important;
+                        line-height: 1.2 !important;
+                    }
+                    
+                    .footer p {
+                        margin: 0 0 1mm 0 !important;
+                    }
+                    
+                    /* Forzar transparencia del logo en PDF */
+                    .logo-container {
+                        background: transparent !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                    }
+                    
+                    .logo-img {
+                        background: transparent !important;
+                        background-color: transparent !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                        mix-blend-mode: multiply;
+                        filter: none !important;
+                    }
+                    
+                    /* Forzar estilos del nuevo header en PDF */
+                    .header {
+                        padding: 20px 20px 15px 20px !important;
+                        margin-bottom: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        background: linear-gradient(135deg, #1DB9A0 0%, #00A3C8 70%, #1A408C 100%) !important;
+                    }
+                    
+                    .header-row {
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: space-between !important;
+                        gap: 25px !important;
+                    }
+                    
+                    .logo-section {
+                        flex: 0 0 auto !important;
+                        min-width: 160px !important;
+                    }
+                    
+                    .title-section {
+                        flex: 1 !important;
+                        text-align: right !important;
+                    }
+                    
+                    .header-title {
+                        font-size: 22px !important;
+                        font-weight: 700 !important;
+                        margin: 0 0 3px 0 !important;
+                        text-align: right !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .header-subtitle {
+                        font-size: 13px !important;
+                        font-weight: 400 !important;
+                        margin: 0 !important;
+                        opacity: 0.9 !important;
+                        text-align: right !important;
+                        line-height: 1.2 !important;
+                    }
+                    
+                    .info-block {
+                        padding: 15px 20px !important;
+                        margin-bottom: 20px !important;
+                        margin-top: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        background: linear-gradient(135deg, #00A3C8 0%, #1A408C 100%) !important;
+                    }
+                    
+                    .header-cards {
+                        display: flex !important;
+                        justify-content: center !important;
+                        gap: 15px !important;
+                        flex-wrap: wrap !important;
+                    }
+                    
+                    .info-card {
+                        background: rgba(255, 255, 255, 0.15) !important;
+                        border-radius: 6px !important;
+                        padding: 12px !important;
+                        flex: 1 !important;
+                        min-width: 110px !important;
+                        max-width: 140px !important;
+                        text-align: center !important;
+                    }
+                }
+                
+                :root {
+                    --dominant: #1DB9A0;
+                    --secondary: #00A3C8;
+                    --accent: #1A408C;
+                    --detail: #0B3D91;
+                    --bg-light: #F8FAFB;
+                    --text-dark: #2E3A46;
+                    --text-muted: #69707A;
+                    --card-bg: #FFFFFF;
+                    --border-light: #E2E8F0;
+                }
+                
+                *, *::before, *::after {
+                    box-sizing: border-box;
+                }
+                
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+                    background: var(--bg-light);
+                    color: var(--text-dark);
+                    line-height: 1.4;
+                }
+                
+                .container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background: var(--card-bg);
+                    overflow: hidden;
+                }
+                
+                /* Header principal */
+                .header {
+                    background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 70%, var(--accent) 100%);
+                    color: #fff;
+                    padding: 20px 20px 15px 20px;
+                    margin-bottom: 0;
+                }
+                
+                .header-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 25px;
+                }
+                
+                .logo-section {
+                    flex: 0 0 auto;
+                    min-width: 160px;
+                }
+                
+                .logo-container {
+                    background: transparent;
+                    padding: 0;
+                    text-align: left;
+                }
+                
+                .logo-img {
+                    max-width: 150px;
+                    max-height: 60px;
+                    background: transparent !important;
+                    mix-blend-mode: multiply;
+                    opacity: 1;
+                }
+                
+                .title-section {
+                    flex: 1;
+                    text-align: right;
+                }
+                
+                .header-title {
+                    font-size: 22px;
+                    font-weight: 700;
+                    margin: 0 0 3px 0;
+                    line-height: 1.1;
+                    text-align: right;
+                }
+                
+                .header-subtitle {
+                    font-size: 13px;
+                    font-weight: 400;
+                    margin: 0;
+                    opacity: 0.9;
+                    text-align: right;
+                    line-height: 1.2;
+                }
+                
+                /* Bloque de información */
+                .info-block {
+                    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+                    color: #fff;
+                    padding: 15px 20px;
+                    margin-bottom: 20px;
+                    margin-top: 0;
+                }
+                
+                .header-cards {
+                    display: flex;
+                    justify-content: center;
+                    gap: 15px;
+                    flex-wrap: wrap;
+                    max-width: 100%;
+                }
+                
+                .info-card {
+                    background: rgba(255, 255, 255, 0.15);
+                    border-radius: 6px;
+                    padding: 12px;
+                    flex: 1;
+                    min-width: 110px;
+                    max-width: 140px;
+                    text-align: center;
+                }
+                
+                .card-icon {
+                    font-size: 18px;
+                    margin-bottom: 6px;
+                }
+                
+                .card-label {
+                    font-size: 10px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    opacity: 0.8;
+                    margin-bottom: 3px;
+                    letter-spacing: 0.5px;
+                }
+                
+                .card-value {
+                    font-size: 12px;
+                    font-weight: 600;
+                }
+                
+                /* Sección de planes */
+                .plans-section {
+                    padding: 20px;
+                    border-bottom: 1px solid var(--border-light);
+                }
+                
+                .section-title {
+                    color: var(--accent);
+                    font-size: 18px;
+                    margin: 0 0 15px 0;
+                    font-weight: 600;
+                    border-bottom: 2px solid var(--dominant);
+                    padding-bottom: 5px;
+                }
+                
+                .plan-summary-item {
+                    background: var(--bg-light);
+                    border-left: 4px solid var(--dominant);
+                    margin-bottom: 10px;
+                    padding: 12px;
+                    border-radius: 0 6px 6px 0;
+                    display: table;
+                    width: 100%;
+                }
+                
+                .plan-summary-info {
+                    display: table-cell;
+                    vertical-align: middle;
+                    width: 70%;
+                }
+                
+                .plan-summary-info h4 {
+                    color: var(--accent);
+                    font-size: 14px;
+                    margin: 0 0 3px 0;
+                    font-weight: 600;
+                }
+                
+                .plan-coverage {
+                    color: var(--text-muted);
+                    font-size: 12px;
+                    margin: 0;
+                }
+                
+                .plan-summary-price {
+                    display: table-cell;
+                    vertical-align: middle;
+                    text-align: right;
+                    width: 30%;
+                }
+                
+                .price-amount {
+                    color: var(--dominant);
+                    font-size: 18px;
+                    font-weight: 700;
+                    display: block;
+                }
+                
+                .price-period {
+                    color: var(--text-muted);
+                    font-size: 11px;
+                }
+                
+                .aportes-section {
+                    margin-top: 15px;
+                }
+                
+                .aportes-info {
+                    background: linear-gradient(135deg, var(--dominant), var(--secondary));
+                    color: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    text-align: center;
+                }
+                
+                .aportes-info.promocional {
+                    background: linear-gradient(135deg, var(--accent), #2563eb);
+                }
+                
+                .aportes-title {
+                    font-size: 16px;
+                    font-weight: 700;
+                    margin: 0 0 8px 0;
+                }
+                
+                .aportes-amount {
+                    font-size: 22px;
+                    font-weight: 800;
+                    margin: 0 0 5px 0;
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                
+                .aportes-description {
+                    font-size: 11px;
+                    opacity: 0.95;
+                    margin: 0;
+                    line-height: 1.3;
+                }
+                
+                .aportes-cta {
+                    font-size: 12px;
+                    font-weight: 600;
+                    margin: 5px 0 0 0;
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                }
+                
+                /* Beneficios compactos */
+                .benefits-section {
+                    padding: 20px;
+                }
+                
+                .benefits-grid {
+                    width: 100%;
+                }
+                
+                .benefits-row {
+                    display: table;
+                    width: 100%;
+                    margin-bottom: 8px;
+                    table-layout: fixed;
+                }
+                
+                .benefit-card-compact {
+                    display: table-cell;
+                    background: var(--bg-light);
+                    border-radius: 6px;
+                    padding: 8px;
+                    margin-right: 8px;
+                    border-left: 3px solid var(--dominant);
+                    width: 33.33%;
+                    vertical-align: top;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                }
+                
+                .benefit-icon {
+                    font-size: 16px;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+                
+                .benefit-title {
+                    color: var(--accent);
+                    font-size: 11px;
+                    font-weight: 600;
+                    margin: 0 0 3px 0;
+                    line-height: 1.2;
+                }
+                
+                .benefit-description {
+                    color: var(--text-muted);
+                    font-size: 9px;
+                    margin: 0;
+                    line-height: 1.3;
+                }
+                
+                /* Footer */
+                .footer {
+                    background: var(--bg-light);
+                    padding: 12px;
+                    text-align: center;
+                    border-top: 1px solid var(--border-light);
+                    color: var(--text-muted);
+                    font-size: 10px;
+                }
+                
+                .footer p {
+                    margin: 0 0 3px 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="main-container">
+                <div class="container">
+                    <!-- Header principal -->
+                    <div class="header">
+                        <div class="header-row">
+                            <div class="logo-section">
+                                <div class="logo-container">
+                                    <img src="https://i.postimg.cc/qBhxQhRv/482cc3df-6285-4fa0-93ea-8d1f008f9dbf.png" alt="OSPADEP" class="logo-img" 
+                                         style="background: transparent !important; mix-blend-mode: multiply;"
+                                         onerror="this.outerHTML='<div style=&quot;background: var(--dominant); color: white; padding: 20px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 18px;&quot;>OSPADEP</div>'"
+                                         crossorigin="anonymous">
+                                </div>
+                            </div>
+                            
+                            <div class="title-section">
+                                <h1 class="header-title">Cotización Comparativa OSP-${numeroReferencia}</h1>
+                            <div class="header-subtitle">
+                                ${formatDate(fechaActual)} | Vigencia: 72 hs hábiles
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bloque de información -->
+                <div class="info-block">
+                    <div class="header-cards">
+                        <div class="info-card">
+                            <div class="card-icon">👤</div>
+                            <div class="card-label">BENEFICIARIO</div>
+                            <div class="card-value">${getTipoPlanLabel(datosCliente.tipoCobertura)}</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-icon">🎂</div>
+                            <div class="card-label">EDAD</div>
+                            <div class="card-value">${datosCliente.edadTitular || '25'} años</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-icon">➕</div>
+                            <div class="card-label">AFILIACIÓN</div>
+                            <div class="card-value">Adherente</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-icon">🏢</div>
+                            <div class="card-label">COBERTURA</div>
+                            <div class="card-value">CABA y GBA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-area">
+                    <!-- Planes seleccionados -->
+                    <div class="plans-section">
+                        <h2 class="section-title">Planes Seleccionados (${planes.length})</h2>
+                        ${planesResumen}
+                        
+                        <div class="aportes-section">
+                            ${tieneAportes ? `
+                                <div class="aportes-info">
+                                    <h3 class="aportes-title">🎯 Tus Aportes OSPADEP</h3>
+                                    <p class="aportes-amount">${montoAportes}% bonificado</p>
+                                    <p class="aportes-description">Como afiliado a OSPADEP, tienes descuentos especiales en estos planes</p>
+                                </div>
+                            ` : `
+                                <div class="aportes-info promocional">
+                                    <h3 class="aportes-title">💰 Paga Menos con tus Aportes</h3>
+                                    <p class="aportes-description">Los afiliados a OSPADEP reciben descuentos especiales</p>
+                                    <p class="aportes-cta">¡Consulta por tus beneficios como afiliado!</p>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                    <!-- Beneficios consolidados -->
+                    <div class="benefits-section">
+                        <h2 class="section-title">Beneficios Destacados</h2>
+                        <div class="benefits-grid">
+                            ${beneficiosHTML}
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+                
+                <!-- Footer -->
+                <div class="footer">
+                    <p><strong>Cotización válida por 30 días.</strong> Contáctenos: 📞 <strong>0800-999-OSPADEP</strong> | 📧 <strong>ventas@ospadep.com.ar</strong> | 📱 <strong>+54 11 1234-5678</strong></p>
+                    <p><em>Obra Social del Personal de Aeronavegación de Entes Privados</em></p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+}
+
+// Función para obtener beneficios específicos por plan
+function generateBenefitsForPlan(plan) {
+    const prestador = plan.type.toLowerCase().replace(/[\s_-]/g, '');
+    
+    switch(prestador) {
+        case 'omint':
+            return [
+                { icon: '🏥', title: 'Red Premium OMINT', description: 'Sanatorio Otamendi y centros exclusivos' },
+                { icon: '💊', title: 'Farmacia OMINT', description: '60% descuento en +500 farmacias' },
+                { icon: '🔬', title: 'Laboratorio Central', description: 'Análisis sin bonificación' }
+            ];
+        case 'swissmedical':
+        case 'swiss':
+            return [
+                { icon: '🏨', title: 'Hospital Universitario Austral', description: 'Centro de excelencia médica' },
+                { icon: '🧬', title: 'Medicina Nuclear', description: 'PET-CT y resonancias 3Tesla' },
+                { icon: '❤️', title: 'Instituto Cardiovascular', description: 'Cirugía cardíaca especializada' }
+            ];
+        case 'activasalud':
+        case 'activa':
+            return [
+                { icon: '💪', title: 'Medicina del Deporte', description: 'Centro especializado en Belgrano' },
+                { icon: '🏥', title: 'Sanatorio Modelo Caseros', description: 'Tecnología de última generación' },
+                { icon: '🏃‍♀️', title: 'Programa Activa Vida', description: 'Descuentos en Megatlon y SportClub' }
+            ];
+        case 'medife':
+            return [
+                { icon: '🏥', title: 'Centro Médico Pueyrredón', description: 'Complejo premium en CABA' },
+                { icon: '🔬', title: 'Laboratorio Stamboulian', description: 'Convenio exclusivo alta complejidad' },
+                { icon: '🚨', title: 'Emergencias Vittal', description: 'Servicio móvil 24 horas' }
+            ];
+        default:
+            return [
+                { icon: '🏥', title: 'Cobertura Integral', description: 'Atención médica completa' },
+                { icon: '🩺', title: 'Red de Especialistas', description: 'Profesionales calificados' },
+                { icon: '🚑', title: 'Emergencias 24/7', description: 'Servicio de urgencias' }
+            ];
+    }
+}
+
+// Función para generar referencia única
+function generateRandomRef() {
+    return Math.random().toString(36).substr(2, 6).toUpperCase();
+}
+
+// Función para formatear fecha en español
+function formatDate(date) {
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    return date.toLocaleDateString('es-AR', options);
+}
+
+// Función para obtener el label del tipo de plan
+function getTipoPlanLabel(tipoCobertura) {
+    switch(tipoCobertura) {
+        case 'solo': return 'Individual';
+        case 'pareja': return 'Pareja';
+        case 'hijos': return 'Con hijos';
+        case 'familia': return 'Familiar';
+        default: return 'Individual';
+    }
+}
+
+// Función para obtener el label del prestador
+function getPrestadorLabel(type) {
+    const prestadorMap = {
+        'omint': 'OMINT',
+        'swiss medical': 'Swiss Medical',
+        'swiss_medical': 'Swiss Medical',
+        'swissmedical': 'Swiss Medical',
+        'swiss': 'Swiss Medical',
+        'activa salud': 'Activa Salud',
+        'activa': 'Activa Salud',
+        'activa_salud': 'Activa Salud',
+        'activasalud': 'Activa Salud',
+        'medife': 'Medifé',
+        'sw nubial': 'SW Nubial',
+        'sw_nubial': 'SW Nubial',
+        'swissnubial': 'SW Nubial'
+    };
+    
+    // Normalizar el tipo para búsqueda
+    const normalizedType = type?.toLowerCase().replace(/[\s_-]/g, '');
+    
+    // Buscar por tipo original, normalizado y variaciones
+    return prestadorMap[type?.toLowerCase()] || 
+           prestadorMap[normalizedType] || 
+           prestadorMap[type?.toLowerCase().replace(/[\s_-]/g, '')] ||
+           (type ? type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, ' ') : 'Prestador');
+}
+
+// Función para generar beneficios en formato email-friendly
+function generateBenefitsHTMLForEmail(plan) {
+    const prestador = plan.type.toLowerCase().replace(/[\s_-]/g, '');
+    let beneficios = [];
+    
+    switch(prestador) {
+        case 'omint':
+            beneficios = [
+                { icon: '🏥', title: 'Red de Prestadores Premium', description: 'Más de 3.000 profesionales en CABA y GBA. Sanatorio Otamendi, Clínica Santa Isabel' },
+                { icon: '🩺', title: 'Internación sin Límites', description: 'Cobertura 100% en habitación privada con acompañante. Sin copagos' },
+                { icon: '🚑', title: 'Emergencias OMINT', description: 'Servicio propio de emergencias médicas móviles las 24hs' },
+                { icon: '💊', title: 'Farmacia OMINT', description: 'Descuentos hasta 60% en más de 500 farmacias adheridas' },
+                { icon: '🔬', title: 'Laboratorio Central', description: 'Análisis clínicos sin bonificación. Resultados online' },
+                { icon: '🦷', title: 'Odontología Integral', description: 'Cobertura completa en consultas, endodoncia y cirugías' }
+            ];
+            break;
+        case 'swissmedical':
+        case 'swiss':
+            beneficios = [
+                { icon: '🏨', title: 'Hospital Universitario Austral', description: 'Acceso directo al centro de excelencia médica de Pilar' },
+                { icon: '🔬', title: 'Instituto de Oncología', description: 'Centro de alta complejidad para tratamientos oncológicos y radioterapia' },
+                { icon: '👶', title: 'Materno Infantil Austral', description: 'Maternidad premium con neonatología de nivel III' },
+                { icon: '🧬', title: 'Medicina Nuclear', description: 'PET-CT, resonancias 3Tesla y diagnóstico molecular avanzado' },
+                { icon: '🏥', title: 'Centros Swiss Medical', description: 'Red propia: Center, Barracas, Palermo, Vicente López' },
+                { icon: '❤️', title: 'Instituto Cardiovascular', description: 'Cirugía cardíaca, hemodinamia y electrofisiología' }
+            ];
+            break;
+        case 'activasalud':
+        case 'activa':
+            beneficios = [
+                { icon: '💪', title: 'Centro de Medicina del Deporte', description: 'Sede Belgrano con especialistas en medicina deportiva y rehabilitación' },
+                { icon: '🏃‍♀️', title: 'Programa Activa Vida', description: 'Descuentos en gimnasios Megatlon, SportClub y centros de wellness' },
+                { icon: '🧘‍♀️', title: 'Medicina Integrativa', description: 'Acupuntura, homeopatía, osteopatía y terapias complementarias' },
+                { icon: '🏥', title: 'Sanatorio Modelo de Caseros', description: 'Centro médico integral con tecnología de última generación' },
+                { icon: '👩‍⚕️', title: 'Medicina Familiar', description: 'Médicos de cabecera y seguimiento personalizado de salud' },
+                { icon: '📱', title: 'Telemedicina 24/7', description: 'Consultas virtuales sin costo adicional con especialistas' }
+            ];
+            break;
+        case 'medife':
+            beneficios = [
+                { icon: '🏥', title: 'Centro Médico Pueyrredón', description: 'Complejo médico premium en CABA con todas las especialidades' },
+                { icon: '🔬', title: 'Laboratorio Stamboulian', description: 'Convenio exclusivo con laboratorio de alta complejidad' },
+                { icon: '🚨', title: 'Emergencias Vittal', description: 'Servicio de emergencias médicas móviles las 24 horas' },
+                { icon: '💉', title: 'Vacunatorio Medifé', description: 'Centro de vacunación con vacunas importadas y calendario completo' },
+                { icon: '👨‍⚕️', title: 'Medicina Preventiva', description: 'Checkeos ejecutivos y programas de medicina preventiva' },
+                { icon: '🏨', title: 'Sanatorios Convenio', description: 'Trinidad Mitre, Clínica Bazterrica, Instituto Argentino del Diagnóstico' }
+            ];
+            break;
+        case 'swnubial':
+        case 'swissnubial':
+            beneficios = [
+                { icon: '🏥', title: 'Red Swiss Medical', description: 'Acceso a toda la red de centros y sanatorios Swiss Medical' },
+                { icon: '💰', title: 'Plan Económico', description: 'Opción accesible con cobertura integral básica' },
+                { icon: '🩺', title: 'Consultas Médicas', description: 'Especialistas y estudios con bonificaciones preferenciales' },
+                { icon: '🚑', title: 'Emergencias Incluidas', description: 'Servicio de emergencias sin costo adicional' },
+                { icon: '💊', title: 'Farmacia con Descuentos', description: 'Medicamentos con descuentos en farmacias de la red' },
+                { icon: '🔬', title: 'Estudios Diagnósticos', description: 'Laboratorio y diagnóstico por imágenes con cobertura' }
+            ];
+            break;
+        default:
+            beneficios = [
+                { icon: '🏥', title: 'Cobertura Médica Integral', description: 'Atención médica completa con especialistas' },
+                { icon: '🩺', title: 'Red de Especialistas', description: 'Acceso a médicos especialistas calificados' },
+                { icon: '🚑', title: 'Emergencias Médicas', description: 'Servicio de emergencias las 24 horas' },
+                { icon: '💊', title: 'Cobertura Farmacológica', description: 'Descuentos en medicamentos esenciales' }
+            ];
+    }
+    
+    let html = '';
+    for (let i = 0; i < beneficios.length; i += 2) {
+        html += '<div class="benefits-row">';
+        
+        // Primer beneficio de la fila
+        html += `
+            <div class="benefit-card">
+                <div class="benefit-icon">${beneficios[i].icon}</div>
+                <h3 class="benefit-title">${beneficios[i].title}</h3>
+                <p class="benefit-description">${beneficios[i].description}</p>
+            </div>
+        `;
+        
+        // Segundo beneficio de la fila (si existe)
+        if (i + 1 < beneficios.length) {
+            html += `
+                <div class="benefit-card">
+                    <div class="benefit-icon">${beneficios[i + 1].icon}</div>
+                    <h3 class="benefit-title">${beneficios[i + 1].title}</h3>
+                    <p class="benefit-description">${beneficios[i + 1].description}</p>
+                </div>
+            `;
+        }
+        
+        html += '</div>';
+    }
+    
+    return html;
 }
 
 

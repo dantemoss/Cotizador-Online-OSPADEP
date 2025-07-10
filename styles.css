@@ -3427,3 +3427,91 @@ h2 i {
     width: 100%;
     max-width: 200px;
 }
+
+/* Estilos existentes ... */
+
+/* Estilos para los radio buttons de aporte */
+.aporte-toggle-group {
+    display: flex;
+    gap: 12px;
+    margin: 8px 0;
+    width: 100%;
+}
+
+.aporte-toggle {
+    flex: 1;
+    position: relative;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    color: #64748b;
+    gap: 8px;
+}
+
+.aporte-toggle:hover {
+    border-color: #1053F3;
+    background: #ffffff;
+}
+
+.aporte-toggle input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Estilos para el botón seleccionado */
+.aporte-toggle:has(input[type="radio"]:checked) {
+    background: #ffffff;
+    border: 2px solid #1053F3;
+    color: #1053F3;
+    font-weight: 500;
+}
+
+.aporte-toggle i {
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+/* Inputs de sueldo y aporte */
+#sueldo-titular,
+#aporte-titular,
+#sueldo-pareja,
+#aporte-pareja {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    margin-top: 12px;
+    background: white;
+}
+
+#sueldo-titular:focus,
+#aporte-titular:focus,
+#sueldo-pareja:focus,
+#aporte-pareja:focus {
+    border-color: #1053F3;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(16, 83, 243, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .aporte-toggle-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .aporte-toggle {
+        width: 100%;
+    }
+}

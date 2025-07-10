@@ -47,7 +47,7 @@ const CONFIG = {
     
     // Configuración de UI
     COMPANY_NAME: 'OSPADEP',
-    LOGO_URL: '/assets/logo.png',
+    LOGO_URL: 'https://i.postimg.cc/qBhxQhRv/482cc3df-6285-4fa0-93ea-8d1f008f9dbf.png',
     THEME_COLOR: '#1053F3'
 };
 

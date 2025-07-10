@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización OSPADEP</title>
+    <title>Cotización Personalizada OSPADEP</title>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         :root {
-            /* Colores oficiales OSPADEP según manual */
             --dominant: #1DB9A0;     /* 60% - Color dominante */
             --secondary: #00A3C8;    /* 30% - Color secundario */
             --accent: #1A408C;       /* 10% - Acentos */
             --detail: #0B3D91;       /* Detalles */
             
-            /* Colores complementarios */
             --bg-light: #F8FAFB;
             --text-dark: #2E3A46;
             --text-muted: #69707A;
             --card-bg: #FFFFFF;
             --border-light: #E2E8F0;
             
-            /* Espaciado y efectos */
             --border-radius: 8px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --shadow-sm: 0 2px 8px rgba(27, 185, 160, 0.08);
@@ -55,11 +52,12 @@
         .header {
             background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 70%, var(--accent) 100%);
             color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px;
+            padding: 40px;
             position: relative;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 40px;
+            align-items: center;
         }
 
         .header::before {
@@ -74,41 +72,71 @@
         }
 
         .header .logo-container {
+            background: transparent;
+            padding: 20px;
+            border-radius: 0;
+            box-shadow: none;
             display: flex;
             align-items: center;
-            max-width: 75%;
-            position: relative;
-            z-index: 2;
+            justify-content: center;
+            height: 120px;
+            width: 200px;
         }
 
         .logo-img {
-            width: auto;
-            height: 160px;
+            max-width: 100%;
+            max-height: 100%;
             object-fit: contain;
-            margin-top: -5px;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
         }
 
-        .header-text {
-            text-align: right;
-            line-height: 1.4;
-            position: relative;
-            z-index: 2;
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .header-text h1 {
-            font-family: 'SF Pro Display', sans-serif;
-            font-size: 24px;
+        .header-title {
+            font-size: 32px;
             font-weight: 700;
             margin: 0;
             letter-spacing: -0.5px;
         }
 
-        .header-text .meta {
-            font-size: 14px;
+        .header-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .meta-item i {
+            font-size: 24px;
             opacity: 0.9;
-            margin-top: 4px;
-            font-weight: 500;
+        }
+
+        .meta-item-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .meta-value {
+            font-size: 16px;
+            font-weight: 600;
         }
 
         /* Sección de resumen con colores OSPADEP */
@@ -281,8 +309,8 @@
 
         /* Tabla comparativa mejorada */
         .comparison-section {
-            padding: 50px 30px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 40px;
+            background: var(--bg-light);
         }
 
         .comparison-intro {
@@ -302,23 +330,18 @@
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 30px;
-            background: var(--card-bg);
+            background: white;
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow-md);
-            min-width: 700px;
         }
 
         .comparison-table th {
             background: var(--accent);
             color: white;
-            padding: 20px 15px;
-            text-align: center;
-            font-family: 'SF Pro Display', sans-serif;
+            padding: 16px;
+            text-align: left;
             font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.5px;
         }
 
         .comparison-table th:first-child {
@@ -340,11 +363,8 @@
         }
 
         .comparison-table td {
-            padding: 16px 15px;
+            padding: 16px;
             border-bottom: 1px solid var(--border-light);
-            font-size: 14px;
-            text-align: center;
-            vertical-align: middle;
         }
 
         .comparison-table td:first-child {
@@ -461,7 +481,7 @@
         .contact-section {
             background: linear-gradient(135deg, var(--accent) 0%, var(--detail) 100%);
             color: white;
-            padding: 40px 30px;
+            padding: 40px;
             text-align: center;
         }
 
@@ -550,272 +570,393 @@
         .benefit-card:nth-child(1) { animation-delay: 0.1s; }
         .benefit-card:nth-child(2) { animation-delay: 0.2s; }
         .benefit-card:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Plan Card Improvements */
+        .plan-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .plan-header {
+            background: var(--accent);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .plan-type {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        .plan-price-container {
+            background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .plan-price {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .plan-price-period {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        /* Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 40px;
+        }
+
+        .benefit-card {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: var(--transition);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .benefit-icon {
+            background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 100%);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .benefit-content {
+            flex: 1;
+        }
+
+        .benefit-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 8px 0;
+        }
+
+        .benefit-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .comparison-table th {
+            background: var(--accent);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-check {
+            color: var(--dominant);
+            font-size: 20px;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--detail) 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .contact-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .contact-label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .contact-value {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        @media print {
+            .container {
+                box-shadow: none;
+            }
+            
+            .header {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .plan-header,
+            .plan-price-container {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .benefit-card,
+            .comparison-table {
+                break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
+        <!-- Header con logo y metadata -->
+        <header class="header">
             <div class="logo-container">
-                <img src="https://i.ibb.co/5XVr8K2M/Logo-OSPADEP.png" alt="Logo OSPADEP" class="logo-img">
+                <img src="https://i.postimg.cc/qBhxQhRv/482cc3df-6285-4fa0-93ea-8d1f008f9dbf.png" alt="OSPADEP" class="logo-img" id="ospadep-logo">
             </div>
-            <div class="header-text">
-                <h1>Cotización OSP-2025-001</h1>
-                <div class="meta">02/07/2025 &nbsp;|&nbsp; Vigencia: 72 hs hábiles</div>
+            <div class="header-content">
+                <h1 class="header-title">Cotización de Planes</h1>
+                <div class="header-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <div class="meta-item-content">
+                            <span class="meta-label">Fecha</span>
+                            <span class="meta-value" id="quote-date"><!-- Fecha dinámica --></span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-users"></i>
+                        <div class="meta-item-content">
+                            <span class="meta-label">Tipo de Plan</span>
+                            <span class="meta-value" id="plan-type"><!-- Tipo de plan dinámico --></span>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-id-card"></i>
+                        <div class="meta-item-content">
+                            <span class="meta-label">Referencia</span>
+                            <span class="meta-value" id="quote-ref"><!-- Referencia dinámica --></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Plan seleccionado -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <h2 class="plan-name" id="plan-name"><!-- Nombre del plan dinámico --></h2>
+                <div class="plan-type" id="plan-category"><!-- Categoría del plan dinámica --></div>
+            </div>
+            <div class="plan-price-container">
+                <div class="plan-price" id="plan-price"><!-- Precio dinámico --></div>
+                <div class="plan-price-period">por mes</div>
             </div>
         </div>
 
-        <!-- Resumen -->
-        <div class="summary">
-            <div class="meta-card">
-                <i class="meta-icon fa-solid fa-user-doctor"></i>
-                <div class="meta-label">Beneficiario</div>
-                <div class="meta-value">Individual</div>
-            </div>
-            <div class="meta-card">
-                <i class="meta-icon fa-solid fa-birthday-cake"></i>
-                <div class="meta-label">Edad</div>
-                <div class="meta-value">18 – 29 años</div>
-            </div>
-            <div class="meta-card">
-                <i class="meta-icon fa-solid fa-file-medical"></i>
-                <div class="meta-label">Afiliación</div>
-                <div class="meta-value">Adherente</div>
-            </div>
-            <div class="meta-card">
-                <i class="meta-icon fa-solid fa-hospital"></i>
-                <div class="meta-label">Cobertura</div>
-                <div class="meta-value">CABA y GBA</div>
-            </div>
-        </div>
-
-        <!-- Planes OSPADEP -->
-        <div class="section">
-            <div class="section-title">Planes OSPADEP Disponibles</div>
-            <div class="plans">
-                <div class="plan">
-                    <div class="plan-header">Plan 200</div>
-                    <div class="plan-price">$85.510</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Cobertura CABA y GBA</li>
-                        <li><i class="fas fa-check"></i> Videoconsultas 24/7</li>
-                        <li><i class="fas fa-check"></i> Red de centros propios</li>
-                        <li><i class="fas fa-check"></i> App móvil incluida</li>
-                        <li><i class="fas fa-check"></i> Sin coseguros</li>
-                    </ul>
-                    <div class="plan-footer">Ideal para jóvenes profesionales</div>
+        <!-- Beneficios -->
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-hospital"></i>
                 </div>
-                <div class="plan">
-                    <div class="plan-header">Plan 300</div>
-                    <div class="plan-price">$0</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Cubierto por aportes</li>
-                        <li><i class="fas fa-check"></i> Cobertura completa</li>
-                        <li><i class="fas fa-check"></i> Sin coseguros</li>
-                        <li><i class="fas fa-check"></i> Atención premium</li>
-                        <li><i class="fas fa-check"></i> Red de excelencia</li>
-                    </ul>
-                    <div class="plan-footer">¡Recomendado!</div>
+                <div class="benefit-content">
+                    <h3 class="benefit-title">Red de Prestadores Premium</h3>
+                    <p class="benefit-description">Acceso a una extensa red de centros médicos y profesionales de primer nivel en todo el país.</p>
                 </div>
-                <div class="plan">
-                    <div class="plan-header">Plan 400</div>
-                    <div class="plan-price">$58.536</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Descuento 15%</li>
-                        <li><i class="fas fa-check"></i> Cobertura extendida</li>
-                        <li><i class="fas fa-check"></i> Beneficios adicionales</li>
-                        <li><i class="fas fa-check"></i> Promoción vigente</li>
-                        <li><i class="fas fa-check"></i> Máxima cobertura</li>
-                    </ul>
-                    <div class="plan-footer">Máxima cobertura</div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="benefit-content">
+                    <h3 class="benefit-title">Tecnología y Comodidad</h3>
+                    <p class="benefit-description">App móvil exclusiva, turnos online y credencial digital para gestionar tu salud desde cualquier lugar.</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <div class="benefit-content">
+                    <h3 class="benefit-title">Atención Especializada</h3>
+                    <p class="benefit-description">Cobertura integral en todas las especialidades médicas con los mejores profesionales.</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="benefit-content">
+                    <h3 class="benefit-title">Atención 24/7</h3>
+                    <p class="benefit-description">Servicio de urgencias y emergencias disponible las 24 horas, los 365 días del año.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Tabla Comparativa de Servicios -->
+        <!-- Tabla comparativa -->
         <div class="comparison-section">
-            <div class="section-title">Comparativa de Servicios</div>
-            <div class="comparison-intro">
-                <p>Comparación detallada de servicios para ayudarle a identificar las características que mejor se adapten a sus necesidades específicas.</p>
-            </div>
-            
-            <div style="overflow-x: auto; margin-top: 30px;">
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th style="min-width: 200px;">Servicio / Beneficio</th>
-                            <th class="ospadep-header" style="min-width: 150px;">
-                                OSPADEP
-                            </th>
-                            <th style="min-width: 130px;">Swiss Medical</th>
-                            <th style="min-width: 130px;">Medifé</th>
-                            <th style="min-width: 130px;">OMINT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Videoconsultas Médicas</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">⭐</span> 24/7 Sin límites
-                            </td>
-                            <td><span class="check-icon">✓</span> 24/7</td>
-                            <td><span class="check-icon">✓</span> 24/7</td>
-                            <td><span class="check-icon">✓</span> 24/7</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Aplicación Móvil</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">⭐</span> Turnos + Consultas
-                            </td>
-                            <td><span class="check-icon">✓</span> Disponible</td>
-                            <td><span class="check-icon">✓</span> Disponible</td>
-                            <td><span class="check-icon">✓</span> Disponible</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Cobertura Geográfica</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">🎯</span> CABA y GBA Especializada
-                            </td>
-                            <td><span class="check-icon">✓</span> Nacional</td>
-                            <td><span class="check-icon">✓</span> Nacional</td>
-                            <td><span class="info-icon">🎯</span> CABA y GBA</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Red de Prestadores</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">⭐</span> Alta Complejidad
-                            </td>
-                            <td><span class="check-icon">✓</span> Red Propia</td>
-                            <td><span class="check-icon">✓</span> Red Asociada</td>
-                            <td><span class="check-icon">✓</span> Red Propia</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Coseguros</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">⭐</span> SIN COSEGUROS
-                            </td>
-                            <td><span class="info-icon">ℹ️</span> Según plan</td>
-                            <td><span class="info-icon">ℹ️</span> Según plan</td>
-                            <td><span class="info-icon">ℹ️</span> Según plan</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Atención Personalizada</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">⭐</span> Servicio Cercano
-                            </td>
-                            <td><span class="info-icon">🏢</span> Corporativo</td>
-                            <td><span class="info-icon">🏢</span> Masivo</td>
-                            <td><span class="info-icon">🏢</span> Corporativo</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Centros de Excelencia</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">⭐</span> Hospital Naval, Sirio Libanés, IMAC
-                            </td>
-                            <td><span class="check-icon">✓</span> Swiss Centers</td>
-                            <td><span class="check-icon">✓</span> Finochietto, CEMIC</td>
-                            <td><span class="check-icon">✓</span> Santa Isabel, Bazterrica</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Relación Precio-Beneficio</strong></td>
-                            <td class="ospadep-cell">
-                                <span class="star-icon">⭐</span> EXCELENTE
-                            </td>
-                            <td><span class="info-icon">💰</span> Premium</td>
-                            <td><span class="info-icon">💰</span> Variable</td>
-                            <td><span class="info-icon">💰</span> Premium</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Beneficios Únicos OSPADEP -->
-        <div class="benefits-section">
-            <div class="section-title">¿Por qué elegir OSPADEP?</div>
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3 class="benefit-title">Atención Personalizada</h3>
-                    <p class="benefit-description">
-                        Servicio cercano y humano, enfocado en las necesidades individuales de cada afiliado con un trato personalizado.
-                    </p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="benefit-title">Sin Coseguros</h3>
-                    <p class="benefit-description">
-                        Cobertura completa sin pagos adicionales en consultas y procedimientos. Tu tranquilidad es nuestra prioridad.
-                    </p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-hospital"></i>
-                    </div>
-                    <h3 class="benefit-title">Red de Excelencia</h3>
-                    <p class="benefit-description">
-                        Acceso a instituciones de alta complejidad como Hospital Naval, Sirio Libanés e IMAC con reconocido prestigio médico.
-                    </p>
-                </div>
-            </div>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Características</th>
+                        <th>Plan Actual</th>
+                        <th>Otros Planes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cobertura Nacional</td>
+                        <td><i class="fas fa-check comparison-check"></i></td>
+                        <td>Limitada</td>
+                    </tr>
+                    <tr>
+                        <td>Centros Propios</td>
+                        <td><i class="fas fa-check comparison-check"></i></td>
+                        <td>Variable</td>
+                    </tr>
+                    <tr>
+                        <td>Tecnología Digital</td>
+                        <td><i class="fas fa-check comparison-check"></i></td>
+                        <td>Básica</td>
+                    </tr>
+                    <tr>
+                        <td>Atención Personalizada</td>
+                        <td><i class="fas fa-check comparison-check"></i></td>
+                        <td>Estándar</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- Contacto -->
         <div class="contact-section">
-            <div class="section-title">Contacto Comercial</div>
-            <div class="contact-info">
-                <strong>OSPADEP</strong>
-                <strong>Obra Social del Personal de Aeronavegación de Entes Privados</strong>
-                Venezuela 900, CABA<br>
-                Tel (011) 1234-5678 | ventas@ospadep.com.ar<br>
-                www.ospadep.com
+            <h2>¿Necesitas más información?</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="contact-label">WhatsApp</div>
+                    <div class="contact-value" id="whatsapp-number"><!-- Número dinámico --></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-label">Teléfono</div>
+                    <div class="contact-value" id="phone-number"><!-- Número dinámico --></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value" id="email-contact"><!-- Email dinámico --></div>
+                </div>
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            © 2025 OSPADEP. Todos los derechos reservados.
         </div>
     </div>
 
     <script>
-        // Animaciones al hacer scroll
-        document.addEventListener('DOMContentLoaded', function() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
+        // Función para formatear la fecha
+        function formatDate(date) {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
             };
+            return date.toLocaleDateString('es-AR', options);
+        }
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
+        // Función para generar referencia única
+        function generateReference() {
+            return 'COT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+        }
 
-            // Observar elementos animados
-            const animatedElements = document.querySelectorAll('.plan, .benefit-card, .meta-card');
-            animatedElements.forEach(element => {
-                observer.observe(element);
-            });
+        // Actualizar elementos dinámicos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fecha actual
+            document.getElementById('quote-date').textContent = formatDate(new Date());
+            
+            // Referencia única
+            document.getElementById('quote-ref').textContent = generateReference();
 
-            // Efecto hover en tabla
-            const tableRows = document.querySelectorAll('.comparison-table tbody tr');
-            tableRows.forEach(row => {
-                row.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.01)';
-                });
-                
-                row.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            });
+            // Tipo de plan (se debe actualizar con la selección real del usuario)
+            const planType = new URLSearchParams(window.location.search).get('tipo') || 'Individual';
+            document.getElementById('plan-type').textContent = planType;
+
+            // Información de contacto (actualizar con datos reales)
+            document.getElementById('whatsapp-number').textContent = '+54 11 1234-5678';
+            document.getElementById('phone-number').textContent = '0800-999-OSPADEP';
+            document.getElementById('email-contact').textContent = 'ventas@ospadep.com.ar';
         });
     </script>
 </body>

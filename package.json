@@ -1,0 +1,14 @@
+{
+  "name": "cotizador-ospadep",
+  "version": "1.0.0",
+  "description": "Cotizador Online OSPADEP",
+  "main": "script.js",
+  "dependencies": {
+    "html-pdf-node": "^1.0.8",
+    "nodemailer": "^6.9.9",
+    "fs-extra": "^11.2.0"
+  },
+  "scripts": {
+    "start": "node script.js"
+  }
+} 
