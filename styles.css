@@ -647,6 +647,166 @@ h2 i {
     box-shadow: 0 6px 20px rgba(16, 83, 243, 0.25);
 }
 
+/* Filtro de Prestadores */
+.prestador-filter-bar.header-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.header-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.header-content {
+    text-align: left;
+}
+
+.filter-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.filter-checkboxes {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #64748b;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s ease;
+}
+
+.filter-checkbox:hover {
+    color: #475569;
+}
+
+.filter-checkbox input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #94a3b8;
+    border-radius: 5px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.filter-checkbox input[type="checkbox"]:hover {
+    border-color: #64748b;
+    background: rgba(100, 116, 139, 0.05);
+}
+
+.filter-checkbox input[type="checkbox"]:checked {
+    background: #1053F3;
+    border-color: #1053F3;
+}
+
+.filter-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: -1px;
+    left: 3px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.checkbox-label {
+    user-select: none;
+}
+
+/* Compatibilidad con selección múltiple */
+.plan-card.selected {
+    border-color: #10b981 !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
+}
+
+.plan-card.selected .select-plan-btn {
+    background: #10b981;
+    border-color: #10b981;
+}
+
+.plan-card.selected .select-plan-btn:hover {
+    background: #059669;
+    border-color: #059669;
+}
+
+/* Estilos para logos en botones de filtro */
+.prestador-filter-btn .prestador-logo {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    border-radius: 3px;
+    background: white;
+    padding: 2px;
+}
+
+/* Animación suave de entrada para el filtro */
+.prestador-filter-bar {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsivo para filtros */
+@media (max-width: 768px) {
+    .header-top-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .prestador-filter-bar.header-filter {
+        margin-left: 0;
+        align-self: stretch;
+    }
+    
+    .filter-checkboxes {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .filter-checkbox {
+        font-size: 0.9rem;
+    }
+    
+    .filter-checkbox input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .filter-checkbox input[type="checkbox"]:checked::after {
+        font-size: 12px;
+        left: 2.5px;
+    }
+}
+
 /* Información de contacto */
 .contact-info {
     background: rgba(16, 83, 243, 0.02);

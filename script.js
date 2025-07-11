@@ -2308,6 +2308,8 @@ function cargarEjemploFormulario(tipo = 'familia') {
     }, 1000);
 }
 
+
+
 // Inicialización de la aplicación
 document.addEventListener('DOMContentLoaded', function() {
     // Cargar planes personalizados si existen
@@ -2345,6 +2347,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.generarDesglosePrecioActiva = generarDesglosePrecioActiva;
     window.generarDesglosePrecioMedife = generarDesglosePrecioMedife;
     window.prestadoresData = prestadoresData;
+    
+
     window.plantillaPorcentual = plantillaPorcentual;
     window.plantillaSinDescuentos = plantillaSinDescuentos;
     
@@ -3036,6 +3040,12 @@ function showPlans() {
                     }
                 };
                 
+                if (prestador.name === 'SWISS MEDICAL' || prestador.name === 'SW NUBIAL' || prestador.name === 'SWISS') {
+                    planCalculado.prestador = 'Swiss Medical';
+                } else {
+                    planCalculado.prestador = prestador.name;
+                }
+                
                 planesCalculados.push(planCalculado);
                 
                 console.log(`✅ ${prestador.name} - ${plan.name} calculado:`, {
@@ -3064,11 +3074,11 @@ function showPlans() {
         
         // Mejor valor: buen precio + prestador reconocido o segundo más económico
         if (planesCalculados.length > 1) {
-            // Buscar OMINT o SWISS MEDICAL en el tercio inferior de precios
+            // Buscar OMINT o Swiss Medical en el tercio inferior de precios
             const tercioInferior = preciosOrdenados.slice(0, Math.ceil(preciosOrdenados.length / 3));
             const planMejorValor = planesCalculados.find(p => 
                 tercioInferior.includes(p.price) && 
-                (p.prestador === 'OMINT' || p.prestador === 'SWISS MEDICAL') &&
+                (p.prestador === 'OMINT' || p.prestador === 'Swiss Medical') &&
                 !p.isBestPrice
             );
             
@@ -3130,6 +3140,13 @@ function showPlans() {
     // Generar HTML de los planes
     plansGrid.innerHTML = planesCalculados.map(plan => generatePlanCard(plan)).join('');
     
+    // Almacenar planes para filtro
+    window.planesCalculados = planesCalculados;
+    
+    // Crear e inicializar el filtro de prestadores
+    createPrestadorFilter(planesCalculados);
+    initializePrestadorFilter();
+    
     // Agregar event listeners a botones de selección
     const selectButtons = document.querySelectorAll('.select-plan-btn');
     selectButtons.forEach((btn, index) => {
@@ -3148,15 +3165,9 @@ function generatePlanCard(plan) {
     if (plan.prestador === 'OMINT') {
         prestadorColor = '#3182ce'; // Azul
         prestadorLogo = 'logosEmpresas/omint.png';
-    } else if (plan.prestador === 'SWISS MEDICAL') {
+    } else if (plan.prestador === 'Swiss Medical') {
         prestadorColor = '#d53f8c'; // Rosa/fucsia
         prestadorLogo = 'logosEmpresas/swissmedical.png';
-    } else if (plan.prestador === 'SW NUBIAL') {
-        prestadorColor = '#7c2d12'; // Marrón
-        prestadorLogo = 'logosEmpresas/swissmedical.png'; // Usar mismo logo por ahora
-    } else if (plan.prestador === 'SWISS') {
-        prestadorColor = '#475569'; // Gris azulado
-        prestadorLogo = 'logosEmpresas/swissmedical.png'; // Usar mismo logo por ahora
     } else if (plan.prestador === 'ACTIVA SALUD') {
         prestadorColor = '#059669'; // Verde
         prestadorLogo = 'logosEmpresas/activasalud.png';
@@ -3259,6 +3270,74 @@ function generatePlanCard(plan) {
         '<button class="select-plan-btn"><i class="fas fa-plus-circle"></i> Seleccionar Plan</button>' +
         '</div>';
 }
+
+// ===== FUNCIONES DE FILTRO POR PRESTADOR =====
+
+function createPrestadorFilter(planesCalculados) {
+    const filterContainer = document.getElementById('prestador-filter-bar');
+    if (!filterContainer) return;
+    
+    // Obtener prestadores únicos
+    const prestadores = [...new Set(planesCalculados.map(plan => plan.prestador))];
+    
+    // Crear checkboxes del filtro
+    let checkboxesHTML = '';
+    
+    prestadores.forEach(prestador => {
+        checkboxesHTML += `
+            <label class="filter-checkbox">
+                <input type="checkbox" checked onchange="filterByPrestadores()" data-prestador="${prestador}">
+                <span class="checkbox-label">${prestador}</span>
+            </label>
+        `;
+    });
+    
+    filterContainer.innerHTML = `
+        <span class="filter-label">Mostrar:</span>
+        <div class="filter-checkboxes">
+            ${checkboxesHTML}
+        </div>
+    `;
+}
+
+function initializePrestadorFilter() {
+    // Los checkboxes ya tienen el evento onchange, no necesitamos inicialización adicional
+}
+
+function filterByPrestadores() {
+    const checkboxes = document.querySelectorAll('input[data-prestador]');
+    const prestadoresSeleccionados = [];
+    
+    // Obtener prestadores seleccionados
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            prestadoresSeleccionados.push(checkbox.getAttribute('data-prestador'));
+        }
+    });
+    
+    // Filtrar planes
+    const planCards = document.querySelectorAll('.plan-card');
+    planCards.forEach(card => {
+        const prestadorCard = card.getAttribute('data-prestador');
+        
+        if (prestadoresSeleccionados.includes(prestadorCard)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Si no hay prestadores seleccionados, mostrar mensaje
+    if (prestadoresSeleccionados.length === 0) {
+        planCards.forEach(card => {
+            card.style.display = 'none';
+        });
+    }
+}
+
+
+
+
 
 function selectPlan(plan) {
     // Antes: alert('¡Excelente elección! Has seleccionado el ' + plan.name + '.\n\nUn miembro de nuestro equipo de ventas se contactará contigo en las próximas horas para finalizar la afiliación.\n\n¡Gracias por elegir OSPADEP!');
@@ -4915,9 +4994,7 @@ function togglePlanSelection(plan) {
         // Mapear el prestador al tipo requerido por la función de informe
         const prestadorMap = {
             'OMINT': 'omint',
-            'SWISS MEDICAL': 'swiss_medical',
-            'SW NUBIAL': 'swiss_medical', // Usar el mismo tipo
-            'SWISS': 'swiss_medical',
+            'Swiss Medical': 'swiss_medical',
             'ACTIVA SALUD': 'activa_salud',
             'MEDIFE': 'medife'
         };
@@ -4960,8 +5037,18 @@ function updatePlanCardsSelection() {
         
         if (isSelected) {
             card.classList.add('selected');
+            // Actualizar texto del botón
+            const button = card.querySelector('.select-plan-btn');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-check-circle"></i> Plan Seleccionado';
+            }
         } else {
             card.classList.remove('selected');
+            // Restaurar texto del botón
+            const button = card.querySelector('.select-plan-btn');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-plus-circle"></i> Seleccionar Plan';
+            }
         }
     });
 }
@@ -4980,12 +5067,7 @@ generatePlanCard = function(plan) {
     return cardHTML;
 };
 
-// Llamar a updatePlanCardsSelection después de mostrar los planes
-const originalShowPlans = showPlans;
-showPlans = function() {
-    originalShowPlans.apply(this, arguments);
-    updatePlanCardsSelection();
-};
+
 
 // Función para generar el informe HTML
 function generarInformeHTML(datosCliente, plan) {

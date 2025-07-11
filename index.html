@@ -212,15 +212,18 @@
 
                     <div class="form-content">
                         <div class="form-header">
-                            <button class="back-button" onclick="goToDetails()">
-                                <i class="fas fa-arrow-left"></i> Modificar datos
-                            </button>
-                            <h2><i class="fas fa-clipboard-list"></i> Planes Disponibles</h2>
-                            <p class="subtitle">Estos son los planes que se ajustan a tu perfil</p>
+                            <div class="header-top-row">
+                                <button class="back-button" onclick="goToDetails()">
+                                    <i class="fas fa-arrow-left"></i> Modificar datos
+                                </button>
+                                <!-- Filtro de prestadores en el header -->
+                                <div id="prestador-filter-bar" class="prestador-filter-bar header-filter"></div>
+                            </div>
+                            <div class="header-content">
+                                <h2><i class="fas fa-clipboard-list"></i> Planes Disponibles</h2>
+                                <p class="subtitle">Estos son los planes que se ajustan a tu perfil</p>
+                            </div>
                         </div>
-                    
-                    <!-- Filtro de prestadores -->
-                    <div id="prestador-filter-bar" class="prestador-filter-bar"></div>
                     <!-- Grilla de planes -->
                     <div id="plans-grid" class="plans-grid">
                         <!-- Los planes se generarán dinámicamente -->
