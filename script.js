@@ -1,4 +1,3 @@
-// Variables globales
 let selectedOption = null;
 let formData = {};
 let validationErrors = {};
@@ -3521,7 +3520,7 @@ function showPlans() {
                     cardClone.appendChild(badge);
                 }
                 // Logo OSPADEP grande
-                const logoURL = 'https://i.postimg.cc/PJNnxBhT/Logo-OSPADEP.png';
+                const logoURL = 'https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg';
                 const customStyle = `
                     <style>
                         body { background: #fff !important; margin: 0; padding: 0; }
@@ -3664,7 +3663,6 @@ function generatePlanCard(plan) {
         '<ul class="plan-features">' + features + '</ul>' +
         '<div class="plan-card-actions" style="display:flex;gap:8px;">' +
         '<button class="select-plan-btn"><i class="fas fa-plus-circle"></i> Seleccionar Plan</button>' +
-            '<button class="pdf-plan-btn" title="Descargar PDF"><i class="fas fa-file-pdf"></i></button>' +
         '</div>' +
         '</div>';
 }
@@ -5629,13 +5627,13 @@ function generarInformeHTML(datosCliente, plan) {
 }
                     
                     .info-card {
-                        background: rgba(255, 255, 255, 0.15) !important;
-                        border-radius: 8px !important;
-                        padding: 15px !important;
-                        flex: 1 !important;
-                        min-width: 140px !important;
-                        max-width: 180px !important;
-                        text-align: center !important;
+                        background: rgba(255, 255, 255, 0.15);
+                        border-radius: 8px;
+                        padding: 15px;
+                        flex: 1;
+                        min-width: 140px;
+                        max-width: 180px;
+                        text-align: center;
                     }
                 }
                 
@@ -5673,10 +5671,8 @@ function generarInformeHTML(datosCliente, plan) {
                 
                 /* Header principal */
                 .header {
-                    background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 70%, var(--accent) 100%);
-                    color: #fff;
-                    padding: 30px 30px 20px 30px;
-                    margin-bottom: 0;
+                    padding: 0;
+                    text-align: center;
                 }
                 
                 .header-row {
@@ -5925,7 +5921,7 @@ function generarInformeHTML(datosCliente, plan) {
                 }
                 
                 /* Footer */
-                .footer {
+                    .footer {
                     background: var(--detail);
                     color: white;
                     padding: 30px;
@@ -5975,11 +5971,8 @@ function generarInformeHTML(datosCliente, plan) {
                         <div class="header-row">
                             <div class="logo-section">
                                 <div class="logo-container">
-                                    <img src="https://i.postimg.cc/qBhxQhRv/482cc3df-6285-4fa0-93ea-8d1f008f9dbf.png" alt="OSPADEP" class="logo-img" 
-                                         style="background: transparent !important; mix-blend-mode: multiply;"
-                                         onerror="this.outerHTML='<div style=&quot;background: var(--dominant); color: white; padding: 20px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 18px;&quot;>OSPADEP</div>'"
-                                         crossorigin="anonymous">
-                                </div>
+                            <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg" alt="OSPADEP" style="width:100%; height:auto; display:block; border-radius: 12px 12px 0 0;" onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
+                        </div>
                             </div>
                             
                             <div class="title-section">
@@ -5987,80 +5980,80 @@ function generarInformeHTML(datosCliente, plan) {
                             <div class="header-subtitle">
                                 ${formatDate(fechaActual)} | Vigencia: 72 hs hábiles
                             </div>
-                        </div>
-                    </div>
-                </div>
+                                </div>
+                            </div>
+                            </div>
                 
-                <!-- Bloque de información -->
-                <div class="info-block">
-                    <div class="header-cards">
-                        <div class="info-card">
-                            <div class="card-icon">👤</div>
-                            <div class="card-label">BENEFICIARIO</div>
-                            <div class="card-value">${getTipoPlanLabel(datosCliente.tipoCobertura)}</div>
+                    <!-- Bloque de información -->
+                    <div class="info-block">
+                        <div class="header-cards">
+                            <div class="info-card">
+                                <div class="card-icon">👤</div>
+                                <div class="card-label">BENEFICIARIO</div>
+                                <div class="card-value">${getTipoPlanLabel(datosCliente.tipoCobertura)}</div>
                         </div>
-                        <div class="info-card">
-                            <div class="card-icon">🎂</div>
-                            <div class="card-label">EDAD</div>
-                            <div class="card-value">${datosCliente.edadTitular || '25'} años</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="card-icon">➕</div>
-                            <div class="card-label">AFILIACIÓN</div>
-                            <div class="card-value">Adherente</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="card-icon">🏢</div>
-                            <div class="card-label">COBERTURA</div>
-                            <div class="card-value">CABA y GBA</div>
+                            <div class="info-card">
+                                <div class="card-icon">🎂</div>
+                                <div class="card-label">EDAD</div>
+                                <div class="card-value">${datosCliente.edadTitular || '25'} años</div>
+                    </div>
+                            <div class="info-card">
+                                <div class="card-icon">➕</div>
+                                <div class="card-label">AFILIACIÓN</div>
+                                <div class="card-value">Adherente</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="card-icon">🏢</div>
+                                <div class="card-label">COBERTURA</div>
+                                <div class="card-value">CABA y GBA</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Plan seleccionado -->
-                <div class="plan-section">
-                    <div class="plan-row">
-                        <div class="plan-info">
-                            <h2 class="plan-name">${plan.name}</h2>
-                        </div>
-                        <div class="plan-price">
-                            <span class="price-amount">$${(plan.precioFinal || plan.price || 0).toLocaleString('es-AR')}</span>
-                            <div class="price-period">por mes</div>
+                    <!-- Plan seleccionado -->
+                    <div class="plan-section">
+                        <div class="plan-row">
+                            <div class="plan-info">
+                                <h2 class="plan-name">${plan.name}</h2>
+                            </div>
+                            <div class="plan-price">
+                                <span class="price-amount">$${(plan.precioFinal || plan.price || 0).toLocaleString('es-AR')}</span>
+                                <div class="price-period">por mes</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Beneficios -->
-                <div class="benefits-section">
-                    <h2 class="section-title">Beneficios Incluidos</h2>
-                    <div class="benefits-grid">
-                        ${generateBenefitsHTMLForEmail(plan)}
+                    <!-- Beneficios -->
+                    <div class="benefits-section">
+                        <h2 class="section-title">Beneficios Incluidos</h2>
+                        <div class="benefits-grid">
+                            ${generateBenefitsHTMLForEmail(plan)}
+                        </div>
                     </div>
-                </div>
 
-                <!-- Tabla comparativa -->
-                <div class="comparison-section">
-                    <h2 class="section-title">Comparación de Características</h2>
-                    <table class="comparison-table">
-                        <thead>
-                            <tr>
-                                <th>Características</th>
-                                <th>${plan.name}</th>
-                                <th>Otros Planes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${generateComparisonTableHTML(plan)}
-                        </tbody>
-                    </table>
-                </div>
+                    <!-- Tabla comparativa -->
+                    <div class="comparison-section">
+                        <h2 class="section-title">Comparación de Características</h2>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Características</th>
+                                    <th>${plan.name}</th>
+                                    <th>Otros Planes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generateComparisonTableHTML(plan)}
+                            </tbody>
+                        </table>
+                    </div>
 
-                </div>
-                
-                <!-- Footer compacto -->
-                <div class="footer">
-                    <p><strong>Cotización válida por 30 días.</strong> Contáctenos: 📞 <strong>0800-999-OSPADEP</strong> | 📧 <strong>ventas@ospadep.com.ar</strong> | 📱 <strong>+54 11 1234-5678</strong></p>
-                    <p><em>Obra Social del Personal de Aeronavegación de Entes Privados</em></p>
+                    </div>
+                    
+                    <!-- Footer compacto -->
+                    <div class="footer">
+                        <p><strong>Cotización válida por 30 días.</strong> Contáctenos: 📞 <strong>0800-345-6732</strong> | 📧 <strong>comercial@ospadep.com</strong> | 📱 <strong>www.ospadep.com</strong></p>
+                        <p><em>Obra Social del Personal de Aeronavegación de Entes Privados</em></p>
                 </div>
             </div>
         </body>
@@ -6441,7 +6434,7 @@ async function generateSelectedPlansReport() {
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
         <tr>
             <td style="padding: 30px 20px; text-align: center;">
-                <img src="https://i.postimg.cc/PJNnxBhT/Logo-OSPADEP.png" alt="OSPADEP Logo" style="height: 400px; width: auto; display: block; margin: 0 auto;">
+                <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg" alt="OSPADEP Logo" style="height: 400px; width: auto; display: block; margin: 0 auto;" onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
             </td>
         </tr>
     </table>
@@ -6697,7 +6690,7 @@ async function generateSelectedPlansReport() {
             <td style="padding: 40px 20px; text-align: center; color: #94a3b8;">
                 <div style="margin-bottom: 20px;">
                     <div style="font-size: 18px; color: #ffffff; font-weight: 600; margin-bottom: 10px;">¿Necesitas más información?</div>
-                    <div style="font-size: 14px; margin-bottom: 20px;">Contactanos: +54 11 1234-5678 | ventas@ospadep.com.ar</div>
+                    <div style="font-size: 14px; margin-bottom: 20px;">Contactanos: 0800-345-6732 | comercial@ospadep.com</div>
                 </div>
                 
                 <div style="color: #64748b; font-size: 12px; line-height: 1.5;">
@@ -7057,14 +7050,14 @@ function generarInformeConsolidado(datosCliente, planes) {
                     }
                     
                     .benefit-title { 
-                        font-size: 9px !important;
-                        margin: 0 0 1mm 0 !important;
+                        font-size: 9px !important; 
+                        margin: 0 0 1mm 0 !important; 
                         line-height: 1.1 !important;
                     }
                     
                     .benefit-description { 
-                        font-size: 8px !important;
-                        margin: 0 !important;
+                        font-size: 8px !important; 
+                        margin: 0 !important; 
                         line-height: 1.2 !important;
                     }
                     
@@ -7321,14 +7314,14 @@ function generarInformeConsolidado(datosCliente, planes) {
                     margin-bottom: 10px;
                     padding: 12px;
                     border-radius: 0 6px 6px 0;
-                    display: table;
-                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
                 }
                 
                 .plan-summary-info {
-                    display: table-cell;
-                    vertical-align: middle;
-                    width: 70%;
+                    flex: 1;
+                    margin-right: 10px;
                 }
                 
                 .plan-summary-info h4 {
@@ -7345,10 +7338,7 @@ function generarInformeConsolidado(datosCliente, planes) {
                 }
                 
                 .plan-summary-price {
-                    display: table-cell;
-                    vertical-align: middle;
                     text-align: right;
-                    width: 30%;
                 }
                 
                 .price-amount {
@@ -7478,11 +7468,8 @@ function generarInformeConsolidado(datosCliente, planes) {
                         <div class="header-row">
                             <div class="logo-section">
                                 <div class="logo-container">
-                                    <img src="https://i.postimg.cc/qBhxQhRv/482cc3df-6285-4fa0-93ea-8d1f008f9dbf.png" alt="OSPADEP" class="logo-img" 
-                                         style="background: transparent !important; mix-blend-mode: multiply;"
-                                         onerror="this.outerHTML='<div style=&quot;background: var(--dominant); color: white; padding: 20px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 18px;&quot;>OSPADEP</div>'"
-                                         crossorigin="anonymous">
-                                </div>
+                            <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg" alt="OSPADEP" style="width:100%; height:auto; display:block; border-radius: 12px 12px 0 0;" onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
+                        </div>
                             </div>
                             
                             <div class="title-section">
@@ -7490,74 +7477,73 @@ function generarInformeConsolidado(datosCliente, planes) {
                             <div class="header-subtitle">
                                 ${formatDate(fechaActual)} | Vigencia: 72 hs hábiles
                             </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Bloque de información -->
-                <div class="info-block">
-                    <div class="header-cards">
-                        <div class="info-card">
-                            <div class="card-icon">👤</div>
-                            <div class="card-label">BENEFICIARIO</div>
-                            <div class="card-value">${getTipoPlanLabel(datosCliente.tipoCobertura)}</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="card-icon">🎂</div>
-                            <div class="card-label">EDAD</div>
-                            <div class="card-value">${datosCliente.edadTitular || '25'} años</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="card-icon">➕</div>
-                            <div class="card-label">AFILIACIÓN</div>
-                            <div class="card-value">Adherente</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="card-icon">🏢</div>
-                            <div class="card-label">COBERTURA</div>
-                            <div class="card-value">CABA y GBA</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-area">
-                    <!-- Planes seleccionados -->
-                    <div class="plans-section">
-                        <h2 class="section-title">Planes Seleccionados (${planes.length})</h2>
-                        ${planesResumen}
-                        
-                        <div class="aportes-section">
-                            ${tieneAportes ? `
-                                <div class="aportes-info">
-                                    <h3 class="aportes-title">🎯 Tus Aportes OSPADEP</h3>
-                                    <p class="aportes-amount">${montoAportes}% bonificado</p>
-                                    <p class="aportes-description">Como afiliado a OSPADEP, tienes descuentos especiales en estos planes</p>
                                 </div>
-                            ` : `
-                                <div class="aportes-info promocional">
-                                    <h3 class="aportes-title">💰 Paga Menos con tus Aportes</h3>
-                                    <p class="aportes-description">Los afiliados a OSPADEP reciben descuentos especiales</p>
-                                    <p class="aportes-cta">¡Consulta por tus beneficios como afiliado!</p>
-                                </div>
-                            `}
-                        </div>
-                    </div>
-
-                    <!-- Beneficios consolidados -->
-                    <div class="benefits-section">
-                        <h2 class="section-title">Beneficios Destacados</h2>
-                        <div class="benefits-grid">
-                            ${beneficiosHTML}
-                        </div>
-                    </div>
-                </div>
-
-                </div>
+                            </div>
+                            </div>
                 
-                <!-- Footer -->
-                <div class="footer">
-                    <p><strong>Cotización válida por 30 días.</strong> Contáctenos: 📞 <strong>0800-999-OSPADEP</strong> | 📧 <strong>ventas@ospadep.com.ar</strong> | 📱 <strong>+54 11 1234-5678</strong></p>
-                    <p><em>Obra Social del Personal de Aeronavegación de Entes Privados</em></p>
+                    <!-- Bloque de información -->
+                    <div class="info-block">
+                        <div class="header-cards">
+                            <div class="info-card">
+                                <div class="card-icon">👤</div>
+                                <div class="card-label">BENEFICIARIO</div>
+                                <div class="card-value">${getTipoPlanLabel(datosCliente.tipoCobertura)}</div>
+                        </div>
+                            <div class="info-card">
+                                <div class="card-icon">🎂</div>
+                                <div class="card-label">EDAD</div>
+                                <div class="card-value">${datosCliente.edadTitular || '25'} años</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="card-icon">➕</div>
+                                <div class="card-label">AFILIACIÓN</div>
+                                <div class="card-value">Adherente</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="card-icon">🏢</div>
+                                <div class="card-label">COBERTURA</div>
+                                <div class="card-value">CABA y GBA</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-area">
+                        <!-- Planes seleccionados -->
+                        <div class="plans-section">
+                            <h2 class="section-title">Planes Seleccionados (${planes.length})</h2>
+                            ${planesResumen}
+                            
+                            <div class="aportes-section">
+                                ${tieneAportes ? `
+                                    <div class="aportes-info">
+                                        <h3 class="aportes-title">🎯 Tus Aportes OSPADEP</h3>
+                                        <p class="aportes-amount">${montoAportes}% bonificado</p>
+                                        <p class="aportes-description">Como afiliado a OSPADEP, tienes descuentos especiales en estos planes</p>
+                                </div>
+                                ` : `
+                                    <div class="aportes-info promocional">
+                                        <h3 class="aportes-title">💰 Paga Menos con tus Aportes</h3>
+                                        <p class="aportes-description">Los afiliados a OSPADEP reciben descuentos especiales</p>
+                                        <p class="aportes-cta">¡Consulta por tus beneficios como afiliado!</p>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+
+                        <!-- Beneficios consolidados -->
+                        <div class="benefits-section">
+                            <h2 class="section-title">Beneficios Destacados</h2>
+                            <div class="benefits-grid">
+                                ${beneficiosHTML}
+                            </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Footer -->
+                        <div class="footer">
+                            <p><strong>Cotización válida por 30 días.</strong> Contáctenos: 📞 <strong>0800-345-6732</strong> | 📧 <strong>comercial@ospadep.com</strong> | 📱 <strong>www.ospadep.com</strong></p>
                 </div>
             </div>
         </body>
@@ -8083,7 +8069,7 @@ function createDownloadableHTML(datosCliente, planPrincipal, selectedPlans, bene
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
         <tr>
             <td style="padding: 30px 20px; text-align: center;">
-                <img src="https://i.postimg.cc/PJNnxBhT/Logo-OSPADEP.png" alt="OSPADEP Logo" style="height: 400px; width: auto; display: block; margin: 0 auto;">
+                <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg" alt="OSPADEP Logo" style="height: 400px; width: auto; display: block; margin: 0 auto;" onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
             </td>
         </tr>
     </table>
@@ -8409,7 +8395,7 @@ function createDownloadableHTML(datosCliente, planPrincipal, selectedPlans, bene
             <td style="padding: 40px 20px; text-align: center; color: #94a3b8;">
                 <div style="margin-bottom: 20px;">
                     <div style="font-size: 18px; color: #ffffff; font-weight: 600; margin-bottom: 10px;">¿Necesitas más información?</div>
-                    <div style="font-size: 14px; margin-bottom: 20px;">Contactanos: +54 11 1234-5678 | ventas@ospadep.com.ar</div>
+                    <div style="font-size: 14px; margin-bottom: 20px;">Contactanos: 0800-345-6732 | comercial@ospadep.com</div>
                 </div>
                 
                 <div style="color: #64748b; font-size: 12px; line-height: 1.5;">
@@ -8443,8 +8429,8 @@ function createDownloadableHTML(datosCliente, planPrincipal, selectedPlans, bene
         }
     </script>
 
-</body>
-</html>
+        </body>
+        </html>
     `;
 }
 
@@ -8570,286 +8556,7 @@ function generateCompactEmailTemplate(datosCliente, planSeleccionado) {
         fechaGeneracion: fechaActual.toISOString()
     });
 
-    return `
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSPADEP - Tu Cotización de Plan de Salud</title>
-    <meta name="color-scheme" content="light">
-    <meta name="supported-color-schemes" content="light">
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            padding: 40px 30px;
-            text-align: center;
-        }
-        
-        .logo {
-            margin-bottom: 20px;
-        }
-        
-        .logo img {
-            height: 80px;
-            width: auto;
-        }
-        
-        .greeting {
-            color: #ffffff;
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0;
-        }
-        
-        .content {
-            padding: 40px 30px;
-            text-align: center;
-        }
-        
-        .message {
-            font-size: 16px;
-            color: #4b5563;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .plan-summary {
-            background: #f8fafc;
-            border: 2px solid #3b82f6;
-            border-radius: 12px;
-            padding: 25px;
-            margin: 30px 0;
-            text-align: center;
-        }
-        
-        .plan-name {
-            color: #1e40af;
-            font-size: 20px;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-        }
-        
-        .plan-price {
-            color: #3b82f6;
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0 0 5px 0;
-        }
-        
-        .plan-period {
-            color: #6b7280;
-            font-size: 14px;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            background: #ef4444;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 18px 40px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 16px;
-            margin: 20px 0;
-            transition: background-color 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .cta-button:hover {
-            background: #dc2626;
-        }
-        
-        .additional-info {
-            font-size: 14px;
-            color: #6b7280;
-            margin: 30px 0;
-            padding: 20px;
-            background: #f1f5f9;
-            border-radius: 8px;
-        }
-        
-        .contact-info {
-            margin: 30px 0;
-            padding: 20px;
-            background: #1e3a8a;
-            border-radius: 8px;
-            color: #ffffff;
-        }
-        
-        .contact-info h3 {
-            margin: 0 0 15px 0;
-            font-size: 18px;
-        }
-        
-        .contact-details {
-            font-size: 14px;
-            line-height: 1.8;
-        }
-        
-        .social-icons {
-            text-align: center;
-            margin: 30px 0 20px 0;
-        }
-        
-        .social-icon {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            margin: 0 10px;
-            background: #e5e7eb;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 40px;
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 18px;
-            transition: all 0.3s;
-        }
-        
-        .social-icon:hover {
-            background: #3b82f6;
-            color: #ffffff;
-        }
-        
-        .footer {
-            background: #f8fafc;
-            padding: 20px 30px;
-            text-align: center;
-            font-size: 12px;
-            color: #9ca3af;
-            border-top: 1px solid #e5e7eb;
-        }
-        
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            
-            .header,
-            .content {
-                padding: 30px 20px;
-            }
-            
-            .greeting {
-                font-size: 20px;
-            }
-            
-            .plan-price {
-                font-size: 24px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Header con logo -->
-        <div class="header">
-            <div class="logo">
-                <img src="https://i.postimg.cc/PJNnxBhT/Logo-OSPADEP.png" alt="OSPADEP Logo" 
-                     onerror="this.outerHTML='<div style=&quot;color: white; font-size: 24px; font-weight: bold;&quot;>OSPADEP</div>'">
-            </div>
-            <h1 class="greeting">¡HOLA!</h1>
-        </div>
-        
-        <!-- Contenido principal -->
-        <div class="content">
-            <div class="message">
-                Ponemos a tu disposición el <strong>certificado de atención, orden médica y/o receta digital</strong> relacionados con tu <strong>cotización personalizada</strong>.
-            </div>
-            
-            <!-- Resumen del plan -->
-            <div class="plan-summary">
-                <div class="plan-name">${prestadorLabel} - ${planName}</div>
-                <div class="plan-price">$${precio.toLocaleString('es-AR')}</div>
-                <div class="plan-period">por mes</div>
-            </div>
-            
-            <!-- Botón principal -->
-            <a href="#" class="cta-button" onclick="guardarYabrirMarketing(this)" data-plan='${encodeURIComponent(JSON.stringify(planSeleccionado))}'>
-                Ver Cotización Completa
-            </a>
-            
-            <!-- Información adicional -->
-            <div class="additional-info">
-                <strong>La cotización digital</strong> no es necesario que la imprimas. Podrás presentarla en la farmacia directamente desde tu celular.
-                <br><br>
-                Por <strong>cualquier consulta</strong> comunícate con nuestra Línea de información 24 hs. al <strong>0810-444-7700</strong>.
-            </div>
-            
-            <!-- Información de contacto -->
-            <div class="contact-info">
-                <h3>¿Necesitas más información?</h3>
-                <div class="contact-details">
-                    📞 <strong>0810-444-7700</strong> - Línea gratuita 24hs<br>
-                    📧 <strong>ventas@ospadep.com.ar</strong><br>
-                    🌐 <strong>www.ospadep.com.ar</strong>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Redes sociales -->
-        <div class="social-icons">
-            <a href="#" class="social-icon">📘</a>
-            <a href="#" class="social-icon">📷</a>
-            <a href="#" class="social-icon">🐦</a>
-            <a href="#" class="social-icon">💼</a>
-        </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-            *Este es un correo informativo generado automáticamente el ${fechaFormateada}.<br>
-            Si no deseas recibir más comunicaciones, puedes darte de baja contactándonos.
-        </div>
-    </div>
-    
-    <script>
-        function guardarYabrirMarketing(btn) {
-            try {
-                // Buscar el HTML de cotización completa guardado
-                var quoteId = localStorage.getItem('last_complete_quote_id');
-                if (quoteId) {
-                    var htmlCompleto = localStorage.getItem(quoteId);
-                    if (htmlCompleto) {
-                        // Abrir en nueva ventana
-                        var win = window.open('', '_blank', 'width=1200,height=800,scrollbars=yes');
-                        win.document.open();
-                        win.document.write(htmlCompleto);
-                        win.document.close();
-                        return;
-                    }
-                }
-                
-                // Si no hay HTML guardado, mostrar mensaje
-                alert('No se encontró la cotización completa. Por favor, selecciona al menos un plan primero.');
-            } catch (e) {
-                alert('Error al mostrar la cotización completa: ' + e.message);
-            }
-        }
-    </script>
-</body>
-</html>
-    `;
-}
+    }
 
 // Función para generar ID único de cotización
 function generateUniqueQuoteId() {
@@ -9032,7 +8739,7 @@ function generateCompactEmail() {
     emailWindow.document.write('}');
     
     emailWindow.document.write('function shareWhatsApp() {');
-    emailWindow.document.write('  var message = encodeURIComponent("🏥 COTIZACIÓN OSPADEP\\nPlan: " + planName + "\\nPrecio: $" + planPrice + "/mes\\nContacto: 0810-444-7700");');
+    emailWindow.document.write('  var message = encodeURIComponent("🏥 COTIZACIÓN OSPADEP\\nPlan: " + planName + "\\nPrecio: $" + planPrice + "/mes\\nContacto: 0800-345-6732");');
     emailWindow.document.write('  window.open("https://wa.me/?text=" + message, "_blank");');
     emailWindow.document.write('}');
     
@@ -9207,23 +8914,43 @@ function generateCompactEmailWithBenefits() {
         }
 
         planesHTML += `
-            <div style="background: white; border: 2px solid #e5e7eb; border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <div>
-                        <div style="font-size: 18px; font-weight: 600; color: #1e40af; margin-bottom: 5px;">${planName}</div>
-                        <div style="color: #6b7280; font-size: 14px;">${prestadorLabel}</div>
-                    </div>
-                    <div style="font-size: 24px; font-weight: 700; color: #059669;">${precioFormateado}</div>
-                </div>
-                <div style="margin-top: 15px;">
-                    <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">Beneficios incluidos:</h4>
-                    ${beneficiosHTML}
-                </div>
-            </div>
-        `;
+    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; margin-bottom: 10px;">
+            <tr>
+                <td style="font-size: 18px; font-weight: 600; color: #1e40af; padding: 0 0 0 0; white-space:nowrap;">
+                    ${planName}<br>
+                    <span style="color: #6b7280; font-size: 14px; font-weight: 400;">${prestadorLabel}</span>
+                </td>
+                <td style="font-size: 24px; font-weight: 700; color: #059669; text-align: right; white-space:nowrap; padding-left: 40px; min-width: 120px;">
+                    ${precioFormateado}
+                </td>
+            </tr>
+        </table>
+        <div style="margin-top: 15px;">
+            <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">Beneficios incluidos:</h4>
+            ${beneficiosHTML}
+        </div>
+    </div>
+`;
     });
 
     const totalFormateado = totalPrecio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
+
+    // Calcular aportes solo una vez (primer plan con _totalAportes > 0)
+    let aporteUnico = 0;
+    for (let i = 0; i < window.selectedPlans.length; i++) {
+        const plan = window.selectedPlans[i];
+        if (plan._totalAportes && plan._totalAportes > 0) {
+            aporteUnico = plan._totalAportes;
+            break;
+        }
+    }
+    let totalSectionHTML = '';
+    if (aporteUnico > 0) {
+        totalSectionHTML = `<div class="total-section"><h3>💸 Aportes descontados</h3><div class="total-price">$${aporteUnico.toLocaleString('es-AR')}</div></div>`;
+    } else {
+        totalSectionHTML = `<div class="total-section"><h3>¡Descontá con tus aportes!</h3></div>`;
+    }
 
     const htmlContent = `
 <!DOCTYPE html>
@@ -9231,7 +8958,6 @@ function generateCompactEmailWithBenefits() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización OSPADEP - Planes de Salud</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -9249,20 +8975,14 @@ function generateCompactEmailWithBenefits() {
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-            color: white;
-            padding: 30px;
+            padding: 0;
             text-align: center;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .header p {
-            margin: 10px 0 0 0;
-            opacity: 0.9;
-            font-size: 16px;
+        .header img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px 12px 0 0;
         }
         .content {
             padding: 30px;
@@ -9345,10 +9065,12 @@ function generateCompactEmailWithBenefits() {
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="max-width: 420px; width: 100%; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(30,64,175,0.08); overflow: hidden;">
         <div class="header">
-            <h1>🏥 OSPADEP</h1>
-            <p>Obra Social del Personal de Aeronavegación de Entes Privados</p>
+            <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg"
+            alt="OSPADEP"
+            style="width:80%; max-width:200px; height:auto; display:block; margin: 0 auto 18px auto; border-radius: 14px;"
+            onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
         </div>
         
         <div class="content">
@@ -9357,25 +9079,22 @@ function generateCompactEmailWithBenefits() {
                 ${planesHTML}
             </div>
             
-            <div class="total-section">
-                <h3>💰 Precio Total Mensual</h3>
-                <div class="total-price">${totalFormateado}</div>
-            </div>
+            ${totalSectionHTML}
             
             <div class="contact-section">
                 <h3>📞 ¿Necesitas más información?</h3>
                 <div class="contact-info">
                     <div class="contact-item">
                         <strong>📞 Teléfono</strong>
-                        0810-444-7700
+                        0800-345-6732
                     </div>
                     <div class="contact-item">
                         <strong>📧 Email</strong>
-                        ventas@ospadep.com.ar
+                        comercial@ospadep.com
                     </div>
                     <div class="contact-item">
                         <strong>🌐 Web</strong>
-                        www.ospadep.com.ar
+                        www.ospadep.com
                     </div>
                 </div>
             </div>
@@ -9478,3 +9197,5 @@ function showCopySuccessMessage(message = 'Copiado al portapapeles') {
 
 
 
+
+            
