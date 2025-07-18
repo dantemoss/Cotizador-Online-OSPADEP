@@ -675,35 +675,6 @@ const prestadoresData = {
                 ],
                 recommended: false
             },
-            as150: {
-                name: "PLAN AS 150",
-                type: "activa_salud",
-                preciosPorEdad: { "≤100": 145000 },
-                features: [
-                    "Plan premium ACTIVA SALUD",
-                    "Consultas médicas ilimitadas",
-                    "Emergencias 24hs",
-                    "Estudios completos",
-                    "Internación",
-                    "Cirugías programadas",
-                    "Red amplia de prestadores"
-                ],
-                recommended: true
-            },
-            as200: {
-                name: "PLAN AS 200",
-                type: "activa_salud",
-                preciosPorEdad: { "≤100": 75000 },
-                features: [
-                    "Plan intermedio ACTIVA SALUD",
-                    "Consultas médicas",
-                    "Emergencias 24hs",
-                    "Estudios diagnósticos",
-                    "Cobertura estándar",
-                    "Red de prestadores"
-                ],
-                recommended: false
-            },
             as300: {
                 name: "PLAN AS 300",
                 type: "activa_salud",
