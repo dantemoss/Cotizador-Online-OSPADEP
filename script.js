@@ -9086,7 +9086,7 @@ function generateCompactEmailWithBenefits() {
                 <div class="contact-info">
                     <div class="contact-item">
                         <strong>📞 Teléfono</strong>
-                        0800-345-6732
+                        +54 9 11 6625-9009
                     </div>
                     <div class="contact-item">
                         <strong>📧 Email</strong>
