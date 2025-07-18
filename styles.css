@@ -3099,12 +3099,17 @@ h2 i {
     padding: 2px 8px;
     font-size: 0.92rem;
 }
-.selected-plans-sidebar .generate-report-btn {
-    width: calc(100% - 48px);
-    margin: 18px 24px 24px 24px;
+.selected-plans-sidebar .sidebar-actions {
+    padding: 18px 24px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.selected-plans-sidebar .generate-report-btn,
+.selected-plans-sidebar .download-report-btn {
+    width: 100%;
     padding: 14px 0;
-    background: linear-gradient(90deg, #3182ce 60%, #059669 100%);
-    color: #fff;
     font-size: 1.13rem;
     font-weight: 700;
     border: none;
@@ -3117,8 +3122,34 @@ h2 i {
     justify-content: center;
     gap: 10px;
 }
+
+.selected-plans-sidebar .generate-report-btn {
+    background: linear-gradient(90deg, #3182ce 60%, #059669 100%);
+    color: #fff;
+}
+
 .selected-plans-sidebar .generate-report-btn:hover {
     background: linear-gradient(90deg, #2563eb 60%, #047857 100%);
+    box-shadow: 0 4px 16px 0 rgba(30,41,59,0.13);
+}
+
+.selected-plans-sidebar .download-report-btn {
+    background: linear-gradient(90deg, #7c3aed 60%, #2563eb 100%);
+    color: #fff;
+}
+
+.selected-plans-sidebar .download-report-btn:hover {
+    background: linear-gradient(90deg, #6d28d9 60%, #1d4ed8 100%);
+    box-shadow: 0 4px 16px 0 rgba(30,41,59,0.13);
+}
+
+.selected-plans-sidebar .email-report-btn {
+    background: linear-gradient(90deg, #ef4444 60%, #dc2626 100%);
+    color: #fff;
+}
+
+.selected-plans-sidebar .email-report-btn:hover {
+    background: linear-gradient(90deg, #dc2626 60%, #b91c1c 100%);
     box-shadow: 0 4px 16px 0 rgba(30,41,59,0.13);
 }
 
@@ -3674,4 +3705,55 @@ h2 i {
     .aporte-toggle {
         width: 100%;
     }
+}
+
+.pdf-plan-btn {
+    background: #f1f5f9;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pdf-plan-btn i {
+    font-size: 1.2em;
+    margin-right: 4px;
+}
+
+.pdf-plan-btn:hover {
+    background: #2563eb;
+    color: #fff;
+    border-color: #1053F3;
+}
+
+.pdf-sidebar-btn {
+    background: #fff;
+    color: #2563eb;
+    border: 2.5px solid #2563eb;
+    border-radius: 10px;
+    font-size: 1.13rem;
+    font-weight: 700;
+    padding: 14px 0;
+    width: 100%;
+    box-shadow: 0 2px 8px 0 rgba(30,41,59,0.08);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.pdf-sidebar-btn:hover {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
 }

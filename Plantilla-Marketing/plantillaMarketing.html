@@ -3,929 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización Personalizada OSPADEP</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        :root {
-            --dominant: #1DB9A0;     /* 60% - Color dominante */
-            --secondary: #00A3C8;    /* 30% - Color secundario */
-            --accent: #1A408C;       /* 10% - Acentos */
-            --detail: #0B3D91;       /* Detalles */
-            
-            --bg-light: #F8FAFB;
-            --text-dark: #2E3A46;
-            --text-muted: #69707A;
-            --card-bg: #FFFFFF;
-            --border-light: #E2E8F0;
-            
-            --border-radius: 8px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow-sm: 0 2px 8px rgba(27, 185, 160, 0.08);
-            --shadow-md: 0 4px 16px rgba(27, 185, 160, 0.12);
-            --shadow-lg: 0 8px 32px rgba(27, 185, 160, 0.16);
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-
-        /* Header con identidad OSPADEP */
-        .header {
-            background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 70%, var(--accent) 100%);
-            color: #fff;
-            padding: 40px;
-            position: relative;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .header .logo-container {
-            background: transparent;
-            padding: 20px;
-            border-radius: 0;
-            box-shadow: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 120px;
-            width: 200px;
-        }
-
-        .logo-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .header-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .header-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-
-        .header-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: var(--border-radius);
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .meta-item i {
-            font-size: 24px;
-            opacity: 0.9;
-        }
-
-        .meta-item-content {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .meta-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.8;
-        }
-
-        .meta-value {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        /* Sección de resumen con colores OSPADEP */
-        .summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: var(--secondary);
-            position: relative;
-        }
-
-        .summary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--dominant), var(--accent));
-        }
-
-        .meta-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            padding: 20px;
-            text-align: center;
-            transition: var(--transition);
-            border: 1px solid var(--border-light);
-        }
-
-        .meta-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--dominant);
-        }
-
-        .meta-icon {
-            font-size: 28px;
-            color: var(--accent);
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .meta-label {
-            font-family: 'SF Pro Display', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--detail);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .meta-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* Secciones */
-        .section {
-            padding: 40px 30px;
-        }
-
-        .section-title {
-            font-family: 'SF Pro Display', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 30px;
-            position: relative;
-            text-align: center;
-            letter-spacing: -0.5px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--dominant), var(--secondary));
-            border-radius: 2px;
-        }
-
-        /* Planes OSPADEP */
-        .plans {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-
-        .plan {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            border: 2px solid transparent;
-        }
-
-        .plan:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--dominant);
-        }
-
-        .plan-header {
-            background: var(--accent);
-            color: #fff;
-            text-align: center;
-            padding: 16px;
-            font-family: 'SF Pro Display', sans-serif;
-            font-weight: 700;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        .plan-price {
-            padding: 30px 20px;
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--detail);
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        }
-
-        .plan-features {
-            list-style: none;
-            padding: 0 24px;
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .plan-features li {
-            margin: 12px 0;
-            font-size: 14px;
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .plan-features li:last-child {
-            border-bottom: none;
-        }
-
-        .plan-features li i {
-            color: var(--dominant);
-            margin-right: 12px;
-            width: 16px;
-        }
-
-        .plan-footer {
-            background: var(--secondary);
-            color: #fff;
-            text-align: center;
-            padding: 16px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Tabla comparativa mejorada */
-        .comparison-section {
-            padding: 40px;
-            background: var(--bg-light);
-        }
-
-        .comparison-intro {
-            text-align: center;
-            margin-bottom: 40px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .comparison-intro p {
-            font-size: 16px;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-
-        .comparison-table th {
-            background: var(--accent);
-            color: white;
-            padding: 16px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .comparison-table th:first-child {
-            text-align: left;
-            background: var(--detail);
-        }
-
-        .comparison-table th.ospadep-header {
-            background: var(--dominant);
-            position: relative;
-        }
-
-        .comparison-table th.ospadep-header::before {
-            content: '⭐';
-            position: absolute;
-            top: -8px;
-            right: 8px;
-            font-size: 16px;
-        }
-
-        .comparison-table td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .comparison-table td:first-child {
-            text-align: left;
-            font-weight: 600;
-            color: var(--accent);
-            background: rgba(26, 64, 140, 0.02);
-        }
-
-        .comparison-table tr:hover {
-            background: rgba(29, 185, 160, 0.03);
-        }
-
-        .comparison-table .ospadep-cell {
-            background: rgba(29, 185, 160, 0.08);
-            font-weight: 600;
-            color: var(--detail);
-            border-left: 3px solid var(--dominant);
-        }
-
-        .check-icon {
-            color: #22c55e;
-            font-weight: bold;
-        }
-
-        .star-icon {
-            color: var(--dominant);
-            font-weight: bold;
-        }
-
-        .info-icon {
-            font-size: 14px;
-        }
-
-        /* Beneficios únicos */
-        .benefits-section {
-            padding: 50px 30px;
-            background: var(--card-bg);
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
-        }
-
-        .benefit-card {
-            background: var(--card-bg);
-            border: 2px solid var(--border-light);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .benefit-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--dominant), var(--secondary));
-            transform: scaleX(0);
-            transition: var(--transition);
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--dominant);
-        }
-
-        .benefit-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .benefit-icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--dominant), var(--secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            color: white;
-            font-size: 24px;
-            transition: var(--transition);
-        }
-
-        .benefit-card:hover .benefit-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .benefit-title {
-            font-family: 'SF Pro Display', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
-
-        .benefit-description {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        /* Contacto */
-        .contact-section {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--detail) 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .contact-section .section-title {
-            color: white;
-        }
-
-        .contact-section .section-title::after {
-            background: linear-gradient(90deg, var(--dominant), var(--secondary));
-        }
-
-        .contact-info {
-            font-size: 16px;
-            line-height: 1.8;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .contact-info strong {
-            font-weight: 700;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--detail);
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                margin: 20px;
-            }
-
-            .header {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            .section {
-                padding: 30px 20px;
-            }
-
-            .section-title {
-                font-size: 24px;
-            }
-
-            .comparison-table {
-                font-size: 12px;
-                min-width: 600px;
-            }
-
-            .comparison-table th,
-            .comparison-table td {
-                padding: 12px 8px;
-            }
-        }
-
-        /* Animaciones */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .plan, .benefit-card {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        .plan:nth-child(1) { animation-delay: 0.1s; }
-        .plan:nth-child(2) { animation-delay: 0.2s; }
-        .plan:nth-child(3) { animation-delay: 0.3s; }
-
-        .benefit-card:nth-child(1) { animation-delay: 0.1s; }
-        .benefit-card:nth-child(2) { animation-delay: 0.2s; }
-        .benefit-card:nth-child(3) { animation-delay: 0.3s; }
-
-        /* Plan Card Improvements */
-        .plan-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .plan-header {
-            background: var(--accent);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        .plan-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-
-        .plan-type {
-            font-size: 16px;
-            opacity: 0.9;
-            margin-top: 8px;
-        }
-
-        .plan-price-container {
-            background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 100%);
-            padding: 30px;
-            text-align: center;
-            color: white;
-        }
-
-        .plan-price {
-            font-size: 48px;
-            font-weight: 700;
-            line-height: 1;
-        }
-
-        .plan-price-period {
-            font-size: 16px;
-            opacity: 0.9;
-            margin-top: 8px;
-        }
-
-        /* Benefits Grid */
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            padding: 40px;
-        }
-
-        .benefit-card {
-            background: var(--bg-light);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            transition: var(--transition);
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .benefit-icon {
-            background: linear-gradient(135deg, var(--dominant) 0%, var(--secondary) 100%);
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .benefit-content {
-            flex: 1;
-        }
-
-        .benefit-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin: 0 0 8px 0;
-        }
-
-        .benefit-description {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        /* Comparison Table */
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-
-        .comparison-table th {
-            background: var(--accent);
-            color: white;
-            padding: 16px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .comparison-table td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .comparison-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .comparison-check {
-            color: var(--dominant);
-            font-size: 20px;
-        }
-
-        /* Contact Section */
-        .contact-section {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--detail) 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin-top: 30px;
-        }
-
-        .contact-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 24px;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-        }
-
-        .contact-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
-        }
-
-        .contact-icon {
-            font-size: 32px;
-            margin-bottom: 16px;
-        }
-
-        .contact-label {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .contact-value {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        @media print {
-            .container {
-                box-shadow: none;
-            }
-            
-            .header {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .plan-header,
-            .plan-price-container {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .benefit-card,
-            .comparison-table {
-                break-inside: avoid;
-            }
-        }
-    </style>
+    <title>OSPADEP - Cobertura médica para tu vida en movimiento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&family=Inter:wght@600&display=swap" rel="stylesheet">
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
 </head>
-<body>
-    <div class="container">
-        <!-- Header con logo y metadata -->
-        <header class="header">
-            <div class="logo-container">
-                <img src="https://i.postimg.cc/qBhxQhRv/482cc3df-6285-4fa0-93ea-8d1f008f9dbf.png" alt="OSPADEP" class="logo-img" id="ospadep-logo">
-            </div>
-            <div class="header-content">
-                <h1 class="header-title">Cotización de Planes</h1>
-                <div class="header-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-calendar"></i>
-                        <div class="meta-item-content">
-                            <span class="meta-label">Fecha</span>
-                            <span class="meta-value" id="quote-date"><!-- Fecha dinámica --></span>
-                        </div>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-users"></i>
-                        <div class="meta-item-content">
-                            <span class="meta-label">Tipo de Plan</span>
-                            <span class="meta-value" id="plan-type"><!-- Tipo de plan dinámico --></span>
-                        </div>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-id-card"></i>
-                        <div class="meta-item-content">
-                            <span class="meta-label">Referencia</span>
-                            <span class="meta-value" id="quote-ref"><!-- Referencia dinámica --></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+<body style="margin: 0; padding: 0; font-family: 'Inter', sans-serif; font-weight: 600; line-height: 1.6; color: #333333; background-color: #f8f9fa;">
+    
+    <!-- Logo Section (White Background) -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
+        <tr>
+            <td style="padding: 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                    <tr>
+                        <td style="padding: 30px 20px; text-align: center;">
+                            <!-- Logo -->
+                            <img src="https://i.postimg.cc/PJNnxBhT/Logo-OSPADEP.png" alt="OSPADEP Logo" style="height: 500px; width: auto; display: block; margin: 0 auto;" id="ospadep-logo">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
-        <!-- Plan seleccionado -->
-        <div class="plan-card">
-            <div class="plan-header">
-                <h2 class="plan-name" id="plan-name"><!-- Nombre del plan dinámico --></h2>
-                <div class="plan-type" id="plan-category"><!-- Categoría del plan dinámica --></div>
-            </div>
-            <div class="plan-price-container">
-                <div class="plan-price" id="plan-price"><!-- Precio dinámico --></div>
-                <div class="plan-price-period">por mes</div>
-            </div>
-        </div>
+    <!-- Header Content Section (Blue Background) -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #1e3a8a; background-image: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);">
+        <tr>
+            <td style="padding: 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                    <tr>
+                        <td style="padding: 40px 20px 60px 20px;">
+                            <!-- Main Headline -->
+                            <div style="text-align: center; margin-bottom: 50px;">
+                                <h1 style="color: #ffffff; font-size: 42px; font-weight: 700; margin: 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: 'Manrope', sans-serif;">
+                                    Cobertura médica para<br>
+                                    <span style="color: #bfdbfe;">tu vida en movimiento</span>
+                                </h1>
+                            </div>
+                            
+                            <!-- Membership Card -->
+                            <div style="text-align: center; margin-bottom: 50px;">
+                                <div style="display: inline-block; transform: perspective(1000px) rotateY(-10deg);">
+                                    <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 320px; height: 200px; position: relative;">
+                                        <div style="color: #1e40af; font-weight: 700; font-size: 20px; margin-bottom: 15px; font-family: 'Manrope', sans-serif;">OSPADEP</div>
+                                        <div style="color: #64748b; font-size: 16px; margin-bottom: 30px;" id="plan-card-name">Tu plan ideal</div>
+                                        <div style="position: absolute; bottom: 30px; left: 30px;">
+                                            <div style="color: #1e40af; font-size: 18px; font-weight: 600; font-family: 'Manrope', sans-serif;">•••• •••• •••• 1234</div>
+                                            <div style="color: #64748b; font-size: 14px; margin-top: 8px;">VÁLIDO HASTA 12/25</div>
+                                        </div>
+                                        <div style="position: absolute; top: 30px; right: 30px; width: 50px; height: 50px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="color: white; font-size: 24px; font-weight: 700;">+</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <div style="text-align: center;">
+                                <a href="#" style="display: inline-block; background: #60a5fa; color: #ffffff; text-decoration: none; padding: 18px 40px; border-radius: 50px; font-weight: 700; font-size: 18px; box-shadow: 0 6px 20px rgba(96, 165, 250, 0.4); font-family: 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: 1px;">
+                                    COTIZÁ AHORA
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
-        <!-- Beneficios -->
-        <div class="benefits-grid">
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fas fa-hospital"></i>
-                </div>
-                <div class="benefit-content">
-                    <h3 class="benefit-title">Red de Prestadores Premium</h3>
-                    <p class="benefit-description">Acceso a una extensa red de centros médicos y profesionales de primer nivel en todo el país.</p>
-                </div>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <div class="benefit-content">
-                    <h3 class="benefit-title">Tecnología y Comodidad</h3>
-                    <p class="benefit-description">App móvil exclusiva, turnos online y credencial digital para gestionar tu salud desde cualquier lugar.</p>
-                </div>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fas fa-user-md"></i>
-                </div>
-                <div class="benefit-content">
-                    <h3 class="benefit-title">Atención Especializada</h3>
-                    <p class="benefit-description">Cobertura integral en todas las especialidades médicas con los mejores profesionales.</p>
-                </div>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="benefit-content">
-                    <h3 class="benefit-title">Atención 24/7</h3>
-                    <p class="benefit-description">Servicio de urgencias y emergencias disponible las 24 horas, los 365 días del año.</p>
-                </div>
-            </div>
-        </div>
+    <!-- Institutional Section -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                    <tr>
+                        <td style="text-align: center;">
+                            <h2 style="color: #1e40af; font-size: 32px; font-weight: 700; margin: 0 0 20px 0; font-family: 'Manrope', sans-serif;">Somos OSPADEP</h2>
+                            <p style="color: #64748b; font-size: 18px; line-height: 1.6; margin: 0 0 30px 0; max-width: 500px; margin-left: auto; margin-right: auto;">
+                                Acompañamos a cada afiliado con atención personalizada, cobertura nacional y una red de prestadores en constante crecimiento.
+                            </p>
+                            <a href="#" style="display: inline-block; background: transparent; color: #3b82f6; text-decoration: none; padding: 12px 24px; border: 2px solid #3b82f6; border-radius: 25px; font-weight: 600; font-size: 16px;">
+                                Conocé más
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
-        <!-- Tabla comparativa -->
-        <div class="comparison-section">
-            <table class="comparison-table">
-                <thead>
+    <!-- Plans Comparison Section -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
                     <tr>
-                        <th>Características</th>
-                        <th>Plan Actual</th>
-                        <th>Otros Planes</th>
+                        <td>
+                            <h2 style="color: #1e40af; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 40px 0; font-family: 'Manrope', sans-serif;">Tu plan seleccionado</h2>
+                            
+                            <!-- Selected Plan -->
+                            <div id="selected-plan-container" style="background: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #3b82f6; position: relative; margin-bottom: 30px;">
+                                <div style="position: absolute; top: -10px; right: 20px; background: #3b82f6; color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; font-weight: 600;">TU PLAN</div>
+                                <div style="padding: 25px;">
+                                    <h3 style="color: #1e40af; font-size: 24px; font-weight: 700; margin: 0 0 10px 0; font-family: 'Manrope', sans-serif;" id="selected-plan-name">Plan Seleccionado</h3>
+                                    <div style="color: #3b82f6; font-size: 32px; font-weight: 700; margin: 0 0 20px 0;" id="selected-plan-price">$49.900<span style="font-size: 16px; color: #64748b;">/mes</span></div>
+                                    <div id="selected-plan-benefits" style="color: #64748b; font-size: 14px; line-height: 1.8;">
+                                        <!-- Los beneficios se insertarán dinámicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- All Plans Comparison -->
+                            <div style="margin-top: 30px;">
+                                <h3 style="color: #1e40af; font-size: 20px; font-weight: 700; text-align: center; margin: 0 0 20px 0; font-family: 'Manrope', sans-serif;">Comparación con otros planes</h3>
+                                <div id="plans-comparison-container">
+                                    <!-- Los planes disponibles se mostrarán dinámicamente -->
+                                </div>
+                            </div>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Cobertura Nacional</td>
-                        <td><i class="fas fa-check comparison-check"></i></td>
-                        <td>Limitada</td>
-                    </tr>
-                    <tr>
-                        <td>Centros Propios</td>
-                        <td><i class="fas fa-check comparison-check"></i></td>
-                        <td>Variable</td>
-                    </tr>
-                    <tr>
-                        <td>Tecnología Digital</td>
-                        <td><i class="fas fa-check comparison-check"></i></td>
-                        <td>Básica</td>
-                    </tr>
-                    <tr>
-                        <td>Atención Personalizada</td>
-                        <td><i class="fas fa-check comparison-check"></i></td>
-                        <td>Estándar</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                </table>
+            </td>
+        </tr>
+    </table>
 
-        <!-- Contacto -->
-        <div class="contact-section">
-            <h2>¿Necesitas más información?</h2>
-            <div class="contact-grid">
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    <div class="contact-label">WhatsApp</div>
-                    <div class="contact-value" id="whatsapp-number"><!-- Número dinámico --></div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <div class="contact-label">Teléfono</div>
-                    <div class="contact-value" id="phone-number"><!-- Número dinámico --></div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="contact-label">Email</div>
-                    <div class="contact-value" id="email-contact"><!-- Email dinámico --></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Multimedia Section -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                    <tr>
+                        <td>
+                            <h2 style="color: #1e40af; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 40px 0; font-family: 'Manrope', sans-serif;">Cuidamos tu bienestar en cada etapa</h2>
+                            
+                            <!-- Images Grid -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td style="width: 50%; vertical-align: top;">
+                                        <img src="https://i.postimg.cc/gJ1mLSJP/foto-Seccion-Media.png" alt="Consulta médica moderna" style="width: 100%; height: auto;">
+                                    </td>
+                                    <td style="width: 50%; vertical-align: top; background-color: #ffffff;">
+                                        <img src="https://i.postimg.cc/ZKKx941r/Imagen-Seccion2.png" alt="Tecnología médica avanzada" style="width: 100%; height: auto;">
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <div style="text-align: center; margin-top: 30px;">
+                                <p style="color: #64748b; font-size: 16px; margin: 0;">Atención personalizada con la mejor tecnología médica</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Services Section -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                    <tr>
+                        <td>
+                            <h2 style="color: #1e40af; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 20px 0; font-family: 'Manrope', sans-serif;">Accedé a estudios y tratamientos</h2>
+                            <p style="color: #64748b; font-size: 16px; text-align: center; margin: 0 0 40px 0;">con la mejor tecnología</p>
+                            
+                            <!-- Services Cards -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td style="width: 50%; padding-right: 5px; vertical-align: top;">
+                                        <div style="background: #ffffff; border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                                            <div style="background: #dbeafe; border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: table;">
+                                                <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #3b82f6;">
+                                                        <rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect>
+                                                        <circle cx="12" cy="5" r="2"></circle>
+                                                        <path d="M12 7v4"></path>
+                                                        <line x1="8" y1="16" x2="16" y2="16"></line>
+                                                        <line x1="10" y1="20" x2="14" y2="20"></line>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <h4 style="color: #1e40af; font-size: 18px; font-weight: 600; margin: 0 0 10px 0; font-family: 'Manrope', sans-serif;">Medicamentos</h4>
+                                            <p style="color: #64748b; font-size: 14px; margin: 0;">Descuentos especiales en farmacias adheridas</p>
+                                        </div>
+                                    </td>
+                                    <td style="width: 50%; padding-left: 5px; vertical-align: top;">
+                                        <div style="background: #ffffff; border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                                            <div style="background: #dbeafe; border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: table;">
+                                                <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #3b82f6;">
+                                                        <path d="M9 11H5a2 2 0 0 0-2 2v3c0 1.1.9 2 2 2h4m6-6h4a2 2 0 0 1 2 2v3c0 1.1-.9 2-2 2h-4m-6 0V9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <h4 style="color: #1e40af; font-size: 18px; font-weight: 600; margin: 0 0 10px 0; font-family: 'Manrope', sans-serif;">Estudios</h4>
+                                            <p style="color: #64748b; font-size: 14px; margin: 0;">Laboratorio y diagnóstico por imágenes</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <div style="text-align: center; margin-top: 30px;">
+                                <a href="#" style="display: inline-block; background: transparent; color: #3b82f6; text-decoration: none; padding: 12px 24px; border: 2px solid #3b82f6; border-radius: 25px; font-weight: 600; font-size: 16px;">
+                                    Ver más beneficios
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Final CTA Section with Steps -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #1e3a8a; background-image: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+        <tr>
+            <td style="padding: 50px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                    <tr>
+                        <td style="text-align: center;">
+                            <h2 style="color: #ffffff; font-size: 36px; font-weight: 700; font-family: 'Manrope', sans-serif; margin: 0 0 20px 0;">Acceso completo a salud de calidad</h2>
+                            <p style="color: #bfdbfe; font-size: 20px; font-family: 'Inter', sans-serif; font-weight: 600; margin: 0 0 60px 0;">Tu afiliación en 3 pasos simples</p>
+                            
+                            <!-- 3 Steps Process -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 50px; max-width: 520px; margin-left: auto; margin-right: auto;">
+                                <tr>
+                                    <td style="width: 28%; text-align: center; vertical-align: top; padding: 0 10px;">
+                                        <!-- Step 1 -->
+                                        <div style="margin-bottom: 30px;">
+                                            <div style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: table; border: 2px solid rgba(255,255,255,0.3);">
+                                                <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffffff;">
+                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                        <circle cx="12" cy="7" r="4"></circle>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <h4 style="color: #ffffff; font-size: 16px; font-weight: 600; font-family: 'Manrope', sans-serif; margin: 0 0 8px 0;">Colocá tu información</h4>
+                                            <p style="color: #bfdbfe; font-size: 14px; font-family: 'Inter', sans-serif; font-weight: 600; margin: 0; line-height: 1.4;">Datos básicos y contacto</p>
+                                        </div>
+                                    </td>
+                                    
+                                    <td style="width: 11%; text-align: center; vertical-align: middle;">
+                                        <!-- Arrow 1 -->
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #bfdbfe;">
+                                            <polyline points="9,18 15,12 9,6"></polyline>
+                                        </svg>
+                                    </td>
+                                    
+                                    <td style="width: 28%; text-align: center; vertical-align: top; padding: 0 10px;">
+                                        <!-- Step 2 -->
+                                        <div style="margin-bottom: 30px;">
+                                            <div style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: table; border: 2px solid rgba(255,255,255,0.3);">
+                                                <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffffff;">
+                                                        <path d="M9 11H5a2 2 0 0 0-2 2v3c0 1.1.9 2 2 2h4m6-6h4a2 2 0 0 1 2 2v3c0 1.1-.9 2-2 2h-4m-6 0V9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <h4 style="color: #ffffff; font-size: 16px; font-weight: 600; font-family: 'Manrope', sans-serif; margin: 0 0 8px 0;">Elegí tu plan</h4>
+                                            <p style="color: #bfdbfe; font-size: 14px; font-family: 'Inter', sans-serif; font-weight: 600; margin: 0; line-height: 1.4;">Regular o Premium</p>
+                                        </div>
+                                    </td>
+                                    
+                                    <td style="width: 11%; text-align: center; vertical-align: middle;">
+                                        <!-- Arrow 2 -->
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #bfdbfe;">
+                                            <polyline points="9,18 15,12 9,6"></polyline>
+                                        </svg>
+                                    </td>
+                                    
+                                    <td style="width: 28%; text-align: center; vertical-align: top; padding: 0 10px;">
+                                        <!-- Step 3 -->
+                                        <div style="margin-bottom: 30px;">
+                                            <div style="background: rgba(255,255,255,0.15); border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: table; border: 2px solid rgba(255,255,255,0.3);">
+                                                <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffffff;">
+                                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <h4 style="color: #ffffff; font-size: 16px; font-weight: 600; font-family: 'Manrope', sans-serif; margin: 0 0 8px 0;">Hablá con un asesor</h4>
+                                            <p style="color: #bfdbfe; font-size: 14px; font-family: 'Inter', sans-serif; font-weight: 600; margin: 0; line-height: 1.4;">y afiliate al instante</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <div style="text-align: center;">
+                                <a href="#" style="display: inline-block; background: #60a5fa; color: #ffffff; text-decoration: none; padding: 18px 40px; border-radius: 50px; font-weight: 700; font-size: 18px; font-family: 'Manrope', sans-serif; box-shadow: 0 6px 20px rgba(96, 165, 250, 0.4); text-transform: uppercase; letter-spacing: 1px;">
+                                    INICIAR AFILIACIÓN
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Footer -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #1e293b;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;">
+                    <tr>
+                        <td style="text-align: center;">
+                            <!-- Address -->
+                            <div style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">
+                                4140 Parker Rd. Allentown, New Mexico 31134
+                            </div>
+                            
+                            <!-- Social Media -->
+                            <div style="margin-bottom: 20px;">
+                                <a href="#" style="display: inline-block; margin: 0 10px; text-decoration: none;">
+                                    <div style="background: #1877f2; border-radius: 50%; width: 40px; height: 40px; display: inline-block; text-align: center; line-height: 40px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color: white; vertical-align: middle;">
+                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                                <a href="#" style="display: inline-block; margin: 0 10px; text-decoration: none;">
+                                    <div style="background: #0077b5; border-radius: 50%; width: 40px; height: 40px; display: inline-block; text-align: center; line-height: 40px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color: white; vertical-align: middle;">
+                                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                                <a href="#" style="display: inline-block; margin: 0 10px; text-decoration: none;">
+                                    <div style="background: #E4405F; border-radius: 50%; width: 40px; height: 40px; display: inline-block; text-align: center; line-height: 40px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color: white; vertical-align: middle;">
+                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Legal Disclaimer -->
+                            <div style="color: #64748b; font-size: 12px; line-height: 1.5;">
+                                *Este es un correo informativo. Si no deseas recibir más comunicaciones, 
+                                <a href="#" style="color: #60a5fa; text-decoration: underline;">podés darte de baja aquí</a>.
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
     <script>
+        // Función para formatear precios
+        function formatPrice(price) {
+            return new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(price);
+        }
+
         // Función para formatear la fecha
         function formatDate(date) {
             const options = { 
@@ -941,23 +385,94 @@
             return 'COT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
         }
 
-        // Actualizar elementos dinámicos
+        // Función para actualizar los datos del plan seleccionado
+        function updateSelectedPlan(planData) {
+            if (planData) {
+                document.getElementById('plan-card-name').textContent = planData.nombre || 'Tu plan ideal';
+                document.getElementById('selected-plan-name').textContent = planData.nombre || 'Plan Seleccionado';
+                document.getElementById('selected-plan-price').innerHTML = 
+                    `${formatPrice(planData.precio)}<span style="font-size: 16px; color: #64748b;">/mes</span>`;
+                
+                // Actualizar beneficios del plan
+                const benefitsContainer = document.getElementById('selected-plan-benefits');
+                if (planData.beneficios && planData.beneficios.length > 0) {
+                    benefitsContainer.innerHTML = '<ul style="margin: 0; padding-left: 20px;">' +
+                        planData.beneficios.map(beneficio => `<li>${beneficio}</li>`).join('') +
+                        '</ul>';
+                }
+            }
+        }
+
+        // Función para mostrar comparación de planes seleccionados
+        function updatePlansComparison(allPlans) {
+            const container = document.getElementById('plans-comparison-container');
+            if (allPlans && allPlans.length > 0) {
+                let html = '<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr>';
+                allPlans.forEach(plan => {
+                    // Obtener beneficios: primero plan.beneficios, luego plan.features, si no hay ninguno, array vacío
+                    let beneficios = [];
+                    if (plan.beneficios && plan.beneficios.length > 0) {
+                        beneficios = plan.beneficios;
+                    } else if (plan.features && plan.features.length > 0) {
+                        beneficios = plan.features;
+                    }
+                    html += `
+                        <td style="width: ${100/allPlans.length}%; padding: 5px; vertical-align: top;">
+                            <div style="background: #ffffff; border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); height: 100%; position: relative; border: 2px solid #e2e8f0;">
+                                <h3 style="color: #1e40af; font-size: 18px; font-weight: 700; margin: 0 0 10px 0; font-family: 'Manrope', sans-serif;">${plan.nombre}</h3>
+                                <div style='color:#64748b;font-size:13px;margin-bottom:6px;'>${plan.prestador}</div>
+                                <div style="color: #3b82f6; font-size: 24px; font-weight: 700; margin: 0 0 15px 0;">$${plan.precio.toLocaleString('es-AR')}<span style="font-size: 14px; color: #64748b;">/mes</span></div>
+                                <div style="color: #64748b; font-size: 12px; line-height: 1.6;">${plan.categoria}</div>
+                                <ul style='margin:8px 0 0 18px;padding:0;'>${beneficios.map(b=>`<li>${b}</li>`).join('')}</ul>
+                            </div>
+                        </td>
+                    `;
+                });
+                html += '</tr></table>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div style="text-align:center; color:#64748b; font-size:16px; padding:30px 0;">¿Necesitás más información? Comunicate con nuestros asesores.</div>';
+            }
+        }
+
+        // Actualizar elementos dinámicos al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            // Fecha actual
-            document.getElementById('quote-date').textContent = formatDate(new Date());
-            
-            // Referencia única
-            document.getElementById('quote-ref').textContent = generateReference();
-
-            // Tipo de plan (se debe actualizar con la selección real del usuario)
-            const planType = new URLSearchParams(window.location.search).get('tipo') || 'Individual';
-            document.getElementById('plan-type').textContent = planType;
-
-            // Información de contacto (actualizar con datos reales)
-            document.getElementById('whatsapp-number').textContent = '+54 11 1234-5678';
-            document.getElementById('phone-number').textContent = '0800-999-OSPADEP';
-            document.getElementById('email-contact').textContent = 'ventas@ospadep.com.ar';
+            let allPlans = [];
+            const planesComparacion = localStorage.getItem('planesComparacion');
+            if (planesComparacion) {
+                try {
+                    const planes = JSON.parse(planesComparacion);
+                    if (Array.isArray(planes) && planes.length > 0) {
+                        allPlans = planes;
+                    }
+                } catch (e) {}
+            }
+            // El primer plan es el principal
+            let principal = allPlans[0];
+            // Para la comparación, solo los distintos al principal
+            let comparacion = allPlans.filter((p, idx) => idx !== 0);
+            updateSelectedPlan(principal);
+            updatePlansComparison(comparacion);
         });
+
+        function copiarHTMLAlPortapapeles() {
+            const html = document.documentElement.outerHTML;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(html).then(() => {
+                    alert('¡HTML copiado! Ahora puedes pegarlo en tu mail.');
+                });
+            } else {
+                const temp = document.createElement('textarea');
+                temp.value = html;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+                alert('¡HTML copiado! Ahora puedes pegarlo en tu mail.');
+            }
+        }
+        document.getElementById('btnCopiarHTML').onclick = copiarHTMLAlPortapapeles;
     </script>
+
 </body>
 </html>

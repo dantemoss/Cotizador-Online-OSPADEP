@@ -229,8 +229,8 @@ const prestadoresData = {
                 name: "PLAN PO62",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 242790,  // Capita menor o igual a 65 años - AGOSTO 2025
-                    ">65": 705491   // Capita mayor a 65 años - AGOSTO 2025
+                    "≤65": 238263,  // Capita menor o igual a 65 años
+                    ">65": 692337   // Capita mayor a 65 años
                 },
                 features: [
                     "Cobertura integral SWISS MEDICAL",
@@ -247,8 +247,8 @@ const prestadoresData = {
                 name: "PLAN PO64",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 291133,  // AGOSTO 2025
-                    ">65": 844782   // AGOSTO 2025
+                    "≤65": 285705,
+                    ">65": 829031
                 },
                 features: [
                     "Cobertura premium SWISS MEDICAL",
@@ -266,8 +266,8 @@ const prestadoresData = {
                 name: "PLAN SB04",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 191472,  // AGOSTO 2025
-                    ">65": 523601   // AGOSTO 2025
+                    "≤65": 187902,
+                    ">65": 513838
                 },
                 features: [
                     "Cobertura básica SWISS MEDICAL",
@@ -290,8 +290,8 @@ const prestadoresData = {
                 name: "PLAN MS",
                 type: "sw_nubial",
                 preciosPorEdad: {
-                    "≤65": 160718,   // Menor de 66 años
-                    ">65": 456584    // Mayor de 65 años
+                    "≤65": 157721,   // Menor de 66 años
+                    ">65": 448071    // Mayor de 65 años
                 },
                 features: [
                     "Plan SW NUBIAL exclusivo",
@@ -315,8 +315,8 @@ const prestadoresData = {
                 name: "PLAN SB02",
                 type: "swiss",
                 preciosPorEdad: {
-                    "≤65": 186814,   // Por Cápita
-                    ">65": 633867    // Mayor de 65 años
+                    "≤65": 183331,   // Por Cápita
+                    ">65": 622048    // Mayor de 65 años
                 },
                 features: [
                     "Plan SWISS básico",
@@ -555,8 +555,8 @@ const prestadoresData = {
                 name: "PLAN PO62",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 242790,  // Capita menor o igual a 65 años - AGOSTO 2025
-                    ">65": 705491   // Capita mayor a 65 años - AGOSTO 2025
+                    "≤65": 238263,  // Capita menor o igual a 65 años
+                    ">65": 692337   // Capita mayor a 65 años
                 },
                 features: [
                     "Cobertura integral SWISS MEDICAL",
@@ -573,8 +573,8 @@ const prestadoresData = {
                 name: "PLAN PO64",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 291133,  // AGOSTO 2025
-                    ">65": 844782   // AGOSTO 2025
+                    "≤65": 285705,
+                    ">65": 829031
                 },
                 features: [
                     "Cobertura premium SWISS MEDICAL",
@@ -592,8 +592,8 @@ const prestadoresData = {
                 name: "PLAN SB04",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 191472,  // AGOSTO 2025
-                    ">65": 523601   // AGOSTO 2025
+                    "≤65": 187902,
+                    ">65": 513838
                 },
                 features: [
                     "Cobertura básica SWISS MEDICAL",
@@ -616,8 +616,8 @@ const prestadoresData = {
                 name: "PLAN MS",
                 type: "sw_nubial",
                 preciosPorEdad: {
-                    "≤65": 160718,   // Menor de 66 años
-                    ">65": 456584    // Mayor de 65 años
+                    "≤65": 157721,   // Menor de 66 años
+                    ">65": 448071    // Mayor de 65 años
                 },
                 features: [
                     "Plan SW NUBIAL exclusivo",
@@ -641,8 +641,8 @@ const prestadoresData = {
                 name: "PLAN SB02",
                 type: "swiss",
                 preciosPorEdad: {
-                    "≤65": 186814,   // Por Cápita
-                    ">65": 633867    // Mayor de 65 años
+                    "≤65": 183331,   // Por Cápita
+                    ">65": 622048    // Mayor de 65 años
                 },
                 features: [
                     "Plan SWISS básico",
@@ -665,7 +665,7 @@ const prestadoresData = {
             as25: {
                 name: "PLAN AS 25",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 66235 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 65000 },
                 features: [
                     "Plan básico ACTIVA SALUD",
                     "Consultas médicas básicas",
@@ -708,7 +708,7 @@ const prestadoresData = {
             as300: {
                 name: "PLAN AS 300",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 76425 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 75000 },
                 features: [
                     "Plan AS 300 ACTIVA SALUD",
                     "Cobertura integral",
@@ -722,7 +722,7 @@ const prestadoresData = {
             as700: {
                 name: "PLAN AS 700",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 86615 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 85000 },
                 features: [
                     "Plan AS 700 ACTIVA SALUD",
                     "Cobertura superior",
@@ -736,7 +736,7 @@ const prestadoresData = {
             as800: {
                 name: "PLAN AS 800",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 106995 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 111418 },
                 features: [
                     "Plan AS 800 ACTIVA SALUD",
                     "Máxima cobertura",
@@ -750,7 +750,7 @@ const prestadoresData = {
             as900: {
                 name: "PLAN AS 900",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 113535 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 105000 },
                 features: [
                     "Plan AS 900 ACTIVA SALUD",
                     "Cobertura total",
@@ -773,24 +773,24 @@ const prestadoresData = {
                 type: "medife",
                 precios: {
                     individual: {
-                        "0-29": 97678,
-                        "30-39": 122780,
-                        "40-49": 159664,
-                        "50-59": 231606,
-                        "60+": 252301
+                        "0-29": 95203,
+                        "30-39": 119669,
+                        "40-49": 155618,
+                        "50-59": 225737,
+                        "60+": 245907
                     },
                     matrimonio: {
-                        "0-29": 182399,  // 97678 + 84721
-                        "30-39": 221533,  // 122780 + 98753
-                        "40-49": 276664,  // 159664 + 117000
-                        "50-59": 355390,  // 231606 + 123784
-                        "60+": 375491    // 252301 + 123190
+                        "0-29": 177777,  // 95203 + 82574
+                        "30-39": 215919,  // 119669 + 96250
+                        "40-49": 269653,  // 155618 + 114035
+                        "50-59": 346384,  // 225737 + 120647
+                        "60+": 365975    // 245907 + 120068
                     },
                     hijos: {
-                        "primerHijo": 79576,     // 1er H (< a 21)
-                        "segundoHijo": 65743,    // 2do H (< a 21)
-                        "hijoAdulto": 97970,     // H AD (21 a 29)
-                        "familiarCargo": 252301  // FAMILIAR A CARGO
+                        "primerHijo": 77559,     // 1er H (< a 21)
+                        "segundoHijo": 64077,    // 2do H (< a 21)
+                        "hijoAdulto": 95487,     // H AD (21 a 29)
+                        "familiarCargo": 245907  // FAMILIAR A CARGO
                     }
                 },
                 features: [
@@ -809,24 +809,24 @@ const prestadoresData = {
                 type: "medife",
                 precios: {
                     individual: {
-                        "0-29": 117740,
-                        "30-39": 149049,
-                        "40-49": 188013,
-                        "50-59": 294508,
-                        "60+": 320211
+                        "0-29": 114757,
+                        "30-39": 145272,
+                        "40-49": 183248,
+                        "50-59": 287045,
+                        "60+": 312096
                     },
                     matrimonio: {
-                        "0-29": 220581,  // 117740 + 102841
-                        "30-39": 272176,  // 149049 + 123127
-                        "40-49": 354482,  // 188013 + 166469
-                        "50-59": 465382,  // 294508 + 170874
-                        "60+": 507194    // 320211 + 186983
+                        "0-29": 214992,  // 114757 + 100235
+                        "30-39": 265279,  // 145272 + 120007
+                        "40-49": 345498,  // 183248 + 162250
+                        "50-59": 453589,  // 287045 + 166544
+                        "60+": 494341    // 312096 + 182245
                     },
                     hijos: {
-                        "primerHijo": 100070,
-                        "segundoHijo": 73141,    // 2do H (< a 21)
-                        "hijoAdulto": 118055,
-                        "familiarCargo": 320211
+                        "primerHijo": 97534,
+                        "segundoHijo": 71288,    // Corregido de 71163 a 71288
+                        "hijoAdulto": 115064,
+                        "familiarCargo": 312096
                     }
                 },
                 features: [
@@ -845,24 +845,24 @@ const prestadoresData = {
                 type: "medife",
                 precios: {
                     individual: {
-                        "0-29": 133804,
-                        "30-39": 172232,
-                        "40-49": 217401,
-                        "50-59": 337913,
-                        "60+": 367962
+                        "0-29": 130414,
+                        "30-39": 167868,
+                        "40-49": 211891,
+                        "50-59": 329350,
+                        "60+": 358637
                     },
                     matrimonio: {
-                        "0-29": 253564,  // 133804 + 119760
-                        "30-39": 319976,  // 172232 + 147744
-                        "40-49": 409927,  // 217401 + 192526
-                        "50-59": 497411,  // 337913 + 159498
-                        "60+": 540046    // 367962 + 172084
+                        "0-29": 247139,  // 130414 + 116725
+                        "30-39": 311868,  // 167868 + 144000
+                        "40-49": 399538,  // 211891 + 187647
+                        "50-59": 484806,  // 329350 + 155456
+                        "60+": 526360    // 358637 + 167723
                     },
                     hijos: {
-                        "primerHijo": 115634,
-                        "segundoHijo": 93496,
-                        "hijoAdulto": 133804,
-                        "familiarCargo": 367962
+                        "primerHijo": 112704,
+                        "segundoHijo": 91127,
+                        "hijoAdulto": 130414,
+                        "familiarCargo": 358637
                     }
                 },
                 features: [
@@ -3473,80 +3473,11 @@ function showPlans() {
     createPrestadorFilter(planesCalculados);
     initializePrestadorFilter();
     
-    // Delegación de eventos para compartir y PDF de la card
-    (function(){
-        document.addEventListener('click', function(e) {
-            // Compartir
-            if (e.target.closest('.share-plan-btn')) {
-                const btn = e.target.closest('.share-plan-btn');
-                const card = btn.closest('.plan-card');
-                if (!card) return;
-                const planName = card.querySelector('.plan-name')?.textContent || '';
-                const prestador = card.getAttribute('data-prestador') || '';
-                const url = window.location.href;
-                const text = `Mirá este plan de ${prestador}: ${planName} en OSPADEP`;
-                if (navigator.share) {
-                    navigator.share({
-                        title: `Plan ${planName} - OSPADEP`,
-                        text,
-                        url
-                    });
-                } else {
-                    navigator.clipboard.writeText(`${text}\n${url}`);
-                    alert('Enlace copiado al portapapeles. ¡Listo para compartir!');
-                }
-                e.preventDefault();
-                return;
-            }
-            // PDF
-            if (e.target.closest('.pdf-plan-btn')) {
-                const btn = e.target.closest('.pdf-plan-btn');
-                const card = btn.closest('.plan-card');
-                if (!card) return;
-                const cardClone = card.cloneNode(true);
-                // Quitar acciones
-                const actions = cardClone.querySelector('.plan-card-actions');
-                if (actions) actions.remove();
-                // Quitar desglose de precio
-                const desglose = cardClone.querySelector('.price-breakdown');
-                if (desglose) desglose.remove();
-                // Quitar badges antiguos
-                const oldBadges = cardClone.querySelectorAll('.recommended-badge, .best-price-badge, .best-value-badge');
-                oldBadges.forEach(b => b.remove());
-                // Si es recomendado, agregar badge especial en esquina superior derecha
-                if (card.classList.contains('recommended')) {
-                    const badge = document.createElement('div');
-                    badge.textContent = 'Recomendado';
-                    badge.className = 'pdf-recommended-badge';
-                    cardClone.appendChild(badge);
-                }
-                // Logo OSPADEP grande
-                const logoURL = 'https://i.postimg.cc/PJNnxBhT/Logo-OSPADEP.png';
-                const customStyle = `
-                    <style>
-                        body { background: #fff !important; margin: 0; padding: 0; }
-                        .pdf-container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(44,62,80,0.10); padding: 32px 28px; font-family: 'DM Sans', Arial, sans-serif; position: relative; border: 2.5px solid #2563eb !important; }
-                        .pdf-logo { display: block; margin: 0 auto 18px auto; max-width: 260px; }
-                        .grupo-familiar-pdf { text-align: center; color: #2563eb; font-size: 1.15rem; font-weight: 600; margin-bottom: 18px; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
-                        .plan-card { border: none !important; box-shadow: none !important; background: #fff; }
-                        .plan-name { font-size: 2rem; color: #2563eb; margin-bottom: 18px; text-align: center; }
-                        .plan-price { font-size: 1.5rem; color: #059669; text-align: center; margin-bottom: 18px; }
-                        .provider-logo img { display: block; margin: 0 auto 18px auto; max-width: 100px; }
-                        .plan-features { margin: 18px 0 0 0; padding: 0 0 0 18px; }
-                        .plan-features li { margin-bottom: 6px; font-size: 1.05em; }
-                        .pdf-recommended-badge { position: absolute; top: 24px; right: 24px; background: #fff; color: #2563eb; border: 2px solid #2563eb; border-radius: 18px; padding: 7px 22px; font-size: 1rem; font-weight: 700; box-shadow: 0 2px 8px rgba(44,62,80,0.08); z-index: 10; }
-                    </style>
-                `;
-                const logoHTML = `<img src="${logoURL}" class="pdf-logo" alt="Logo OSPADEP" />`;
-                const grupoHTML = `<div class='grupo-familiar-pdf'>Cotizacion Para plan de salud</div>`;
-                const win = window.open('', '', 'width=800,height=900');
-                win.document.write(`<!DOCTYPE html><html><head><title>Plan ${cardClone.querySelector('.plan-name')?.textContent || ''} - OSPADEP</title><link href='https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap' rel='stylesheet'>${customStyle}</head><body><div class='pdf-container'>${logoHTML}${grupoHTML}${cardClone.outerHTML}</div><script>setTimeout(()=>{window.print();},500);<\/script></body></html>`);
-                win.document.close();
-                e.preventDefault();
-                return;
-            }
-        });
-    })();
+    // Agregar event listeners a botones de selección
+    const selectButtons = document.querySelectorAll('.select-plan-btn');
+    selectButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => togglePlanSelection(planesCalculados[index]));
+    });
 }
 
 function generatePlanCard(plan) {
@@ -3662,10 +3593,7 @@ function generatePlanCard(plan) {
         priceHTML +
         desgloseHTML +
         '<ul class="plan-features">' + features + '</ul>' +
-        '<div class="plan-card-actions" style="display:flex;gap:8px;">' +
         '<button class="select-plan-btn"><i class="fas fa-plus-circle"></i> Seleccionar Plan</button>' +
-            '<button class="pdf-plan-btn" title="Descargar PDF"><i class="fas fa-file-pdf"></i></button>' +
-        '</div>' +
         '</div>';
 }
 
@@ -5337,11 +5265,10 @@ function renderSelectedPlansSidebar() {
     
     html += '</div>';
     
-    // Botones de acciones en la sidebar
+    // Agregar botones para generar informe y descargar
     html += '<div class="sidebar-actions">';
-    html += '<button class="copy-benefits-btn" style="border: 2px solid #f59e0b; background: #fff; color: #f59e0b; font-weight: 700; font-size: 1.13rem; border-radius: 10px; padding: 14px 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 8px 0 rgba(30,41,59,0.08); cursor: pointer; transition: all 0.2s; margin-bottom: 10px;" onmouseover="this.style.background=\'#f59e0b\'; this.style.color=\'#fff\';" onmouseout="this.style.background=\'#fff\'; this.style.color=\'#f59e0b\';" onclick="generateCompactEmailWithBenefits()"><i class="fas fa-envelope"></i> Copiar cotización mail</button>';
-    // Botón PDF oculto temporalmente
-    // html += '<button class="pdf-general-btn" style="border: 2px solid #2563eb; background: #fff; color: #2563eb; font-weight: 700; font-size: 1.13rem; border-radius: 10px; padding: 14px 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 8px 0 rgba(30,41,59,0.08); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background=\'#2563eb\'; this.style.color=\'#fff\';" onmouseout="this.style.background=\'#fff\'; this.style.color=\'#2563eb\';" onclick="downloadSelectedPlansReport()"><i class="fas fa-file-pdf"></i> Descargar PDF</button>';
+    html += '<button class="generate-report-btn" onclick="generateSelectedPlansReport()"><i class="fas fa-file-alt"></i> Generar informe</button>';
+    html += '<button class="download-report-btn" onclick="downloadSelectedPlansReport()"><i class="fas fa-download"></i> Descargar HTML</button>';
     html += '</div>';
     
     sidebar.innerHTML = html;
@@ -5422,11 +5349,6 @@ function togglePlanSelection(plan) {
     
     renderSelectedPlansSidebar();
     updatePlanCardsSelection();
-    
-    // Generar y guardar el HTML de cotización completa automáticamente
-    if (window.selectedPlans.length > 0) {
-        generateAndSaveCompleteQuote();
-    }
 }
 
 function removePlanFromSelected(idx) {
@@ -5460,6 +5382,19 @@ function updatePlanCardsSelection() {
     });
 }
 
+// Modificar generatePlanCard para usar togglePlanSelection
+const originalGeneratePlanCard = generatePlanCard;
+generatePlanCard = function(plan) {
+    // Llamar al original para obtener el HTML
+    let cardHTML = originalGeneratePlanCard(plan);
+    // Modificar el botón para usar togglePlanSelection
+    // Reemplazar el botón por uno con onclick
+    cardHTML = cardHTML.replace(
+        /<button class=\"select-plan-btn\">[^<]*<\/button>/,
+        `<button class="select-plan-btn" onclick='togglePlanSelection(${JSON.stringify(plan)})'><i class="fas fa-plus-circle"></i> Seleccionar Plan</button>`
+    );
+    return cardHTML;
+};
 
 
 
@@ -5469,17 +5404,17 @@ function generarInformeHTML(datosCliente, plan) {
     const numeroReferencia = generateRandomRef();
     
     return `
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Cotización Personalizada OSPADEP</title>
             <meta name="color-scheme" content="light">
             <meta name="supported-color-schemes" content="light">
-    <style>
+            <style>
                 @media print {
-        body {
+                    body {
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                         margin: 0 !important;
@@ -5520,7 +5455,7 @@ function generarInformeHTML(datosCliente, plan) {
                         break-inside: avoid;
                     }
                     
-        .footer {
+                    .footer {
                         page-break-inside: avoid;
                         break-inside: avoid;
                         margin-top: 20px !important;
@@ -5529,7 +5464,7 @@ function generarInformeHTML(datosCliente, plan) {
                     }
                     
                     /* Reducir espaciado en print */
-            .header {
+                    .header {
                         padding: 20px !important;
                     }
                     
@@ -5626,7 +5561,7 @@ function generarInformeHTML(datosCliente, plan) {
                         justify-content: center !important;
                         gap: 20px !important;
                         flex-wrap: wrap !important;
-}
+                    }
                     
                     .info-card {
                         background: rgba(255, 255, 255, 0.15) !important;
@@ -6022,6 +5957,7 @@ function generarInformeHTML(datosCliente, plan) {
                     <div class="plan-row">
                         <div class="plan-info">
                             <h2 class="plan-name">${plan.name}</h2>
+                            <p class="plan-prestador">${getPrestadorLabel(plan.type)}</p>
                         </div>
                         <div class="plan-price">
                             <span class="price-amount">$${(plan.precioFinal || plan.price || 0).toLocaleString('es-AR')}</span>
@@ -8079,6 +8015,24 @@ function createDownloadableHTML(datosCliente, planPrincipal, selectedPlans, bene
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Inter', sans-serif; font-weight: 600; line-height: 1.6; color: #333333; background-color: #f8f9fa;">
     
+    <!-- Barra de descarga -->
+    <div class="download-bar">
+        <div class="download-info">
+            <i class="fas fa-file-alt"></i>
+            <span>Cotización OSPADEP generada el ${new Date().toLocaleDateString('es-AR')}</span>
+            <span>•</span>
+            <span>${selectedPlans.length} plan${selectedPlans.length > 1 ? 'es' : ''} seleccionado${selectedPlans.length > 1 ? 's' : ''}</span>
+        </div>
+        <div class="download-actions">
+            <button class="download-btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+            <button class="download-btn primary" onclick="downloadCurrentHTML()">
+                <i class="fas fa-download"></i> Guardar como PDF
+            </button>
+        </div>
+    </div>
+    
     <!-- Logo Section -->
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
         <tr>
@@ -8148,27 +8102,20 @@ function createDownloadableHTML(datosCliente, planPrincipal, selectedPlans, bene
                 <h2 style="color: #1e40af; font-size: 28px; font-weight: 700; margin: 0 0 30px 0; font-family: 'Manrope', sans-serif;">Comparación con otros planes</h2>
                 
                 <div style="max-width: 600px; margin: 0 auto;">
-                ${selectedPlans.map((plan, index) => {
-                    const planPrecio = typeof plan.price === 'number' ? plan.price : parseFloat(plan.price) || 0;
-                    const isSelected = index === 0;
-                    const borderStyle = isSelected ? 'border: 2px solid #3b82f6;' : 'border: 2px solid #e2e8f0;';
-                    const badge = isSelected ? '<div style="position: absolute; top: -10px; right: 20px; background: #3b82f6; color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; font-weight: 600;">SELECCIONADO</div>' : '';
-                    // Obtener beneficios: primero plan.beneficios, luego plan.features, si no hay ninguno, array vacío
-                    let beneficios = [];
-                    if (plan.beneficios && plan.beneficios.length > 0) {
-                        beneficios = plan.beneficios;
-                    } else if (plan.features && plan.features.length > 0) {
-                        beneficios = plan.features;
-                    }
-                    return `
-                    <div style="background: #ffffff; border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 15px 0; position: relative; ${borderStyle}">
-                        ${badge}
-                        <h3 style="color: #1e40af; font-size: 18px; font-weight: 700; margin: 0 0 10px 0;">${plan.prestador.replace(/_/g, ' ')} - ${plan.name.replace(/_/g, ' ')}</h3>
-                        <div style="color: #3b82f6; font-size: 24px; font-weight: 700;">$${planPrecio.toLocaleString('es-AR')}<span style="font-size: 14px; color: #64748b;">/mes</span></div>
-                        <ul style='color: #64748b; font-size: 14px; line-height: 1.8; margin: 10px 0 0 18px; padding: 0;'>${beneficios.map(b=>`<li>${typeof b === 'string' ? b : (b.title || '')}</li>`).join('')}</ul>
-                    </div>
-                    `;
-                }).join('')}
+                    ${selectedPlans.map((plan, index) => {
+                        const planPrecio = typeof plan.price === 'number' ? plan.price : parseFloat(plan.price) || 0;
+                        const isSelected = index === 0;
+                        const borderStyle = isSelected ? 'border: 2px solid #3b82f6;' : 'border: 2px solid #e2e8f0;';
+                        const badge = isSelected ? '<div style="position: absolute; top: -10px; right: 20px; background: #3b82f6; color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; font-weight: 600;">SELECCIONADO</div>' : '';
+                        
+                        return `
+                        <div style="background: #ffffff; border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 15px 0; position: relative; ${borderStyle}">
+                            ${badge}
+                            <h3 style="color: #1e40af; font-size: 18px; font-weight: 700; margin: 0 0 10px 0;">${plan.prestador.replace(/_/g, ' ')} - ${plan.name.replace(/_/g, ' ')}</h3>
+                            <div style="color: #3b82f6; font-size: 24px; font-weight: 700;">$${planPrecio.toLocaleString('es-AR')}<span style="font-size: 14px; color: #64748b;">/mes</span></div>
+                        </div>
+                        `;
+                    }).join('')}
                 </div>
             </td>
         </tr>
@@ -8785,7 +8732,7 @@ function generateCompactEmailTemplate(datosCliente, planSeleccionado) {
             </div>
             
             <!-- Botón principal -->
-            <a href="#" class="cta-button" onclick="guardarYabrirMarketing(this)" data-plan='${encodeURIComponent(JSON.stringify(planSeleccionado))}'>
+            <a href="#" class="cta-button" onclick="openFullQuotation('${cotizacionId}')">
                 Ver Cotización Completa
             </a>
             
@@ -8823,27 +8770,13 @@ function generateCompactEmailTemplate(datosCliente, planSeleccionado) {
     </div>
     
     <script>
-        function guardarYabrirMarketing(btn) {
-            try {
-                // Buscar el HTML de cotización completa guardado
-                var quoteId = localStorage.getItem('last_complete_quote_id');
-                if (quoteId) {
-                    var htmlCompleto = localStorage.getItem(quoteId);
-                    if (htmlCompleto) {
-                        // Abrir en nueva ventana
-                        var win = window.open('', '_blank', 'width=1200,height=800,scrollbars=yes');
-                        win.document.open();
-                        win.document.write(htmlCompleto);
-                        win.document.close();
-                        return;
-                    }
-                }
-                
-                // Si no hay HTML guardado, mostrar mensaje
-                alert('No se encontró la cotización completa. Por favor, selecciona al menos un plan primero.');
-            } catch (e) {
-                alert('Error al mostrar la cotización completa: ' + e.message);
-            }
+        function openFullQuotation(quoteId) {
+            // Construir URL para abrir la cotización completa
+            const baseUrl = window.location.origin + window.location.pathname;
+            const fullQuoteUrl = baseUrl + '?quote=' + quoteId;
+            
+            // Abrir en nueva pestaña
+            window.open(fullQuoteUrl, '_blank');
         }
     </script>
 </body>
@@ -8918,563 +8851,27 @@ function generateCompactEmail() {
     // Usar el primer plan seleccionado como principal
     const planPrincipal = selectedPlans[0];
     
-    // NUEVA ESTRATEGIA: SIMPLE Y DIRECTA
-    // 1. Generar el HTML del email
+    // Generar el HTML del email compacto
     const emailHTML = generateCompactEmailTemplate(datosCliente, planPrincipal);
     
-    // 2. Información básica del plan
-    const planName = planPrincipal.name.replace(/_/g, ' ');
-    const planPrice = typeof planPrincipal.price === 'number' ? 
-        planPrincipal.price.toLocaleString('es-AR') : 
-        planPrincipal.price.toString();
-    
-    // 3. Crear ventana simple con botones funcionales
-    const emailWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
-    
-    if (!emailWindow) {
-        alert('Error: No se pudo abrir la ventana. Verifica los permisos de ventanas emergentes.');
-        return;
-    }
-
-    // 4. Escribir contenido básico
-    emailWindow.document.open();
-    emailWindow.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>OSPADEP Email</title>');
-    emailWindow.document.write('<style>body{margin:0;font-family:Arial,sans-serif}.toolbar{background:#1e40af;color:white;padding:15px;text-align:center}.btn{background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);padding:10px 15px;margin:5px;border-radius:5px;cursor:pointer}.btn:hover{background:rgba(255,255,255,0.3)}.content{padding:20px}</style>');
-    emailWindow.document.write('</head><body>');
-    emailWindow.document.write('<div class="toolbar">');
-    emailWindow.document.write('<h3>🛠️ Email OSPADEP - ' + planName + '</h3>');
-    emailWindow.document.write('<button class="btn" onclick="copyEmail()">📋 Copiar HTML</button>');
-    emailWindow.document.write('<button class="btn" onclick="copyPlainText()">📄 Copiar Texto</button>');
-    emailWindow.document.write('<button class="btn" onclick="openGmail()">📧 Gmail</button>');
-    emailWindow.document.write('<button class="btn" onclick="openOutlook()">📨 Outlook</button>');
-    emailWindow.document.write('<button class="btn" onclick="shareWhatsApp()">📱 WhatsApp</button>');
-    emailWindow.document.write('</div>');
-    emailWindow.document.write('<div class="content">');
+    // Abrir el email en una nueva ventana
+    const emailWindow = window.open('', '_blank', 'width=800,height=900,scrollbars=yes');
     emailWindow.document.write(emailHTML);
-    emailWindow.document.write('</div>');
-    
-    // 5. NUEVA ESTRATEGIA: Usar localStorage para evitar problemas de escape
-    // Guardar el contenido del email en localStorage
-    const emailKey = 'ospadep_email_' + Date.now();
-    localStorage.setItem(emailKey, emailHTML);
-    localStorage.setItem(emailKey + '_planName', planName);
-    localStorage.setItem(emailKey + '_planPrice', planPrice);
-    
-    // Crear JavaScript sin problemas de escape
-    emailWindow.document.write('<script>');
-    emailWindow.document.write('var emailKey = "' + emailKey + '";');
-    emailWindow.document.write('var emailContent = localStorage.getItem(emailKey);');
-    emailWindow.document.write('var planName = localStorage.getItem(emailKey + "_planName");');
-    emailWindow.document.write('var planPrice = localStorage.getItem(emailKey + "_planPrice");');
-    
-    emailWindow.document.write('function copyEmail() {');
-    emailWindow.document.write('  if (navigator.clipboard && emailContent) {');
-    emailWindow.document.write('    var blob = new Blob([emailContent], {type: "text/html"});');
-    emailWindow.document.write('    var clipboardItem = new ClipboardItem({"text/html": blob, "text/plain": new Blob([emailContent.replace(/<[^>]*>/g, "")], {type: "text/plain"})});');
-    emailWindow.document.write('    navigator.clipboard.write([clipboardItem]).then(function() {');
-    emailWindow.document.write('      alert("✅ Email copiado como HTML formateado");');
-    emailWindow.document.write('    }).catch(function() {');
-    emailWindow.document.write('      fallbackCopyAsHTML();');
-    emailWindow.document.write('    });');
-    emailWindow.document.write('  } else {');
-    emailWindow.document.write('    fallbackCopyAsHTML();');
-    emailWindow.document.write('  }');
-    emailWindow.document.write('}');
-    
-    emailWindow.document.write('function fallbackCopyAsHTML() {');
-    emailWindow.document.write('  var div = document.createElement("div");');
-    emailWindow.document.write('  div.innerHTML = emailContent;');
-    emailWindow.document.write('  div.style.position = "absolute";');
-    emailWindow.document.write('  div.style.left = "-9999px";');
-    emailWindow.document.write('  document.body.appendChild(div);');
-    emailWindow.document.write('  var range = document.createRange();');
-    emailWindow.document.write('  range.selectNodeContents(div);');
-    emailWindow.document.write('  var selection = window.getSelection();');
-    emailWindow.document.write('  selection.removeAllRanges();');
-    emailWindow.document.write('  selection.addRange(range);');
-    emailWindow.document.write('  try {');
-    emailWindow.document.write('    document.execCommand("copy");');
-    emailWindow.document.write('    alert("✅ Email copiado (versión compatible)");');
-    emailWindow.document.write('  } catch (err) {');
-    emailWindow.document.write('    alert("❌ Error al copiar. Selecciona el contenido manualmente.");');
-    emailWindow.document.write('  }');
-    emailWindow.document.write('  document.body.removeChild(div);');
-    emailWindow.document.write('  selection.removeAllRanges();');
-    emailWindow.document.write('}');
-    
-    emailWindow.document.write('function copyPlainText() {');
-    emailWindow.document.write('  var plainText = emailContent.replace(/<[^>]*>/g, " ").replace(/\\s+/g, " ").trim();');
-    emailWindow.document.write('  if (navigator.clipboard) {');
-    emailWindow.document.write('    navigator.clipboard.writeText(plainText).then(function() {');
-    emailWindow.document.write('      alert("✅ Texto plano copiado");');
-    emailWindow.document.write('    });');
-    emailWindow.document.write('  } else {');
-    emailWindow.document.write('    var textarea = document.createElement("textarea");');
-    emailWindow.document.write('    textarea.value = plainText;');
-    emailWindow.document.write('    document.body.appendChild(textarea);');
-    emailWindow.document.write('    textarea.select();');
-    emailWindow.document.write('    document.execCommand("copy");');
-    emailWindow.document.write('    document.body.removeChild(textarea);');
-    emailWindow.document.write('    alert("✅ Texto plano copiado");');
-    emailWindow.document.write('  }');
-    emailWindow.document.write('}');
-    
-    emailWindow.document.write('function openGmail() {');
-    emailWindow.document.write('  var subject = encodeURIComponent("Cotización OSPADEP - " + planName);');
-    emailWindow.document.write('  window.open("https://mail.google.com/mail/?view=cm&su=" + subject, "_blank");');
-    emailWindow.document.write('  setTimeout(function(){ alert("📧 Gmail abierto. Usa el botón COPIAR EMAIL y pégalo."); }, 1000);');
-    emailWindow.document.write('}');
-    
-    emailWindow.document.write('function openOutlook() {');
-    emailWindow.document.write('  var subject = encodeURIComponent("Cotización OSPADEP - " + planName);');
-    emailWindow.document.write('  window.open("https://outlook.live.com/mail/0/deeplink/compose?subject=" + subject, "_blank");');
-    emailWindow.document.write('  setTimeout(function(){ alert("📨 Outlook abierto. Usa el botón COPIAR EMAIL y pégalo."); }, 1000);');
-    emailWindow.document.write('}');
-    
-    emailWindow.document.write('function shareWhatsApp() {');
-    emailWindow.document.write('  var message = encodeURIComponent("🏥 COTIZACIÓN OSPADEP\\nPlan: " + planName + "\\nPrecio: $" + planPrice + "/mes\\nContacto: 0810-444-7700");');
-    emailWindow.document.write('  window.open("https://wa.me/?text=" + message, "_blank");');
-    emailWindow.document.write('}');
-    
-    // Limpiar localStorage después de 1 hora
-    emailWindow.document.write('setTimeout(function() {');
-    emailWindow.document.write('  localStorage.removeItem(emailKey);');
-    emailWindow.document.write('  localStorage.removeItem(emailKey + "_planName");');
-    emailWindow.document.write('  localStorage.removeItem(emailKey + "_planPrice");');
-    emailWindow.document.write('}, 3600000);');
-    
-    emailWindow.document.write('setTimeout(function() {');
-    emailWindow.document.write('  alert("🚀 Email listo para usar\\n\\n📋 COPIAR HTML: Para emails que soportan formato\\n📄 COPIAR TEXTO: Para emails básicos\\n📧 Luego abre Gmail/Outlook y pega el contenido");');
-    emailWindow.document.write('}, 500);');
-    emailWindow.document.write('</script>');
-    
-    emailWindow.document.write('</body></html>');
     emailWindow.document.close();
+    
+    // Enfocar la ventana
     emailWindow.focus();
-
-}
-
-// Función para generar y guardar el HTML de cotización completa
-function generateAndSaveCompleteQuote() {
-    if (!window.selectedPlans || window.selectedPlans.length === 0) {
-        console.log('No hay planes seleccionados para generar cotización');
-        return;
-    }
-
-    // Obtener datos del cliente
-    let datosCliente = window.datosFormulario || {};
     
-    if (!datosCliente.tipoCobertura) {
-        const form = document.getElementById('cotization-form');
-        if (form) {
-            const formData = new FormData(form);
-            datosCliente = {
-                tipoCobertura: formData.get('tipo-cobertura') || window.selectedOption || 'solo',
-                edadTitular: formData.get('edad-titular') || formData.get('edad'),
-                edadPareja: formData.get('edad-pareja') || formData.get('edadPareja'),
-                cantidadHijos: formData.get('cantidad-hijos') || formData.get('cantidadHijos'),
-                edadesHijos: formData.get('edades-hijos') || formData.get('edadesHijos')
-            };
-        } else {
-            datosCliente = {
-                tipoCobertura: window.selectedOption || 'solo',
-                edadTitular: 30,
-                edadPareja: null,
-                cantidadHijos: 0,
-                edadesHijos: ''
-            };
-        }
-    }
-
-    // Usar el primer plan seleccionado como principal
-    const planPrincipal = window.selectedPlans[0];
-    const beneficiosDelPlan = planPrincipal.features || [];
-    const precio = planPrincipal.price || planPrincipal._precioFinal || 0;
-    
-    // Generar el HTML completo usando la función existente
-    const htmlCompleto = createDownloadableHTML(datosCliente, planPrincipal, window.selectedPlans, beneficiosDelPlan, precio);
-    
-    // Guardar en localStorage con timestamp
-    const quoteId = 'complete_quote_' + Date.now();
-    localStorage.setItem(quoteId, htmlCompleto);
-    localStorage.setItem('last_complete_quote_id', quoteId);
-    
-    console.log('HTML de cotización completa generado y guardado:', quoteId);
-    return quoteId;
-}
-
-
-
-// Función de respaldo para copiar HTML al portapapeles
-function fallbackCopyHTMLToClipboard(htmlContent) {
-    // Crear un elemento temporal para copiar HTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
-    tempDiv.style.position = 'fixed';
-    tempDiv.style.left = '-999999px';
-    tempDiv.style.top = '-999999px';
-    document.body.appendChild(tempDiv);
-    
-    // Seleccionar el contenido
-    const range = document.createRange();
-    range.selectNodeContents(tempDiv);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    
-    try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            showCopySuccessMessage('HTML formateado copiado al portapapeles');
-        } else {
-            // Si falla, intentar con texto plano
-            const plainText = htmlContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-            fallbackCopyTextToClipboard(plainText);
-        }
-    } catch (err) {
-        // Si falla, intentar con texto plano
-        const plainText = htmlContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-        fallbackCopyTextToClipboard(plainText);
-    }
-    
-    // Limpiar
-    selection.removeAllRanges();
-    document.body.removeChild(tempDiv);
-}
-
-// Función de respaldo para copiar texto plano al portapapeles
-function fallbackCopyTextToClipboard(text) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            showCopySuccessMessage('Texto copiado al portapapeles');
-        } else {
-            alert('❌ No se pudo copiar al portapapeles. Por favor, selecciona el texto manualmente.');
-        }
-    } catch (err) {
-        alert('❌ Error al copiar al portapapeles. Por favor, selecciona el texto manualmente.');
-    }
-    
-    document.body.removeChild(textArea);
-}
-
-// Función para generar HTML compacto con beneficios comparativos para email
-function generateCompactEmailWithBenefits() {
-    if (!window.selectedPlans || window.selectedPlans.length === 0) {
-        alert('Por favor, selecciona al menos un plan para generar el email.');
-        return;
-    }
-
-    const fechaActual = new Date();
-    const fechaFormateada = fechaActual.toLocaleDateString('es-AR', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    });
-
-    // Generar HTML de los planes con beneficios
-    let planesHTML = '';
-    let totalPrecio = 0;
-
-    window.selectedPlans.forEach((plan, index) => {
-        const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
-        const precioFormateado = typeof precio === 'number' ? 
-            precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : 
-            '$' + precio.toString();
-        
-        totalPrecio += typeof precio === 'number' ? precio : parseFloat(precio) || 0;
-        
-        const prestadorLabel = getPrestadorLabel(plan.type);
-        const planName = plan.name.replace(/_/g, ' ');
-        
-        // Generar lista de beneficios
-        let beneficiosHTML = '';
-        if (plan.features && plan.features.length > 0) {
-            beneficiosHTML = '<ul style="margin: 10px 0; padding-left: 20px; text-align: left;">';
-            plan.features.forEach(feature => {
-                beneficiosHTML += `<li style="margin: 5px 0; color: #374151; font-size: 14px;">${feature}</li>`;
-            });
-            beneficiosHTML += '</ul>';
-        }
-
-        planesHTML += `
-            <div style="background: white; border: 2px solid #e5e7eb; border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <div>
-                        <div style="font-size: 18px; font-weight: 600; color: #1e40af; margin-bottom: 5px;">${planName}</div>
-                        <div style="color: #6b7280; font-size: 14px;">${prestadorLabel}</div>
-                    </div>
-                    <div style="font-size: 24px; font-weight: 700; color: #059669;">${precioFormateado}</div>
-                </div>
-                <div style="margin-top: 15px;">
-                    <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">Beneficios incluidos:</h4>
-                    ${beneficiosHTML}
-                </div>
-            </div>
-        `;
-    });
-
-    const totalFormateado = totalPrecio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
-
-    const htmlContent = `
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización OSPADEP - Planes de Salud</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .header p {
-            margin: 10px 0 0 0;
-            opacity: 0.9;
-            font-size: 16px;
-        }
-        .content {
-            padding: 30px;
-        }
-        .plans-section {
-            margin-top: 20px;
-        }
-        .plans-section h3 {
-            color: #1e40af;
-            font-size: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .total-section {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 25px;
-            text-align: center;
-        }
-        .total-section h3 {
-            margin: 0 0 10px 0;
-            font-size: 20px;
-        }
-        .total-price {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0;
-        }
-        .contact-section {
-            background: #f3f4f6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 25px;
-            text-align: center;
-        }
-        .contact-section h3 {
-            color: #1e40af;
-            margin-top: 0;
-        }
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .contact-item {
-            background: white;
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-        }
-        .contact-item strong {
-            color: #1e40af;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .footer {
-            background: #1f2937;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-        }
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .header {
-                padding: 20px;
-            }
-            .content {
-                padding: 20px;
-            }
-            .contact-info {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🏥 OSPADEP</h1>
-            <p>Obra Social del Personal de Aeronavegación de Entes Privados</p>
-        </div>
-        
-        <div class="content">
-            <div class="plans-section">
-                <h3>📋 Cotización de Planes de Salud</h3>
-                ${planesHTML}
-            </div>
-            
-            <div class="total-section">
-                <h3>💰 Precio Total Mensual</h3>
-                <div class="total-price">${totalFormateado}</div>
-            </div>
-            
-            <div class="contact-section">
-                <h3>📞 ¿Necesitas más información?</h3>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <strong>📞 Teléfono</strong>
-                        0810-444-7700
-                    </div>
-                    <div class="contact-item">
-                        <strong>📧 Email</strong>
-                        ventas@ospadep.com.ar
-                    </div>
-                    <div class="contact-item">
-                        <strong>🌐 Web</strong>
-                        www.ospadep.com.ar
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            *Cotización generada el ${fechaFormateada} - OSPADEP
-        </div>
-    </div>
-</body>
-</html>`;
-
-    // Copiar al portapapeles
-    if (navigator.clipboard) {
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const clipboardItem = new ClipboardItem({
-            'text/html': blob,
-            'text/plain': new Blob([htmlContent.replace(/<[^>]*>/g, '')], { type: 'text/plain' })
-        });
-        
-        navigator.clipboard.write([clipboardItem]).then(() => {
-            showCopySuccessMessage('✅ HTML con beneficios copiado al portapapeles');
-        }).catch(() => {
-            fallbackCopyHTMLToClipboard(htmlContent);
-        });
-    } else {
-        fallbackCopyHTMLToClipboard(htmlContent);
-    }
-}
-
-// Función para mostrar mensaje de éxito
-function showCopySuccessMessage(message = 'Copiado al portapapeles') {
-    // Crear un mensaje temporal
-    const messageElement = document.createElement('div');
-    messageElement.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #10b981;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        animation: slideIn 0.3s ease-out;
-        max-width: 300px;
-        word-wrap: break-word;
-    `;
-    messageElement.innerHTML = '✅ ' + message;
-    
-    // Agregar estilos de animación
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    document.body.appendChild(messageElement);
-    
-    // Remover después de 3 segundos
+    // Mostrar mensaje informativo
     setTimeout(() => {
-        if (messageElement.parentNode) {
-            messageElement.parentNode.removeChild(messageElement);
-        }
-        if (style.parentNode) {
-            style.parentNode.removeChild(style);
-        }
-    }, 3000);
+        alert('📧 ¡Email compacto generado!\n\n' +
+              '✅ Se abrió en una nueva ventana\n' +
+              '✅ El botón "Ver Cotización Completa" abrirá la cotización detallada\n' +
+              '✅ Puedes copiar este HTML y enviarlo por email\n\n' +
+              '💡 Este formato es perfecto para envío por correo electrónico.');
+    }, 1000);
 }
 
-(function(){
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.select-plan-btn');
-        if (btn) {
-            const card = btn.closest('.plan-card');
-            if (!card) return;
-            const planName = card.getAttribute('data-plan-name');
-            const planPrestador = card.getAttribute('data-prestador');
-            console.log('Click en seleccionar plan:', planName, planPrestador, window.planesCalculados);
-            let plan = null;
-            if (window.planesCalculados) {
-                plan = window.planesCalculados.find(
-                    p => p.name == planName && p.prestador == planPrestador
-                );
-            }
-            if (plan) {
-                window.togglePlanSelection(plan);
-            } else {
-                alert('No se encontró el plan. Revisa la consola.');
-            }
-            e.preventDefault();
-            return;
-        }
-    });
-})();
 
 
 
