@@ -9206,9 +9206,9 @@ function printCompactEmailWithBenefitsPDF() {
         day: 'numeric' 
     });
 
-    // Generar HTML de los planes con beneficios (cards horizontales)
+    // Generar HTML de los planes con beneficios (cards horizontales, alineadas)
     let planesHTML = '';
-    window.selectedPlans.forEach((plan, index) => {
+    window.selectedPlans.forEach((plan) => {
         const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
         const precioFormateado = typeof precio === 'number' ? 
             precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : 
@@ -9217,27 +9217,21 @@ function printCompactEmailWithBenefitsPDF() {
         const planName = plan.name.replace(/_/g, ' ');
         let beneficiosHTML = '';
         if (plan.features && plan.features.length > 0) {
-            beneficiosHTML = '<ul style="margin: 10px 0; padding-left: 20px; text-align: left;">';
+            beneficiosHTML = '<ul style="margin: 10px 0 0 0; padding-left: 18px; text-align: left;">';
             plan.features.forEach(feature => {
-                beneficiosHTML += `<li style="margin: 5px 0; color: #374151; font-size: 14px;">${feature}</li>`;
+                beneficiosHTML += `<li style="margin: 4px 0; color: #374151; font-size: 13px;">${feature}</li>`;
             });
             beneficiosHTML += '</ul>';
         }
         planesHTML += `
         <div class="plan-card-horizontal">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; margin-bottom: 10px;">
-                <tr>
-                    <td style="font-size: 18px; font-weight: 600; color: #1e40af; padding: 0 0 0 0; white-space:nowrap;">
-                        ${planName}<br>
-                        <span style="color: #6b7280; font-size: 14px; font-weight: 400;">${prestadorLabel}</span>
-                    </td>
-                    <td style="font-size: 24px; font-weight: 700; color: #059669; text-align: right; white-space:nowrap; padding-left: 40px; min-width: 120px;">
-                        ${precioFormateado}
-                    </td>
-                </tr>
-            </table>
-            <div style="margin-top: 15px;">
-                <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">Beneficios incluidos:</h4>
+            <div class="plan-header">
+                <div class="plan-title">${planName}</div>
+                <div class="plan-prestador">${prestadorLabel}</div>
+            </div>
+            <div class="plan-precio">${precioFormateado}</div>
+            <div class="plan-beneficios">
+                <span class="benef-title">Beneficios incluidos:</span>
                 ${beneficiosHTML}
             </div>
         </div>
@@ -9268,164 +9262,201 @@ function printCompactEmailWithBenefitsPDF() {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cotización de Planes de Salud - OSPADEP</title>
     <style>
+        html, body, * { box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+            line-height: 1.4;
             color: #333;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
             background-color: #f8f9fa;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         .container {
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             overflow: hidden;
+            margin: 0 auto;
+            max-width: 1000px;
+            page-break-inside: avoid;
+        }
+        .main-content {
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
         .header {
-            padding: 0;
+            padding: 10px 0 0 0;
             text-align: center;
+            page-break-inside: avoid;
         }
         .header img {
-            width: 100%;
+            width: 160px;
             height: auto;
             display: block;
+            margin: 0 auto 8px auto;
             border-radius: 12px 12px 0 0;
         }
-        .content {
-            padding: 30px;
-        }
         .plans-section {
-            margin-top: 20px;
+            margin-top: 0;
+            padding: 0 20px;
         }
         .plans-section h3 {
             color: #1e40af;
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 18px;
+            margin-bottom: 12px;
             text-align: center;
         }
         .plans-horizontal-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 18px;
+            gap: 16px;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
         .plan-card-horizontal {
             background: white;
             border: 2px solid #e5e7eb;
             border-radius: 10px;
-            padding: 20px;
+            padding: 14px 14px 12px 14px;
             margin-bottom: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            min-width: 260px;
-            max-width: 320px;
-            flex: 1 1 260px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-width: 220px;
+            max-width: 240px;
+            flex: 1 1 220px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            align-items: flex-start;
+            justify-content: flex-start;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        .plan-header {
+            width: 100%;
+            margin-bottom: 2px;
+        }
+        .plan-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 2px;
+        }
+        .plan-prestador {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+        .plan-precio {
+            font-size: 20px;
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 8px;
+            width: 100%;
+            text-align: left;
+        }
+        .plan-beneficios {
+            width: 100%;
+        }
+        .benef-title {
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
         }
         .total-section {
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             color: white;
-            padding: 20px;
+            padding: 14px;
             border-radius: 10px;
-            margin-top: 25px;
+            margin: 0 20px 18px 20px;
             text-align: center;
+            font-size: 16px;
         }
         .total-section h3 {
-            margin: 0 0 10px 0;
-            font-size: 20px;
+            margin: 0 0 6px 0;
+            font-size: 16px;
         }
         .total-price {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 700;
             margin: 0;
         }
         .contact-section {
             background: #f3f4f6;
             border-radius: 8px;
-            padding: 20px;
-            margin-top: 25px;
+            padding: 14px;
+            margin: 0 20px 18px 20px;
             text-align: center;
         }
         .contact-section h3 {
             color: #1e40af;
             margin-top: 0;
+            font-size: 15px;
         }
         .contact-info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            gap: 10px;
+            margin-top: 10px;
         }
         .contact-item {
             background: white;
-            padding: 15px;
+            padding: 10px;
             border-radius: 6px;
             border: 1px solid #e5e7eb;
+            font-size: 13px;
         }
         .contact-item strong {
             color: #1e40af;
             display: block;
-            margin-bottom: 5px;
-        }
-        .footer {
-            background: #1f2937;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-        }
-        @media (max-width: 900px) {
-            .plans-horizontal-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .plan-card-horizontal {
-                max-width: 100%;
-            }
-        }
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .header {
-                padding: 20px;
-            }
-            .content {
-                padding: 20px;
-            }
-            .contact-info {
-                grid-template-columns: 1fr;
-            }
+            margin-bottom: 3px;
         }
         @media print {
-            body { background: white !important; }
+            html, body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background: white !important;
+            }
             .container { box-shadow: none !important; }
+            .main-content, .plans-horizontal-container, .plan-card-horizontal {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .plans-horizontal-container {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 16px !important;
+                justify-content: center !important;
+                margin-bottom: 18px !important;
+                white-space: normal !important;
+                overflow-x: visible !important;
+            }
+            .plan-card-horizontal {
+                min-width: 220px !important;
+                max-width: 240px !important;
+                font-size: 12px !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container" style="max-width: 900px; width: 100%; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(30,64,175,0.08); overflow: hidden;">
-        <div class="header">
-            <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg"
-            alt="OSPADEP"
-            style="width:80%; max-width:200px; height:auto; display:block; margin: 0 auto 18px auto; border-radius: 14px;"
-            onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
-        </div>
-        
-        <div class="content">
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg"
+                alt="OSPADEP"
+                onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
+            </div>
             <div class="plans-section">
                 <h3>📋 Cotización de Planes de Salud</h3>
                 <div class="plans-horizontal-container">
                     ${planesHTML}
                 </div>
             </div>
-            
             ${totalSectionHTML}
-            
             <div class="contact-section">
                 <h3>📞 ¿Necesitas más información?</h3>
                 <div class="contact-info">
@@ -9444,10 +9475,6 @@ function printCompactEmailWithBenefitsPDF() {
                 </div>
             </div>
         </div>
-        
-        <div class="footer">
-            *Cotización generada el ${fechaFormateada} - OSPADEP
-        </div>
     </div>
     <script>window.onload = function() { setTimeout(function() { window.print(); }, 400); }<\/script>
 </body>
@@ -9464,6 +9491,3 @@ function printCompactEmailWithBenefitsPDF() {
     printWindow.document.close();
     printWindow.focus();
 }
-
-
-            
