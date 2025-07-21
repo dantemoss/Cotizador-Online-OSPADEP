@@ -749,6 +749,13 @@ const prestadoresData = {
                         "50-59": 231606,
                         "60+": 252301
                     },
+                    conyuge: {
+                        "0-29": 84721,
+                        "30-39": 98753,
+                        "40-49": 117000,
+                        "50-59": 123784,
+                        "60+": 123190
+                    },
                     matrimonio: {
                         "0-29": 182399,  // 97678 + 84721
                         "30-39": 221533,  // 122780 + 98753
@@ -785,6 +792,13 @@ const prestadoresData = {
                         "50-59": 294508,
                         "60+": 320211
                     },
+                    conyuge: {
+                        "0-29": 102841,
+                        "30-39": 123127,
+                        "40-49": 166469,
+                        "50-59": 170874,
+                        "60+": 186983
+                    },
                     matrimonio: {
                         "0-29": 220581,  // 117740 + 102841
                         "30-39": 272176,  // 149049 + 123127
@@ -820,6 +834,13 @@ const prestadoresData = {
                         "40-49": 217401,
                         "50-59": 337913,
                         "60+": 367962
+                    },
+                    conyuge: {
+                        "0-29": 119760,
+                        "30-39": 147744,
+                        "40-49": 192526,
+                        "50-59": 159498,
+                        "60+": 172084
                     },
                     matrimonio: {
                         "0-29": 253564,  // 133804 + 119760
@@ -1204,16 +1225,16 @@ function calcularPrecioFinalMedife(planMedife, composicionFamiliar, edadTitular,
     }
     let precioTotal = 0;
     
-    // Determinar si es Individual o Matrimonio
+    // Nuevo: calcular individual para titular y conyuge por separado usando estructura correcta
     const esMatrimonio = composicionFamiliar.tienePareja;
     const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
-    
-    if (esMatrimonio) {
-        // Usar precios de MATRIMONIO (ya incluye titular + pareja)
-        const precioMatrimonio = planMedife.precios.matrimonio[grupoEtarioTitular];
-        precioTotal += precioMatrimonio;
+    if (esMatrimonio && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioMedife(edadPareja);
+        const precioTitular = planMedife.precios.individual[grupoEtarioTitular];
+        const precioConyuge = planMedife.precios.conyuge[grupoEtarioPareja];
+        precioTotal += precioTitular + precioConyuge;
     } else {
-        // Usar precios INDIVIDUALES
+        // Usar precio individual solo para el titular
         const precioIndividual = planMedife.precios.individual[grupoEtarioTitular];
         precioTotal += precioIndividual;
     }
@@ -1880,21 +1901,29 @@ function generarDesglosePrecioMedife(planMedife, composicionFamiliar, edadTitula
         total: 0
     };
     
-    // Determinar si es Individual o Matrimonio
+    // Nuevo: desglose individual para titular y conyuge usando estructura correcta
     const esMatrimonio = composicionFamiliar.tienePareja;
     const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
-    
-    if (esMatrimonio) {
-        // Precio MATRIMONIO (incluye titular + pareja)
-        const precioMatrimonio = planMedife.precios.matrimonio[grupoEtarioTitular];
+    if (esMatrimonio && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioMedife(edadPareja);
+        const precioTitular = planMedife.precios.individual[grupoEtarioTitular];
+        const precioConyuge = planMedife.precios.conyuge[grupoEtarioPareja];
         desglose.items.push({
-            concepto: `Matrimonio (${edadTitular} años - ${grupoEtarioTitular})`,
+            concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
             cantidad: 1,
-            precioUnitario: precioMatrimonio,
-            subtotal: precioMatrimonio,
-            porcentaje: "Precio fijo matrimonio"
+            precioUnitario: precioTitular,
+            subtotal: precioTitular,
+            porcentaje: "Precio individual titular"
         });
-        desglose.total += precioMatrimonio;
+        desglose.total += precioTitular;
+        desglose.items.push({
+            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
+            cantidad: 1,
+            precioUnitario: precioConyuge,
+            subtotal: precioConyuge,
+            porcentaje: "Precio especial cónyuge"
+        });
+        desglose.total += precioConyuge;
     } else {
         // Precio INDIVIDUAL
         const precioIndividual = planMedife.precios.individual[grupoEtarioTitular];
@@ -5309,8 +5338,7 @@ function renderSelectedPlansSidebar() {
     // Botones de acciones en la sidebar
     html += '<div class="sidebar-actions">';
     html += '<button class="copy-benefits-btn" style="border: 2px solid #f59e0b; background: #fff; color: #f59e0b; font-weight: 700; font-size: 1.13rem; border-radius: 10px; padding: 14px 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 8px 0 rgba(30,41,59,0.08); cursor: pointer; transition: all 0.2s; margin-bottom: 10px;" onmouseover="this.style.background=\'#f59e0b\'; this.style.color=\'#fff\';" onmouseout="this.style.background=\'#fff\'; this.style.color=\'#f59e0b\';" onclick="generateCompactEmailWithBenefits()"><i class="fas fa-envelope"></i> Copiar cotización mail</button>';
-    // Botón PDF oculto temporalmente
-    // html += '<button class="pdf-general-btn" style="border: 2px solid #2563eb; background: #fff; color: #2563eb; font-weight: 700; font-size: 1.13rem; border-radius: 10px; padding: 14px 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 8px 0 rgba(30,41,59,0.08); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background=\'#2563eb\'; this.style.color=\'#fff\';" onmouseout="this.style.background=\'#fff\'; this.style.color=\'#2563eb\';" onclick="downloadSelectedPlansReport()"><i class="fas fa-file-pdf"></i> Descargar PDF</button>';
+    html += '<button class="pdf-general-btn" style="border: 2px solid #2563eb; background: #fff; color: #2563eb; font-weight: 700; font-size: 1.13rem; border-radius: 10px; padding: 14px 0; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 8px 0 rgba(30,41,59,0.08); cursor: pointer; transition: all 0.2s; margin-bottom: 10px;" onmouseover="this.style.background=\'#2563eb\'; this.style.color=\'#fff\';" onmouseout="this.style.background=\'#fff\'; this.style.color=\'#2563eb\';" onclick="printCompactEmailWithBenefitsPDF()"><i class="fas fa-file-pdf"></i> Descargar PDF</button>';
     html += '</div>';
     
     sidebar.innerHTML = html;
@@ -7490,7 +7518,7 @@ function generarInformeConsolidado(datosCliente, planes) {
                                         <h3 class="aportes-title">🎯 Tus Aportes OSPADEP</h3>
                                         <p class="aportes-amount">${montoAportes}% bonificado</p>
                                         <p class="aportes-description">Como afiliado a OSPADEP, tienes descuentos especiales en estos planes</p>
-                                </div>
+                                    </div>
                                 ` : `
                                     <div class="aportes-info promocional">
                                         <h3 class="aportes-title">💰 Paga Menos con tus Aportes</h3>
@@ -9166,7 +9194,276 @@ function showCopySuccessMessage(message = 'Copiado al portapapeles') {
     });
 })();
 
+function printCompactEmailWithBenefitsPDF() {
+    if (!window.selectedPlans || window.selectedPlans.length === 0) {
+        alert('Por favor, selecciona al menos un plan para generar el PDF.');
+        return;
+    }
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toLocaleDateString('es-AR', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
 
+    // Generar HTML de los planes con beneficios (cards horizontales)
+    let planesHTML = '';
+    window.selectedPlans.forEach((plan, index) => {
+        const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
+        const precioFormateado = typeof precio === 'number' ? 
+            precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : 
+            '$' + precio.toString();
+        const prestadorLabel = getPrestadorLabel(plan.type);
+        const planName = plan.name.replace(/_/g, ' ');
+        let beneficiosHTML = '';
+        if (plan.features && plan.features.length > 0) {
+            beneficiosHTML = '<ul style="margin: 10px 0; padding-left: 20px; text-align: left;">';
+            plan.features.forEach(feature => {
+                beneficiosHTML += `<li style="margin: 5px 0; color: #374151; font-size: 14px;">${feature}</li>`;
+            });
+            beneficiosHTML += '</ul>';
+        }
+        planesHTML += `
+        <div class="plan-card-horizontal">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; margin-bottom: 10px;">
+                <tr>
+                    <td style="font-size: 18px; font-weight: 600; color: #1e40af; padding: 0 0 0 0; white-space:nowrap;">
+                        ${planName}<br>
+                        <span style="color: #6b7280; font-size: 14px; font-weight: 400;">${prestadorLabel}</span>
+                    </td>
+                    <td style="font-size: 24px; font-weight: 700; color: #059669; text-align: right; white-space:nowrap; padding-left: 40px; min-width: 120px;">
+                        ${precioFormateado}
+                    </td>
+                </tr>
+            </table>
+            <div style="margin-top: 15px;">
+                <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">Beneficios incluidos:</h4>
+                ${beneficiosHTML}
+            </div>
+        </div>
+        `;
+    });
+
+    // Calcular aportes solo una vez (primer plan con _totalAportes > 0)
+    let aporteUnico = 0;
+    for (let i = 0; i < window.selectedPlans.length; i++) {
+        const plan = window.selectedPlans[i];
+        if (plan._totalAportes && plan._totalAportes > 0) {
+            aporteUnico = plan._totalAportes;
+            break;
+        }
+    }
+    let totalSectionHTML = '';
+    if (aporteUnico > 0) {
+        totalSectionHTML = `<div class="total-section"><h3>💸 Aportes descontados</h3><div class="total-price">$${aporteUnico.toLocaleString('es-AR')}</div></div>`;
+    } else {
+        totalSectionHTML = `<div class="total-section"><h3>¡Descontá con tus aportes!</h3></div>`;
+    }
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización de Planes de Salud - OSPADEP</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            padding: 0;
+            text-align: center;
+        }
+        .header img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px 12px 0 0;
+        }
+        .content {
+            padding: 30px;
+        }
+        .plans-section {
+            margin-top: 20px;
+        }
+        .plans-section h3 {
+            color: #1e40af;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .plans-horizontal-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .plan-card-horizontal {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 260px;
+            max-width: 320px;
+            flex: 1 1 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .total-section {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .total-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
+        .total-price {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .contact-section {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .contact-section h3 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .contact-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+        .contact-item strong {
+            color: #1e40af;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .footer {
+            background: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+        @media (max-width: 900px) {
+            .plans-horizontal-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .plan-card-horizontal {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .header {
+                padding: 20px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media print {
+            body { background: white !important; }
+            .container { box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 900px; width: 100%; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(30,64,175,0.08); overflow: hidden;">
+        <div class="header">
+            <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg"
+            alt="OSPADEP"
+            style="width:80%; max-width:200px; height:auto; display:block; margin: 0 auto 18px auto; border-radius: 14px;"
+            onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
+        </div>
+        
+        <div class="content">
+            <div class="plans-section">
+                <h3>📋 Cotización de Planes de Salud</h3>
+                <div class="plans-horizontal-container">
+                    ${planesHTML}
+                </div>
+            </div>
+            
+            ${totalSectionHTML}
+            
+            <div class="contact-section">
+                <h3>📞 ¿Necesitas más información?</h3>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <strong>📞 Teléfono</strong>
+                        +54 9 11 6625-9009
+                    </div>
+                    <div class="contact-item">
+                        <strong>📧 Email</strong>
+                        comercial@ospadep.com
+                    </div>
+                    <div class="contact-item">
+                        <strong>🌐 Web</strong>
+                        www.ospadep.com
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            *Cotización generada el ${fechaFormateada} - OSPADEP
+        </div>
+    </div>
+    <script>window.onload = function() { setTimeout(function() { window.print(); }, 400); }<\/script>
+</body>
+</html>`;
+
+    // Abrir en nueva ventana y disparar print
+    const printWindow = window.open('', '_blank', 'width=1200,height=900,scrollbars=yes');
+    if (!printWindow) {
+        alert('No se pudo abrir la ventana para imprimir. Verifica los permisos de ventanas emergentes.');
+        return;
+    }
+    printWindow.document.open();
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+    printWindow.focus();
+}
 
 
             
