@@ -14,29 +14,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 79782,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 81777,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "26-35": {
-                        adultoConyugue: 114322,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 117180,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "36-54": {
-                        adultoConyugue: 134954,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 138328,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "55-59": {
-                        adultoConyugue: 229880,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 235627,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "60+": {
-                        adultoConyugue: 355439,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 364325,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     }
                 },
                 features: [
@@ -54,39 +54,38 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 107430,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 110116,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "26-35": {
-                        adultoConyugue: 155736,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 159629,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "36-54": {
-                        adultoConyugue: 182824,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 187395,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "55-59": {
-                        adultoConyugue: 315183,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 323063,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "60+": {
-                        adultoConyugue: 478339,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 490297,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     }
                 },
                 features: [
-                    "Cobertura integral OMINT",
+                    "Plan intermedio OMINT",
                     "Red de prestadores nivel 4500",
-                    "Internación en habitación privada",
-                    "Consultas médicas sin límite",
-                    "Estudios de diagnóstico incluidos",
+                    "Consultas médicas",
                     "Emergencias 24hs",
-                    "Cobertura odontológica básica"
+                    "Estudios de mediana complejidad",
+                    "Ideal para familias"
                 ],
                 recommended: false
             },
@@ -95,29 +94,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 136401,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 139811,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "26-35": {
-                        adultoConyugue: 195188,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 200068,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "36-54": {
-                        adultoConyugue: 228584,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 205069,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "55-59": {
-                        adultoConyugue: 383140,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 392719,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "60+": {
-                        adultoConyugue: 570574,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 584838,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     }
                 },
                 features: [
@@ -137,42 +136,40 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 234550,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 240414,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "26-35": {
-                        adultoConyugue: 312648,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 320464,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "36-54": {
-                        adultoConyugue: 411553,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 421842,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "55-59": {
-                        adultoConyugue: 573508,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 587846,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "60+": {
-                        adultoConyugue: 781761,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 801305,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     }
                 },
                 features: [
-                    "Cobertura premium OMINT",
+                    "Plan premium OMINT",
                     "Red de prestadores nivel 8500",
                     "Internación en habitación privada",
                     "Consultas médicas sin límite",
-                    "Estudios de máxima complejidad",
-                    "Emergencias 24hs prioritarias",
-                    "Cobertura odontológica premium",
-                    "Medicina preventiva avanzada",
-                    "Cobertura internacional",
-                    "Enfermería domiciliaria"
+                    "Estudios de alta complejidad",
+                    "Emergencias 24hs",
+                    "Cobertura odontológica completa",
+                    "Medicina preventiva premium"
                 ],
                 recommended: false
             },
@@ -181,29 +178,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 80952,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 82976,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "26-35": {
-                        adultoConyugue: 115712,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 118605,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "36-54": {
-                        adultoConyugue: 136743,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 140162,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "55-59": {
-                        adultoConyugue: 231672,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 237464,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "60+": {
-                        adultoConyugue: 359940,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 368939,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     }
                 },
                 features: [
@@ -340,29 +337,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 79782,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 81777,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "26-35": {
-                        adultoConyugue: 114322,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 117180,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "36-54": {
-                        adultoConyugue: 134954,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 138328,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "55-59": {
-                        adultoConyugue: 229880,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 235627,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     },
                     "60+": {
-                        adultoConyugue: 355439,
-                        hijo1Menor: 69487,
-                        hijo2MasMenores: 60083
+                        adultoConyugue: 364325,
+                        hijo1Menor: 71224,
+                        hijo2MasMenores: 61585
                     }
                 },
                 features: [
@@ -380,39 +377,38 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 107430,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 110116,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "26-35": {
-                        adultoConyugue: 155736,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 159629,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "36-54": {
-                        adultoConyugue: 182824,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 187395,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "55-59": {
-                        adultoConyugue: 315183,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 323063,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     },
                     "60+": {
-                        adultoConyugue: 478339,
-                        hijo1Menor: 93532,
-                        hijo2MasMenores: 80724
+                        adultoConyugue: 490297,
+                        hijo1Menor: 95870,
+                        hijo2MasMenores: 82742
                     }
                 },
                 features: [
-                    "Cobertura integral OMINT",
+                    "Plan intermedio OMINT",
                     "Red de prestadores nivel 4500",
-                    "Internación en habitación privada",
-                    "Consultas médicas sin límite",
-                    "Estudios de diagnóstico incluidos",
+                    "Consultas médicas",
                     "Emergencias 24hs",
-                    "Cobertura odontológica básica"
+                    "Estudios de mediana complejidad",
+                    "Ideal para familias"
                 ],
                 recommended: false
             },
@@ -421,29 +417,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 136401,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 139811,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "26-35": {
-                        adultoConyugue: 195188,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 200068,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "36-54": {
-                        adultoConyugue: 228584,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 205069,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "55-59": {
-                        adultoConyugue: 383140,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 392719,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     },
                     "60+": {
-                        adultoConyugue: 570574,
-                        hijo1Menor: 119240,
-                        hijo2MasMenores: 103542
+                        adultoConyugue: 584838,
+                        hijo1Menor: 122221,
+                        hijo2MasMenores: 106131
                     }
                 },
                 features: [
@@ -463,42 +459,40 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 234550,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 240414,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "26-35": {
-                        adultoConyugue: 312648,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 320464,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "36-54": {
-                        adultoConyugue: 411553,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 421842,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "55-59": {
-                        adultoConyugue: 573508,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 587846,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     },
                     "60+": {
-                        adultoConyugue: 781761,
-                        hijo1Menor: 205657,
-                        hijo2MasMenores: 179383
+                        adultoConyugue: 801305,
+                        hijo1Menor: 210798,
+                        hijo2MasMenores: 183868
                     }
                 },
                 features: [
-                    "Cobertura premium OMINT",
+                    "Plan premium OMINT",
                     "Red de prestadores nivel 8500",
                     "Internación en habitación privada",
                     "Consultas médicas sin límite",
-                    "Estudios de máxima complejidad",
-                    "Emergencias 24hs prioritarias",
-                    "Cobertura odontológica premium",
-                    "Medicina preventiva avanzada",
-                    "Cobertura internacional",
-                    "Enfermería domiciliaria"
+                    "Estudios de alta complejidad",
+                    "Emergencias 24hs",
+                    "Cobertura odontológica completa",
+                    "Medicina preventiva premium"
                 ],
                 recommended: false
             },
@@ -507,29 +501,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 80952,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 82976,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "26-35": {
-                        adultoConyugue: 115712,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 118605,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "36-54": {
-                        adultoConyugue: 136743,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 140162,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "55-59": {
-                        adultoConyugue: 231672,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 237464,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     },
                     "60+": {
-                        adultoConyugue: 359940,
-                        hijo1Menor: 70384,
-                        hijo2MasMenores: 60773
+                        adultoConyugue: 368939,
+                        hijo1Menor: 72144,
+                        hijo2MasMenores: 62292
                     }
                 },
                 features: [
