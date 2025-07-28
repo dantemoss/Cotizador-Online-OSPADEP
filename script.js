@@ -1018,8 +1018,14 @@ function calcularPrecioFinalOMINT(planOMINT, composicionFamiliar, edadTitular, e
     }
     
     // 3. Hijos menores de 25 años (según estructura OMINT)
-    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
-        const menoresDe25 = composicionFamiliar.menores.filter(edad => edad < 25);
+    // Combinar menores (<21) y mayores (21-24) para OMINT
+    const todosLosHijos = [
+        ...(composicionFamiliar.menores || []),
+        ...(composicionFamiliar.mayores || []).filter(edad => edad < 25)
+    ];
+    
+    if (todosLosHijos.length > 0) {
+        const menoresDe25 = todosLosHijos.filter(edad => edad < 25);
         
         if (menoresDe25.length > 0) {
             // Primer hijo menor
@@ -1031,6 +1037,17 @@ function calcularPrecioFinalOMINT(planOMINT, composicionFamiliar, edadTitular, e
                 precioTotal += preciosGrupoTitular.hijo2MasMenores * hijosAdicionales;
             }
         }
+    }
+    
+    // 4. Hijos mayores de 25 años (se cobran como adultos/cónyuges)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach(edadHijo => {
+            if (edadHijo >= 25) {
+                const grupoEtarioHijo = determinarGrupoEtario(edadHijo);
+                const preciosGrupoHijo = planOMINT.preciosPorEdad[grupoEtarioHijo];
+                precioTotal += preciosGrupoHijo.adultoConyugue;
+            }
+        });
     }
     
     return Math.round(precioTotal);
@@ -1438,12 +1455,13 @@ function analizarComposicionFamiliar(formData) {
             if (formData['edades-hijos']) {
                 const edadesHijos = formData['edades-hijos'].split(',').map(edad => parseInt(edad.trim()));
                 
-                // Separar por criterio más general (25 años como referencia)
+                // Separar por criterio más general (21 años como referencia para MEDIFE)
                 // Cada prestador luego aplicará su propia lógica:
-                // - OMINT: menores de 25 años
-                // - SWISS MEDICAL: menores de 21 años
-                composicion.menores = edadesHijos.filter(edad => edad < 25);
-                composicion.mayores = edadesHijos.filter(edad => edad >= 25);
+                // - OMINT: menores de 25 años (se procesará en la función específica)
+                // - MEDIFE: menores de 21 años, adultos 21-29 años
+                // - SWISS MEDICAL: todos como adultos
+                composicion.menores = edadesHijos.filter(edad => edad < 21);
+                composicion.mayores = edadesHijos.filter(edad => edad >= 21);
                 
                 const totalHijos = edadesHijos.length;
                 const menoresDe25 = composicion.menores.length;
@@ -1461,8 +1479,8 @@ function analizarComposicionFamiliar(formData) {
             composicion.tienePareja = true;
             if (formData['edades-hijos']) {
                 const edadesHijos = formData['edades-hijos'].split(',').map(edad => parseInt(edad.trim()));
-                composicion.menores = edadesHijos.filter(edad => edad < 25);
-                composicion.mayores = edadesHijos.filter(edad => edad >= 25);
+                composicion.menores = edadesHijos.filter(edad => edad < 21);
+                composicion.mayores = edadesHijos.filter(edad => edad >= 21);
                 
                 const menoresDe25 = composicion.menores.length;
                 const mayoresDe25 = composicion.mayores.length;
@@ -1523,8 +1541,14 @@ function generarDesglosePrecioOMINT(planOMINT, composicionFamiliar, edadTitular,
     }
     
     // 3. Hijos menores de 25 años
-    if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
-        const menoresDe25 = composicionFamiliar.menores.filter(edad => edad < 25);
+    // Combinar menores (<21) y mayores (21-24) para OMINT
+    const todosLosHijos = [
+        ...(composicionFamiliar.menores || []),
+        ...(composicionFamiliar.mayores || []).filter(edad => edad < 25)
+    ];
+    
+    if (todosLosHijos.length > 0) {
+        const menoresDe25 = todosLosHijos.filter(edad => edad < 25);
         
         if (menoresDe25.length > 0) {
             // Primer hijo menor
@@ -1557,19 +1581,23 @@ function generarDesglosePrecioOMINT(planOMINT, composicionFamiliar, edadTitular,
     // 4. Hijos mayores de 25 años (se cobran como adultos)
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
         composicionFamiliar.mayores.forEach((edadHijo, index) => {
-            const grupoEtarioHijo = determinarGrupoEtario(edadHijo);
-            const preciosGrupoHijo = planOMINT.preciosPorEdad[grupoEtarioHijo];
-            const precioHijoMayor = preciosGrupoHijo.adultoConyugue;
-            
-            desglose.items.push({
-                concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
-                cantidad: 1,
-                precioUnitario: precioHijoMayor,
-                subtotal: precioHijoMayor
-            });
-            desglose.total += precioHijoMayor;
+            if (edadHijo >= 25) {
+                const grupoEtarioHijo = determinarGrupoEtario(edadHijo);
+                const preciosGrupoHijo = planOMINT.preciosPorEdad[grupoEtarioHijo];
+                const precioHijoMayor = preciosGrupoHijo.adultoConyugue;
+                
+                desglose.items.push({
+                    concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
+                    cantidad: 1,
+                    precioUnitario: precioHijoMayor,
+                    subtotal: precioHijoMayor
+                });
+                desglose.total += precioHijoMayor;
+            }
         });
     }
+    
+
     
     desglose.total = Math.round(desglose.total);
     return desglose;
@@ -2116,8 +2144,13 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
         });
     }
 
-    // Actualizar el total final
-    desglose.total = plan._precioFinal || desglose.total;
+    // Actualizar el total final solo si no hay items específicos del prestador
+    if (desglose.items.length === 0) {
+        desglose.total = plan._precioFinal || desglose.total;
+    } else {
+        // Recalcular el total basado en los items del desglose
+        desglose.total = desglose.items.reduce((sum, item) => sum + item.subtotal, 0);
+    }
     
     return desglose;
 }
@@ -2588,6 +2621,30 @@ function testNuevaLogicaCotizacion() {
         precio: precioMedifeConHijos,
         nota: 'Precios específicos: 1er hijo + 2do hijo',
         desglose: desgloseMedifeConHijos
+    });
+    
+    // PRUEBA ESPECÍFICA MEDIFE - Caso del usuario
+    console.log('\n--- PRUEBA ESPECÍFICA MEDIFE - Caso del usuario ---');
+    const composicionUsuario = {
+        tienePareja: false,
+        menores: [24], // 1 hijo de 24 años
+        mayores: []
+    };
+    
+    const precioMedifeUsuario = calcularPrecioUnificado('medife', planMedife, composicionUsuario, 52);
+    const desgloseMedifeUsuario = generarDesgloseUnificado('medife', planMedife, composicionUsuario, 52);
+    
+    console.log('📋 MEDIFE - Caso usuario (52 años + 1 hijo 24 años):', {
+        prestador: 'MEDIFE',
+        plan: planMedife.name,
+        precioFinal: precioMedifeUsuario,
+        composicion: composicionUsuario,
+        desglose: desgloseMedifeUsuario,
+        items: desgloseMedifeUsuario.items.map(item => ({
+            concepto: item.concepto,
+            precio: item.precioUnitario,
+            subtotal: item.subtotal
+        }))
     });
     
     // Comparación de precios entre los 4 prestadores
