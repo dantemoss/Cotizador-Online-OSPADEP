@@ -2,7 +2,7 @@ let selectedOption = null;
 let formData = {};
 let validationErrors = {};
 
-// ===== DATOS ACTUALIZADOS AGOSTO 2025 - PRESTADORES =====
+// ===== DATOS ACTUALIZADOS SEPTIEMBRE 2025 - PRESTADORES =====
 // Sistema unificado basado en nuevos CSV con precios oficiales
 const prestadoresData = {
     omint: {
@@ -89,6 +89,9 @@ const prestadoresData = {
                 ],
                 recommended: false
             },
+            // PLAN TEMPORALMENTE OCULTO - SEPTIEMBRE 2025
+            // Para reactivar: descomenta el siguiente código
+            /*
             plan4500Mega: {
                 name: "PLAN 4500 MEGA",
                 type: "omint",
@@ -131,6 +134,7 @@ const prestadoresData = {
                 ],
                 recommended: false
             },
+            */
             plan6500: {
                 name: "PLAN 6500",
                 type: "omint",
@@ -267,8 +271,8 @@ const prestadoresData = {
                 name: "PLAN PO62",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 242790,  // Capita menor o igual a 65 años - AGOSTO 2025
-                    ">65": 705491   // Capita mayor a 65 años - AGOSTO 2025
+                    "≤65": 247403,  // Capita menor o igual a 65 años - SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 718896   // Capita mayor a 65 años - SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Cobertura integral SWISS MEDICAL",
@@ -285,8 +289,8 @@ const prestadoresData = {
                 name: "PLAN PO64",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 291133,  // AGOSTO 2025
-                    ">65": 844782   // AGOSTO 2025
+                    "≤65": 296665,  // SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 860833   // SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Cobertura premium SWISS MEDICAL",
@@ -304,8 +308,8 @@ const prestadoresData = {
                 name: "PLAN SB04",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 191472,  // AGOSTO 2025
-                    ">65": 523601   // AGOSTO 2025
+                    "≤65": 195110,  // SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 533550   // SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Cobertura básica SWISS MEDICAL",
@@ -328,8 +332,8 @@ const prestadoresData = {
                 name: "PLAN MS",
                 type: "sw_nubial",
                 preciosPorEdad: {
-                    "≤65": 160718,   // Menor de 66 años
-                    ">65": 456584    // Mayor de 65 años
+                    "≤65": 163772,   // Menor de 66 años - SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 465259    // Mayor de 65 años - SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Plan SW NUBIAL exclusivo",
@@ -353,8 +357,8 @@ const prestadoresData = {
                 name: "PLAN SB02",
                 type: "swiss",
                 preciosPorEdad: {
-                    "≤65": 186814,   // Por Cápita
-                    ">65": 633867    // Mayor de 65 años
+                    "≤65": 190363,   // Por Cápita - SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 645910    // Mayor de 65 años - SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Plan SWISS básico",
@@ -590,8 +594,8 @@ const prestadoresData = {
                 name: "PLAN PO62",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 242790,  // Capita menor o igual a 65 años - AGOSTO 2025
-                    ">65": 705491   // Capita mayor a 65 años - AGOSTO 2025
+                    "≤65": 247403,  // Capita menor o igual a 65 años - SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 718896   // Capita mayor a 65 años - SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Cobertura integral SWISS MEDICAL",
@@ -608,8 +612,8 @@ const prestadoresData = {
                 name: "PLAN PO64",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 291133,  // AGOSTO 2025
-                    ">65": 844782   // AGOSTO 2025
+                    "≤65": 296665,  // SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 860833   // SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Cobertura premium SWISS MEDICAL",
@@ -627,8 +631,8 @@ const prestadoresData = {
                 name: "PLAN SB04",
                 type: "swiss_medical",
                 preciosPorEdad: {
-                    "≤65": 191472,  // AGOSTO 2025
-                    ">65": 523601   // AGOSTO 2025
+                    "≤65": 195110,  // SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 533550   // SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Cobertura básica SWISS MEDICAL",
@@ -651,8 +655,8 @@ const prestadoresData = {
                 name: "PLAN MS",
                 type: "sw_nubial",
                 preciosPorEdad: {
-                    "≤65": 160718,   // Menor de 66 años
-                    ">65": 456584    // Mayor de 65 años
+                    "≤65": 163772,   // Menor de 66 años - SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 465259    // Mayor de 65 años - SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Plan SW NUBIAL exclusivo",
@@ -676,8 +680,8 @@ const prestadoresData = {
                 name: "PLAN SB02",
                 type: "swiss",
                 preciosPorEdad: {
-                    "≤65": 186814,   // Por Cápita
-                    ">65": 633867    // Mayor de 65 años
+                    "≤65": 190363,   // Por Cápita - SEPTIEMBRE 2025 (+1.9%)
+                    ">65": 645910    // Mayor de 65 años - SEPTIEMBRE 2025 (+1.9%)
                 },
                 features: [
                     "Plan SWISS básico",
@@ -700,7 +704,7 @@ const prestadoresData = {
             as25: {
                 name: "PLAN AS 25",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 66235 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 67493 },  // SEPTIEMBRE 2025 (+1.9%)
                 features: [
                     "Plan básico ACTIVA SALUD",
                     "Consultas médicas básicas",
@@ -714,7 +718,7 @@ const prestadoresData = {
             as300: {
                 name: "PLAN AS 300",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 76425 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 77877 },  // SEPTIEMBRE 2025 (+1.9%)
                 features: [
                     "Plan AS 300 ACTIVA SALUD",
                     "Cobertura integral",
@@ -728,7 +732,7 @@ const prestadoresData = {
             as700: {
                 name: "PLAN AS 700",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 86615 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 88261 },  // SEPTIEMBRE 2025 (+1.9%)
                 features: [
                     "Plan AS 700 ACTIVA SALUD",
                     "Cobertura superior",
@@ -742,7 +746,7 @@ const prestadoresData = {
             as800: {
                 name: "PLAN AS 800",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 106995 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 109028 },  // SEPTIEMBRE 2025 (+1.9%)
                 features: [
                     "Plan AS 800 ACTIVA SALUD",
                     "Máxima cobertura",
@@ -756,7 +760,7 @@ const prestadoresData = {
             as900: {
                 name: "PLAN AS 900",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 113535 },  // AGOSTO 2025
+                preciosPorEdad: { "≤100": 115692 },  // SEPTIEMBRE 2025 (+1.9%)
                 features: [
                     "Plan AS 900 ACTIVA SALUD",
                     "Cobertura total",
@@ -779,31 +783,31 @@ const prestadoresData = {
                 type: "medife",
                 precios: {
                     individual: {
-                        "0-29": 97678,
-                        "30-39": 122780,
-                        "40-49": 159664,
-                        "50-59": 231606,
-                        "60+": 252301
+                        "0-29": 101195,  // 97678 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 127200,  // 122780 * 1.036
+                        "40-49": 165412,  // 159664 * 1.036
+                        "50-59": 239944,  // 231606 * 1.036
+                        "60+": 261383     // 252301 * 1.036
                     },
                     conyuge: {
-                        "0-29": 84721,
-                        "30-39": 98753,
-                        "40-49": 117000,
-                        "50-59": 123784,
-                        "60+": 123190
+                        "0-29": 87771,   // 84721 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 102308,  // 98753 * 1.036
+                        "40-49": 121212,  // 117000 * 1.036
+                        "50-59": 128240,  // 123784 * 1.036
+                        "60+": 127625     // 123190 * 1.036
                     },
                     matrimonio: {
-                        "0-29": 182399,  // 97678 + 84721
-                        "30-39": 221533,  // 122780 + 98753
-                        "40-49": 276664,  // 159664 + 117000
-                        "50-59": 355390,  // 231606 + 123784
-                        "60+": 375491    // 252301 + 123190
+                        "0-29": 188966,  // 101195 + 87771 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 229508,  // 127200 + 102308
+                        "40-49": 286624,  // 165412 + 121212
+                        "50-59": 368184,  // 239944 + 128240
+                        "60+": 389008    // 261383 + 127625
                     },
                     hijos: {
-                        "primerHijo": 79576,     // 1er H (< a 21)
-                        "segundoHijo": 65743,    // 2do H (< a 21)
-                        "hijoAdulto": 97970,     // H AD (21 a 29)
-                        "familiarCargo": 252301  // FAMILIAR A CARGO
+                        "primerHijo": 82440,     // 79576 * 1.036 - 1er H (< a 21) - SEPTIEMBRE 2025 (+3.6%)
+                        "segundoHijo": 68110,    // 65743 * 1.036 - 2do H (< a 21)
+                        "hijoAdulto": 101497,    // 97970 * 1.036 - H AD (21 a 29)
+                        "familiarCargo": 261383  // 252301 * 1.036 - FAMILIAR A CARGO
                     }
                 },
                 features: [
@@ -822,31 +826,31 @@ const prestadoresData = {
                 type: "medife",
                 precios: {
                     individual: {
-                        "0-29": 117740,
-                        "30-39": 149049,
-                        "40-49": 188013,
-                        "50-59": 294508,
-                        "60+": 320211
+                        "0-29": 121979,  // 117740 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 154415,  // 149049 * 1.036
+                        "40-49": 194781,  // 188013 * 1.036
+                        "50-59": 305110,  // 294508 * 1.036
+                        "60+": 331738     // 320211 * 1.036
                     },
                     conyuge: {
-                        "0-29": 102841,
-                        "30-39": 123127,
-                        "40-49": 166469,
-                        "50-59": 170874,
-                        "60+": 186983
+                        "0-29": 106543,  // 102841 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 127560,  // 123127 * 1.036
+                        "40-49": 172461,  // 166469 * 1.036
+                        "50-59": 177026,  // 170874 * 1.036
+                        "60+": 193715    // 186983 * 1.036
                     },
                     matrimonio: {
-                        "0-29": 220581,  // 117740 + 102841
-                        "30-39": 272176,  // 149049 + 123127
-                        "40-49": 354482,  // 188013 + 166469
-                        "50-59": 465382,  // 294508 + 170874
-                        "60+": 507194    // 320211 + 186983
+                        "0-29": 228522,  // 121979 + 106543 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 281975,  // 154415 + 127560
+                        "40-49": 367242,  // 194781 + 172461
+                        "50-59": 482136,  // 305110 + 177026
+                        "60+": 525453    // 331738 + 193715
                     },
                     hijos: {
-                        "primerHijo": 100070,
-                        "segundoHijo": 73141,    // 2do H (< a 21)
-                        "hijoAdulto": 118055,
-                        "familiarCargo": 320211
+                        "primerHijo": 103672,   // 100070 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "segundoHijo": 75775,    // 73141 * 1.036 - 2do H (< a 21)
+                        "hijoAdulto": 122305,    // 118055 * 1.036
+                        "familiarCargo": 331738  // 320211 * 1.036
                     }
                 },
                 features: [
@@ -865,31 +869,31 @@ const prestadoresData = {
                 type: "medife",
                 precios: {
                     individual: {
-                        "0-29": 133804,
-                        "30-39": 172232,
-                        "40-49": 217401,
-                        "50-59": 337913,
-                        "60+": 367962
+                        "0-29": 138621,  // 133804 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 178432,  // 172232 * 1.036
+                        "40-49": 225227,  // 217401 * 1.036
+                        "50-59": 350078,  // 337913 * 1.036
+                        "60+": 381209    // 367962 * 1.036
                     },
                     conyuge: {
-                        "0-29": 119760,
-                        "30-39": 147744,
-                        "40-49": 192526,
-                        "50-59": 159498,
-                        "60+": 172084
+                        "0-29": 124071,  // 119760 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 153063,  // 147744 * 1.036
+                        "40-49": 199457,  // 192526 * 1.036
+                        "50-59": 165240,  // 159498 * 1.036
+                        "60+": 178279    // 172084 * 1.036
                     },
                     matrimonio: {
-                        "0-29": 253564,  // 133804 + 119760
-                        "30-39": 319976,  // 172232 + 147744
-                        "40-49": 409927,  // 217401 + 192526
-                        "50-59": 497411,  // 337913 + 159498
-                        "60+": 540046    // 367962 + 172084
+                        "0-29": 262692,  // 138621 + 124071 - SEPTIEMBRE 2025 (+3.6%)
+                        "30-39": 331495,  // 178432 + 153063
+                        "40-49": 424684,  // 225227 + 199457
+                        "50-59": 515318,  // 350078 + 165240
+                        "60+": 559488    // 381209 + 178279
                     },
                     hijos: {
-                        "primerHijo": 115634,
-                        "segundoHijo": 93496,
-                        "hijoAdulto": 133804,
-                        "familiarCargo": 367962
+                        "primerHijo": 119797,   // 115634 * 1.036 - SEPTIEMBRE 2025 (+3.6%)
+                        "segundoHijo": 96862,    // 93496 * 1.036
+                        "hijoAdulto": 138621,    // 133804 * 1.036
+                        "familiarCargo": 381209  // 367962 * 1.036
                     }
                 },
                 features: [
