@@ -14,29 +14,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 81059,
-                        hijo1Menor: 70599,
-                        hijo2MasMenores: 61044
+                        adultoConyugue: 82599,
+                        hijo1Menor: 71940,
+                        hijo2MasMenores: 62204
                     },
                     "26-35": {
-                        adultoConyugue: 116151,
-                        hijo1Menor: 70599,
-                        hijo2MasMenores: 61044
+                        adultoConyugue: 118358,
+                        hijo1Menor: 71940,
+                        hijo2MasMenores: 62204
                     },
                     "36-54": {
-                        adultoConyugue: 137113,
-                        hijo1Menor: 70599,
-                        hijo2MasMenores: 61044
+                        adultoConyugue: 139718,
+                        hijo1Menor: 71940,
+                        hijo2MasMenores: 62204
                     },
                     "55-59": {
-                        adultoConyugue: 233558,
-                        hijo1Menor: 70599,
-                        hijo2MasMenores: 61044
+                        adultoConyugue: 237996,
+                        hijo1Menor: 71940,
+                        hijo2MasMenores: 62204
                     },
                     "60+": {
-                        adultoConyugue: 361126,
-                        hijo1Menor: 70599,
-                        hijo2MasMenores: 61044
+                        adultoConyugue: 367987,
+                        hijo1Menor: 71940,
+                        hijo2MasMenores: 62204
                     }
                 },
                 features: [
@@ -54,29 +54,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 109149,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 111223,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "26-35": {
-                        adultoConyugue: 158228,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 161234,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "36-54": {
-                        adultoConyugue: 185749,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 189278,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "55-59": {
-                        adultoConyugue: 320226,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 326310,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "60+": {
-                        adultoConyugue: 485992,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 495226,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     }
                 },
                 features: [
@@ -117,7 +117,7 @@ const prestadoresData = {
                         hijo2MasMenores: 73814
                     },
                     "60+": {
-                        adultoConyugue: 485992,
+                        adultoConyugue: 495226,
                         hijo1Menor: 85526,
                         hijo2MasMenores: 73814
                     }
@@ -140,29 +140,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 138583,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 141217,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "26-35": {
-                        adultoConyugue: 198311,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 202079,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "36-54": {
-                        adultoConyugue: 232241,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 236654,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "55-59": {
-                        adultoConyugue: 389270,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 396666,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "60+": {
-                        adultoConyugue: 579703,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 590718,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     }
                 },
                 features: [
@@ -182,29 +182,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 238303,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 242831,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "26-35": {
-                        adultoConyugue: 317650,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 323686,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "36-54": {
-                        adultoConyugue: 418138,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 426082,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "55-59": {
-                        adultoConyugue: 582684,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 593755,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "60+": {
-                        adultoConyugue: 794269,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 809360,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     }
                 },
                 features: [
@@ -224,29 +224,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 82247,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 83810,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "26-35": {
-                        adultoConyugue: 117563,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 119797,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "36-54": {
-                        adultoConyugue: 138931,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 141571,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "55-59": {
-                        adultoConyugue: 235379,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 239851,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "60+": {
-                        adultoConyugue: 365699,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 372647,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     }
                 },
                 features: [
@@ -423,29 +423,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 109149,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 111223,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "26-35": {
-                        adultoConyugue: 158228,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 161234,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "36-54": {
-                        adultoConyugue: 185749,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 189278,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "55-59": {
-                        adultoConyugue: 320226,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 326310,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     },
                     "60+": {
-                        adultoConyugue: 485992,
-                        hijo1Menor: 95029,
-                        hijo2MasMenores: 82016
+                        adultoConyugue: 495226,
+                        hijo1Menor: 96834,
+                        hijo2MasMenores: 83574
                     }
                 },
                 features: [
@@ -463,29 +463,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 138583,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 141217,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "26-35": {
-                        adultoConyugue: 198311,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 202079,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "36-54": {
-                        adultoConyugue: 232241,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 236654,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "55-59": {
-                        adultoConyugue: 389270,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 396666,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     },
                     "60+": {
-                        adultoConyugue: 579703,
-                        hijo1Menor: 121148,
-                        hijo2MasMenores: 105199
+                        adultoConyugue: 590718,
+                        hijo1Menor: 123450,
+                        hijo2MasMenores: 107197
                     }
                 },
                 features: [
@@ -505,29 +505,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 238303,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 242831,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "26-35": {
-                        adultoConyugue: 317650,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 323686,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "36-54": {
-                        adultoConyugue: 418138,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 426082,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "55-59": {
-                        adultoConyugue: 582684,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 593755,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     },
                     "60+": {
-                        adultoConyugue: 794269,
-                        hijo1Menor: 208948,
-                        hijo2MasMenores: 182253
+                        adultoConyugue: 809360,
+                        hijo1Menor: 212918,
+                        hijo2MasMenores: 185716
                     }
                 },
                 features: [
@@ -547,29 +547,29 @@ const prestadoresData = {
                 type: "omint",
                 preciosPorEdad: {
                     "0-25": {
-                        adultoConyugue: 82247,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 83810,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "26-35": {
-                        adultoConyugue: 117563,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 119797,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "36-54": {
-                        adultoConyugue: 138931,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 141571,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "55-59": {
-                        adultoConyugue: 235379,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 239851,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     },
                     "60+": {
-                        adultoConyugue: 365699,
-                        hijo1Menor: 71510,
-                        hijo2MasMenores: 61745
+                        adultoConyugue: 372647,
+                        hijo1Menor: 72869,
+                        hijo2MasMenores: 62919
                     }
                 },
                 features: [
