@@ -718,10 +718,12 @@ const prestadoresData = {
             as300: {
                 name: "PLAN AS 300",
                 type: "activa_salud",
-                preciosPorEdad: { 
-                    "≤65": 77877,   // SEPTIEMBRE 2025 (+1.9%) - Hasta 65 años
-                    ">65": 118000   // OCTUBRE 2025 - Desde 66 años en adelante
-                },
+                preciosPorEdad: { "≤100": 77877 },  // SEPTIEMBRE 2025 (+1.9%) - Precio único
+                // FUTURO: Grupos etarios diferenciados (actualmente no se usa)
+                // preciosPorEdad: { 
+                //     "≤65": 77877,   // SEPTIEMBRE 2025 (+1.9%) - Hasta 65 años
+                //     ">65": 118000   // OCTUBRE 2025 - Desde 66 años en adelante
+                // },
                 features: [
                     "Plan AS 300 ACTIVA SALUD",
                     "Cobertura integral",
@@ -947,12 +949,12 @@ function determinarGrupoEtarioSwiss(edad) {
  * @returns {string} - Grupo etario correspondiente
  */
 function determinarGrupoEtarioActiva(edad, plan = null) {
-    // Si es el plan AS300, usar estructura de 2 grupos etarios
-    if (plan && plan.name === "PLAN AS 300") {
-        return edad <= 65 ? "≤65" : ">65";
-    }
+    // FUTURO: Lógica para grupos etarios diferenciados (actualmente no se usa)
+    // if (plan && plan.name === "PLAN AS 300") {
+    //     return edad <= 65 ? "≤65" : ">65";
+    // }
     
-    // Para otros planes de ActivaSalud, mantener grupo etario universal
+    // Para todos los planes de ActivaSalud, usar grupo etario universal
     return '≤100';
 }
 
@@ -1149,7 +1151,7 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
     }
     
     // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
-    // ACTIVA SALUD: Plan AS300 tiene precios por grupos etarios (≤65 y >65), otros planes precio único
+    // ACTIVA SALUD: Todos los planes usan precio único (≤100) por el momento
     if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
         composicionFamiliar.menores.forEach(edadMenor => {
             const grupoEtarioMenor = determinarGrupoEtarioActiva(edadMenor, planActiva);
