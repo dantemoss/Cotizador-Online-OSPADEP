@@ -718,7 +718,10 @@ const prestadoresData = {
             as300: {
                 name: "PLAN AS 300",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 77877 },  // SEPTIEMBRE 2025 (+1.9%)
+                preciosPorEdad: { 
+                    "≤65": 77877,   // SEPTIEMBRE 2025 (+1.9%) - Hasta 65 años
+                    ">65": 118000   // OCTUBRE 2025 - Desde 66 años en adelante
+                },
                 features: [
                     "Plan AS 300 ACTIVA SALUD",
                     "Cobertura integral",
@@ -938,12 +941,18 @@ function determinarGrupoEtarioSwiss(edad) {
 }
 
 /**
- * Determina el grupo etario para ACTIVA SALUD (igual que SWISS MEDICAL)
+ * Determina el grupo etario para ACTIVA SALUD 
  * @param {number} edad - Edad de la persona
+ * @param {object} plan - Plan específico para determinar estructura de grupos
  * @returns {string} - Grupo etario correspondiente
  */
-function determinarGrupoEtarioActiva(edad) {
-    // Para planes de ActivaSalud, solo hay un grupo etario universal
+function determinarGrupoEtarioActiva(edad, plan = null) {
+    // Si es el plan AS300, usar estructura de 2 grupos etarios
+    if (plan && plan.name === "PLAN AS 300") {
+        return edad <= 65 ? "≤65" : ">65";
+    }
+    
+    // Para otros planes de ActivaSalud, mantener grupo etario universal
     return '≤100';
 }
 
@@ -1126,7 +1135,7 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
     let precioTotal = 0;
     
     // Determinar grupo etario del titular
-    const grupoEtarioTitular = determinarGrupoEtarioActiva(edadTitular);
+    const grupoEtarioTitular = determinarGrupoEtarioActiva(edadTitular, planActiva);
     const precioBaseTitular = planActiva.preciosPorEdad[grupoEtarioTitular];
     
     // 1. Capita titular (siempre presente)
@@ -1134,16 +1143,16 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
     
     // 2. Segunda capita (pareja/cónyuge) - SIN descuento, precio completo
     if (composicionFamiliar.tienePareja && edadPareja) {
-        const grupoEtarioPareja = determinarGrupoEtarioActiva(edadPareja);
+        const grupoEtarioPareja = determinarGrupoEtarioActiva(edadPareja, planActiva);
         const precioBasePareja = planActiva.preciosPorEdad[grupoEtarioPareja];
         precioTotal += precioBasePareja * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
     }
     
     // 3. TODOS LOS HIJOS (menores y mayores) se cobran como ADULTOS - precio completo
-    // ACTIVA SALUD no tiene precios específicos para menores, solo ≤65 y >65
+    // ACTIVA SALUD: Plan AS300 tiene precios por grupos etarios (≤65 y >65), otros planes precio único
     if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
         composicionFamiliar.menores.forEach(edadMenor => {
-            const grupoEtarioMenor = determinarGrupoEtarioActiva(edadMenor);
+            const grupoEtarioMenor = determinarGrupoEtarioActiva(edadMenor, planActiva);
             const precioBaseMenor = planActiva.preciosPorEdad[grupoEtarioMenor];
             precioTotal += precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto - NO 50%
         });
@@ -1153,7 +1162,7 @@ function calcularPrecioFinalActiva(planActiva, composicionFamiliar, edadTitular,
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
         composicionFamiliar.mayores.forEach((edadHijo, index) => {
             if (edadHijo >= 21) {
-                const grupoEtarioHijo = determinarGrupoEtarioActiva(edadHijo);
+                const grupoEtarioHijo = determinarGrupoEtarioActiva(edadHijo, planActiva);
                 const precioBaseHijo = planActiva.preciosPorEdad[grupoEtarioHijo];
                 precioTotal += precioBaseHijo * plantillaSinDescuentos.segundaCapita; // 100% - SIN descuento
             }
@@ -1709,7 +1718,7 @@ function generarDesglosePrecioActiva(planActiva, composicionFamiliar, edadTitula
     };
     
     // Determinar grupo etario del titular
-    const grupoEtarioTitular = determinarGrupoEtarioActiva(edadTitular);
+    const grupoEtarioTitular = determinarGrupoEtarioActiva(edadTitular, planActiva);
     const precioBaseTitular = planActiva.preciosPorEdad[grupoEtarioTitular];
     
     // 1. Capita titular
@@ -1725,7 +1734,7 @@ function generarDesglosePrecioActiva(planActiva, composicionFamiliar, edadTitula
     
     // 2. Segunda capita (pareja/cónyuge) - SIN descuento
     if (composicionFamiliar.tienePareja && edadPareja) {
-        const grupoEtarioPareja = determinarGrupoEtarioActiva(edadPareja);
+        const grupoEtarioPareja = determinarGrupoEtarioActiva(edadPareja, planActiva);
         const precioBasePareja = planActiva.preciosPorEdad[grupoEtarioPareja];
         const precioPareja = precioBasePareja * plantillaSinDescuentos.segundaCapita;
         
@@ -1742,7 +1751,7 @@ function generarDesglosePrecioActiva(planActiva, composicionFamiliar, edadTitula
     // 3. TODOS LOS HIJOS se cobran como ADULTOS (100%)
     if (composicionFamiliar.menores && composicionFamiliar.menores.length > 0) {
         composicionFamiliar.menores.forEach((edadMenor, index) => {
-            const grupoEtarioMenor = determinarGrupoEtarioActiva(edadMenor);
+            const grupoEtarioMenor = determinarGrupoEtarioActiva(edadMenor, planActiva);
             const precioBaseMenor = planActiva.preciosPorEdad[grupoEtarioMenor];
             const precioMenor = precioBaseMenor * plantillaSinDescuentos.segundaCapita; // 100% como adulto
             
@@ -1761,7 +1770,7 @@ function generarDesglosePrecioActiva(planActiva, composicionFamiliar, edadTitula
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
         composicionFamiliar.mayores.forEach((edadHijo, index) => {
             if (edadHijo >= 21) {
-                const grupoEtarioHijo = determinarGrupoEtarioActiva(edadHijo);
+                const grupoEtarioHijo = determinarGrupoEtarioActiva(edadHijo, planActiva);
                 const precioBaseHijo = planActiva.preciosPorEdad[grupoEtarioHijo];
                 const precioHijoMayor = precioBaseHijo * plantillaSinDescuentos.segundaCapita;
                 
@@ -2561,7 +2570,7 @@ function testNuevaLogicaCotizacion() {
         prestador: 'ACTIVA SALUD',
         plan: planActiva.name,
         precioFinal: precioActiva,
-        grupoEtario: determinarGrupoEtarioActiva(edadTitular),
+        grupoEtario: determinarGrupoEtarioActiva(edadTitular, planActiva),
         tipoEstructura: 'plantilla_adultos_simple',
         nota: 'Simple: todos como adultos con 2 grupos etarios',
         desglose: desgloseActiva
@@ -3432,7 +3441,7 @@ function showPlans() {
                     prestador.tipoEstructura === "plantilla_porcentual") {
                     grupoEtarioInfo = `Titular: ${determinarGrupoEtarioSwiss(edadTitular)}`;
                 } else if (prestador.tipoEstructura === "plantilla_adultos_simple") {
-                    grupoEtarioInfo = `Titular: ${determinarGrupoEtarioActiva(edadTitular)}`;
+                    grupoEtarioInfo = `Titular: ${determinarGrupoEtarioActiva(edadTitular, plan)}`;
                 } else if (prestador.tipoEstructura === "estructura_matrimonio_hijos") {
                     grupoEtarioInfo = `Titular: ${determinarGrupoEtarioMedife(edadTitular)}`;
                 } else {
