@@ -2,9 +2,34 @@ let selectedOption = null;
 let formData = {};
 let validationErrors = {};
 
-// ===== DATOS ACTUALIZADOS SEPTIEMBRE 2025 - PRESTADORES =====
-// Sistema unificado basado en nuevos CSV con precios oficiales
-const prestadoresData = {
+// ===== SISTEMA DE PRECIOS EXTERNOS =====
+// Los precios se cargan desde precios-data.json para facilitar actualizaciones
+let prestadoresData = {};
+let preciosExternosDisponibles = false;
+
+// Función para cargar precios desde JSON externo
+async function cargarPreciosExternos() {
+    try {
+        const response = await fetch('precios-data.json');
+        if (response.ok) {
+            const data = await response.json();
+            prestadoresData = data.prestadores;
+            preciosExternosDisponibles = true;
+            console.log('✅ Precios cargados desde archivo externo:', data.version);
+            return true;
+        } else {
+            console.warn('⚠️ No se pudo cargar precios externos, usando precios internos');
+            return false;
+        }
+    } catch (error) {
+        console.warn('⚠️ Error cargando precios externos:', error.message);
+        return false;
+    }
+}
+
+// ===== DATOS INTERNOS DE RESPALDO (SEPTIEMBRE 2025) =====
+// Estos precios se usan solo si no se puede cargar el archivo externo
+const prestadoresDataRespaldo = {
     omint: {
         name: "OMINT",
         tipoEstructura: "estructura_compleja", // Precios específicos por rol
@@ -2744,12 +2769,125 @@ function cargarEjemploFormulario(tipo = 'familia') {
 
 
 // Inicialización de la aplicación
-document.addEventListener('DOMContentLoaded', function() {
-    // Cargar planes personalizados si existen
+// ================================
+// SISTEMA DE ACCESO SECRETO AL PANEL DE ADMINISTRACIÓN
+// ================================
+
+// Sistema de acceso secreto al panel de administración
+let secretKeySequence = [];
+const SECRET_CODE = ['a', 'd', 'm', 'i', 'n'];
+const SECRET_URL_PARAM = 'admin_access_2024';
+
+function initSecretAccess() {
+    // Método 1: Combinación de teclas secreta (escribir "admin")
+    document.addEventListener('keydown', function(event) {
+        secretKeySequence.push(event.key.toLowerCase());
+        
+        // Mantener solo los últimos 5 caracteres
+        if (secretKeySequence.length > SECRET_CODE.length) {
+            secretKeySequence.shift();
+        }
+        
+        // Verificar si coincide con el código secreto
+        if (secretKeySequence.join('') === SECRET_CODE.join('')) {
+            console.log('🔓 Acceso secreto activado por teclado');
+            showSecretAdminAccess();
+            secretKeySequence = []; // Limpiar secuencia
+        }
+    });
+    
+    // Método 2: URL con parámetro secreto
+    // Ejemplo: https://tu-sitio.com/?access=admin_access_2024
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('access') === SECRET_URL_PARAM) {
+        console.log('🔓 Acceso por URL secreto activado');
+        showSecretAdminAccess();
+    }
+    
+    // Método 3: Comando de consola (para desarrollador)
+    window.enableAdminAccess = function() {
+        console.log('🔓 Acceso de administrador habilitado desde consola');
+        showSecretAdminAccess();
+    };
+    
+    // Método 4: Combinación de teclas Ctrl+Shift+A
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.shiftKey && event.key === 'A') {
+            console.log('🔓 Acceso secreto por combinación de teclas');
+            showSecretAdminAccess();
+        }
+    });
+}
+
+function showSecretAdminAccess() {
+    const adminBtn = document.getElementById('secret-admin-btn');
+    if (adminBtn) {
+        // Marcar que el acceso fue autorizado
+        sessionStorage.setItem('admin_access_authorized', 'true');
+        adminBtn.style.display = 'block';
+        
+        // Mostrar mensaje temporal
+        const tempMsg = document.createElement('div');
+        tempMsg.innerHTML = '🔓 Panel de administración activado';
+        tempMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:#4caf50;color:white;padding:15px 20px;border-radius:8px;z-index:9999;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+        document.body.appendChild(tempMsg);
+        
+        setTimeout(() => {
+            if (document.body.contains(tempMsg)) {
+                document.body.removeChild(tempMsg);
+            }
+        }, 4000);
+    }
+}
+
+// Protección adicional: verificar acceso autorizado antes de mostrar panel
+function checkAdminAccess() {
+    const isAuthorized = sessionStorage.getItem('admin_access_authorized') === 'true';
+    const adminSection = document.getElementById('admin-section');
+    
+    if (!isAuthorized && adminSection && adminSection.style.display !== 'none') {
+        console.warn('⚠️ Intento de acceso no autorizado al panel de administración');
+        adminSection.style.display = 'none';
+        
+        // Mostrar mensaje de acceso denegado
+        const denyMsg = document.createElement('div');
+        denyMsg.innerHTML = '🚫 Acceso denegado';
+        denyMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:#f44336;color:white;padding:15px 20px;border-radius:8px;z-index:9999;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+        document.body.appendChild(denyMsg);
+        
+        setTimeout(() => {
+            if (document.body.contains(denyMsg)) {
+                document.body.removeChild(denyMsg);
+            }
+        }, 3000);
+    }
+}
+
+// Verificar acceso cada 5 segundos
+setInterval(checkAdminAccess, 5000);
+
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 Iniciando sistema de cotización OSPADEP...');
+    
+    // Inicializar sistema de acceso secreto
+    initSecretAccess();
+    
+    // 1. Intentar cargar precios desde archivo externo
+    const preciosExternosCargados = await cargarPreciosExternos();
+    
+    // 2. Si no se pudieron cargar precios externos, usar datos de respaldo
+    if (!preciosExternosCargados) {
+        prestadoresData = prestadoresDataRespaldo;
+        console.log('📋 Usando precios internos de respaldo');
+    }
+    
+    // 3. Cargar planes personalizados si existen
     loadCustomPlans();
+    
+    // 4. Inicializar la aplicación
     initializeApp();
     
-    // Verificar sesión activa cuando el AuthSystem esté listo
+    // 5. Verificar sesión activa cuando el AuthSystem esté listo
     setTimeout(() => {
         if (window.AuthSystem && window.AuthSystem.isLoggedIn()) {
             currentAdminMode = true;
@@ -2779,6 +2917,9 @@ document.addEventListener('DOMContentLoaded', function() {
     window.determinarGrupoEtarioMedife = determinarGrupoEtarioMedife;
     window.generarDesglosePrecioActiva = generarDesglosePrecioActiva;
     window.generarDesglosePrecioMedife = generarDesglosePrecioMedife;
+    
+    // Verificar estado del sistema de precios externos
+    verificarEstadoPreciosExternos();
     window.prestadoresData = prestadoresData;
     
 
@@ -9598,4 +9739,460 @@ function printCompactEmailWithBenefitsPDF() {
     printWindow.document.write(htmlContent);
     printWindow.document.close();
     printWindow.focus();
+}
+
+// ================================
+// SISTEMA DE PRECIOS EXTERNOS
+// ================================
+
+// Verificar estado del sistema de precios externos
+function verificarEstadoPreciosExternos() {
+    const statusElement = document.getElementById('external-status');
+    const textElement = document.getElementById('status-text');
+    const versionElement = document.getElementById('current-version');
+    
+    if (!statusElement) return; // Panel no visible aún
+    
+    if (preciosExternosDisponibles) {
+        statusElement.className = 'status-indicator active';
+        textElement.textContent = 'Precios externos cargados';
+        
+        // Intentar obtener versión del JSON
+        fetch('precios-data.json')
+            .then(response => response.json())
+            .then(data => {
+                versionElement.textContent = data.version || 'Sin versión';
+            })
+            .catch(() => {
+                versionElement.textContent = 'Error al leer versión';
+            });
+    } else {
+        statusElement.className = 'status-indicator inactive';
+        textElement.textContent = 'Usando precios internos';
+        versionElement.textContent = 'Septiembre 2025';
+    }
+}
+
+// Mostrar panel de precios externos
+function showExternalPricing() {
+    // Ocultar otras secciones
+    document.querySelectorAll('.admin-content > div').forEach(div => {
+        if (div.style) div.style.display = 'none';
+    });
+    
+    // Mostrar panel externo
+    document.getElementById('external-pricing-section').style.display = 'block';
+    
+    // Verificar estado
+    verificarEstadoPreciosExternos();
+}
+
+// Ocultar panel de precios externos
+function hideExternalPricing() {
+    document.getElementById('external-pricing-section').style.display = 'none';
+}
+
+// Cambiar tabs del panel externo
+function switchExternalTab(tabName) {
+    // Actualizar botones de navegación
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tab === tabName) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Actualizar paneles de contenido
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+        if (panel.id === `tab-${tabName}`) {
+            panel.classList.add('active');
+        }
+    });
+}
+
+// Aplicar aumentos por porcentaje a precios externos
+async function aplicarAumentosExternos() {
+    const omintPercent = parseFloat(document.getElementById('omint-percent').value) || 0;
+    const swissPercent = parseFloat(document.getElementById('swiss-percent').value) || 0;
+    const activaPercent = parseFloat(document.getElementById('activa-percent').value) || 0;
+    const medifePercent = parseFloat(document.getElementById('medife-percent').value) || 0;
+    
+    if (omintPercent === 0 && swissPercent === 0 && activaPercent === 0 && medifePercent === 0) {
+        alert('Ingresa al menos un porcentaje de aumento');
+        return;
+    }
+    
+    try {
+        // Cargar datos actuales
+        const response = await fetch('precios-data.json');
+        const data = await response.json();
+        
+        // Aplicar aumentos
+        if (omintPercent !== 0) aplicarAumentoAPrestador(data.prestadores.omint, omintPercent);
+        if (swissPercent !== 0) aplicarAumentoAPrestador(data.prestadores.swissMedical, swissPercent);
+        if (activaPercent !== 0) aplicarAumentoAPrestador(data.prestadores.activaSalud, activaPercent);
+        if (medifePercent !== 0) aplicarAumentoAPrestador(data.prestadores.medife, medifePercent);
+        
+        // Actualizar versión y fecha
+        const now = new Date();
+        data.version = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+        data.fechaActualizacion = now.toISOString().split('T')[0];
+        
+        // Agregar al historial
+        data.historialCambios.push({
+            fecha: data.fechaActualizacion,
+            descripcion: `Aumento por porcentajes: OMINT ${omintPercent}%, SWISS ${swissPercent}%, ACTIVA ${activaPercent}%, MEDIFE ${medifePercent}%`,
+            autor: 'Panel Admin'
+        });
+        
+        // Generar y descargar el nuevo JSON
+        descargarJSON(data, 'precios-data-actualizado.json');
+        
+        alert(`✅ Aumentos aplicados exitosamente!
+        
+📊 Resumen:
+• OMINT: ${omintPercent}%
+• SWISS MEDICAL: ${swissPercent}%  
+• ACTIVA SALUD: ${activaPercent}%
+• MEDIFE: ${medifePercent}%
+
+📥 Se descargó el archivo actualizado.
+Sube este archivo como 'precios-data.json' para aplicar los cambios.`);
+        
+    } catch (error) {
+        alert('Error al procesar aumentos: ' + error.message);
+    }
+}
+
+// Aplicar aumento a un prestador específico
+function aplicarAumentoAPrestador(prestador, porcentaje) {
+    if (!prestador || !prestador.planes) return;
+    
+    const factor = 1 + (porcentaje / 100);
+    
+    Object.values(prestador.planes).forEach(plan => {
+        if (plan.preciosPorEdad) {
+            // Estructura ACTIVA SALUD
+            Object.keys(plan.preciosPorEdad).forEach(grupo => {
+                if (typeof plan.preciosPorEdad[grupo] === 'number') {
+                    plan.preciosPorEdad[grupo] = Math.round(plan.preciosPorEdad[grupo] * factor);
+                } else if (typeof plan.preciosPorEdad[grupo] === 'object') {
+                    // Estructura OMINT/SWISS
+                    Object.keys(plan.preciosPorEdad[grupo]).forEach(subgrupo => {
+                        plan.preciosPorEdad[grupo][subgrupo] = Math.round(plan.preciosPorEdad[grupo][subgrupo] * factor);
+                    });
+                }
+            });
+        } else if (plan.precios) {
+            // Estructura MEDIFE
+            Object.keys(plan.precios).forEach(categoria => {
+                if (typeof plan.precios[categoria] === 'object') {
+                    Object.keys(plan.precios[categoria]).forEach(edad => {
+                        plan.precios[categoria][edad] = Math.round(plan.precios[categoria][edad] * factor);
+                    });
+                }
+            });
+        }
+    });
+}
+
+// Descargar JSON
+function descargarJSON(data, filename) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Descargar JSON actual
+async function descargarJSONExterno() {
+    try {
+        const response = await fetch('precios-data.json');
+        const data = await response.json();
+        descargarJSON(data, 'precios-data-backup.json');
+        alert('✅ Archivo JSON descargado como respaldo');
+    } catch (error) {
+        alert('Error al descargar JSON: ' + error.message);
+    }
+}
+
+// Manejar drag & drop de CSV
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function handleCSVDrop(ev) {
+    ev.preventDefault();
+    const files = ev.dataTransfer.files;
+    if (files.length > 0) {
+        procesarArchivoCSV(files[0]);
+    }
+}
+
+function handleCSVFile(event) {
+    const file = event.target.files[0];
+    if (file) {
+        procesarArchivoCSV(file);
+    }
+}
+
+function procesarArchivoCSV(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        document.getElementById('csv-content').textContent = content.substring(0, 500) + '...';
+        document.getElementById('csv-preview').style.display = 'block';
+        
+        // Guardar contenido para procesamiento
+        window.csvContent = content;
+    };
+    reader.readAsText(file);
+}
+
+// Calculadora de reversión de aumentos por prestador específico
+function calcularReversion() {
+    const prestadorSeleccionado = document.getElementById('revert-prestador').value;
+    const aumentoAnterior = parseFloat(document.getElementById('revert-calc').value);
+    
+    if (!prestadorSeleccionado) {
+        alert('Selecciona el prestador que fue afectado');
+        return;
+    }
+    
+    if (!aumentoAnterior || aumentoAnterior === 0) {
+        alert('Ingresa el porcentaje de aumento anterior');
+        return;
+    }
+    
+    // SIMPLIFICADO: Para revertir +X%, simplemente aplicar -X%
+    // Esto es más intuitivo: si subiste 2%, bajas 2% para volver al original
+    const descuentoNecesario = -aumentoAnterior;
+    const descuentoRedondeado = descuentoNecesario;
+    
+    // Mapear nombres de prestadores
+    const nombresPrestadores = {
+        'omint': 'OMINT',
+        'swiss': 'SWISS MEDICAL', 
+        'activa': 'ACTIVA SALUD',
+        'medife': 'MEDIFE'
+    };
+    
+    // Mostrar resultado específico
+    document.getElementById('original-increase').textContent = aumentoAnterior;
+    document.getElementById('selected-prestador').textContent = nombresPrestadores[prestadorSeleccionado];
+    document.getElementById('revert-percentage').textContent = descuentoRedondeado;
+    document.getElementById('prestador-target').textContent = nombresPrestadores[prestadorSeleccionado];
+    document.getElementById('calc-result').style.display = 'block';
+    
+    // Guardar para aplicar automáticamente
+    window.descuentoCalculado = {
+        prestador: prestadorSeleccionado,
+        descuento: descuentoRedondeado,
+        nombre: nombresPrestadores[prestadorSeleccionado]
+    };
+    
+    console.log(`${nombresPrestadores[prestadorSeleccionado]} - Aumento anterior: ${aumentoAnterior}% -> Descuento necesario: ${descuentoRedondeado}%`);
+}
+
+// Función simplificada para aplicar descuentos directos
+function aplicarDescuentoDirecto() {
+    const prestadorSeleccionado = document.getElementById('revert-prestador').value;
+    const porcentajeDescuento = parseFloat(document.getElementById('revert-calc').value);
+    
+    if (!prestadorSeleccionado) {
+        alert('Selecciona el prestador al que quieres aplicar el descuento');
+        return;
+    }
+    
+    if (!porcentajeDescuento || porcentajeDescuento === 0) {
+        alert('Ingresa el porcentaje de descuento a aplicar');
+        return;
+    }
+    
+    // Mapear nombres de prestadores
+    const nombresPrestadores = {
+        'omint': 'OMINT',
+        'swiss': 'SWISS MEDICAL', 
+        'activa': 'ACTIVA SALUD',
+        'medife': 'MEDIFE'
+    };
+    
+    // Confirmar la acción
+    const confirmar = confirm(`¿Aplicar un descuento del ${porcentajeDescuento}% a todos los planes de ${nombresPrestadores[prestadorSeleccionado]}?`);
+    
+    if (!confirmar) return;
+    
+    try {
+        // Cargar datos actuales
+        fetch('precios-data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Aplicar descuento (porcentaje negativo)
+                aplicarAumentoAPrestador(data.prestadores[prestadorSeleccionado], -porcentajeDescuento);
+                
+                // Actualizar fecha y versión
+                const now = new Date();
+                data.version = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+                data.fechaActualizacion = now.toISOString().split('T')[0];
+                
+                // Agregar al historial
+                data.historialCambios.push({
+                    fecha: data.fechaActualizacion,
+                    descripcion: `Descuento del ${porcentajeDescuento}% aplicado a ${nombresPrestadores[prestadorSeleccionado]}`,
+                    autor: "Panel de Administración"
+                });
+                
+                // Descargar archivo actualizado
+                descargarJSON(data, `precios-data-${prestadorSeleccionado}-descuento-${porcentajeDescuento}%.json`);
+                
+                alert(`✅ Descuento del ${porcentajeDescuento}% aplicado a ${nombresPrestadores[prestadorSeleccionado]}!
+
+📥 Se descargó el archivo actualizado.
+Sube este archivo como 'precios-data.json' para aplicar los cambios.`);
+                
+                // Limpiar campos
+                document.getElementById('revert-calc').value = '';
+                document.getElementById('revert-prestador').value = '';
+                
+            })
+            .catch(error => {
+                alert('Error al aplicar descuento: ' + error.message);
+            });
+            
+    } catch (error) {
+        alert('Error al aplicar descuento: ' + error.message);
+    }
+}
+
+// Aplicar el descuento calculado automáticamente al prestador específico
+function aplicarDescuentoCalculado() {
+    if (!window.descuentoCalculado) {
+        alert('Primero calcula el descuento necesario');
+        return;
+    }
+    
+    const { prestador, descuento, nombre } = window.descuentoCalculado;
+    
+    // Mapear a los IDs de los campos
+    const camposInputs = {
+        'omint': 'omint-percent',
+        'swiss': 'swiss-percent',
+        'activa': 'activa-percent', 
+        'medife': 'medife-percent'
+    };
+    
+    const inputId = camposInputs[prestador];
+    if (!inputId) {
+        alert('Error: Prestador no reconocido');
+        return;
+    }
+    
+    // Limpiar otros campos para evitar confusión
+    Object.values(camposInputs).forEach(id => {
+        if (id !== inputId) {
+            document.getElementById(id).value = '';
+        }
+    });
+    
+    // Aplicar el descuento calculado al campo específico
+    document.getElementById(inputId).value = descuento;
+    
+    // Mostrar confirmación específica
+    alert(`✅ Descuento de ${descuento}% aplicado al campo ${nombre}.
+
+Esto revertirá el aumento anterior que aplicaste a ${nombre}.
+
+Ahora haz clic en "Calcular y Generar Archivo" para crear el archivo actualizado.`);
+    
+    // Highlight del campo modificado
+    const targetInput = document.getElementById(inputId);
+    targetInput.style.backgroundColor = '#e8f5e8';
+    targetInput.style.borderColor = '#4caf50';
+    
+    // Scroll hacia el botón principal
+    document.querySelector('.btn-primary.large').scrollIntoView({ behavior: 'smooth' });
+    
+    // Remover highlight después de 3 segundos
+    setTimeout(() => {
+        targetInput.style.backgroundColor = '';
+        targetInput.style.borderColor = '';
+    }, 3000);
+}
+
+// Función universal para corregir precios exactos (eliminar errores de redondeo)
+async function corregirPrecisionUniversal() {
+    const prestadorSeleccionado = document.getElementById('precision-prestador').value;
+    
+    if (!prestadorSeleccionado) {
+        alert('Por favor, selecciona un prestador para restaurar sus precios originales');
+        return;
+    }
+    try {
+        // Cargar datos actuales
+        const response = await fetch('precios-data.json');
+        const data = await response.json();
+        
+        // Mapear nombres de prestadores
+        const nombresPrestadores = {
+            'omint': 'OMINT',
+            'swiss': 'SWISS MEDICAL',
+            'activa': 'ACTIVA SALUD', 
+            'medife': 'MEDIFE'
+        };
+        
+        // Confirmar la acción
+        const confirmar = confirm(`¿Restaurar los precios originales exactos de ${nombresPrestadores[prestadorSeleccionado]}?
+
+Esto eliminará cualquier error de redondeo acumulativo y volverá a los precios base de Septiembre 2025.`);
+        
+        if (!confirmar) return;
+        
+        // Obtener precios originales del prestador desde el respaldo
+        const preciosOriginales = prestadoresDataRespaldo[prestadorSeleccionado];
+        
+        if (!preciosOriginales) {
+            alert('Error: No se encontraron los precios originales para este prestador');
+            return;
+        }
+        
+        // Restaurar precios exactos del prestador seleccionado
+        data.prestadores[prestadorSeleccionado] = JSON.parse(JSON.stringify(preciosOriginales));
+        
+        // Actualizar fecha y versión
+        const now = new Date();
+        data.version = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+        data.fechaActualizacion = now.toISOString().split('T')[0];
+        
+        // Agregar al historial
+        data.historialCambios.push({
+            fecha: data.fechaActualizacion,
+            descripcion: `Corrección de precisión ${nombresPrestadores[prestadorSeleccionado]} - Restauración de precios exactos originales`,
+            autor: "Sistema de Corrección"
+        });
+        
+        // Generar y descargar el JSON corregido
+        descargarJSON(data, `precios-data-${prestadorSeleccionado}-corregido.json`);
+        
+        alert(`✅ Precios exactos de ${nombresPrestadores[prestadorSeleccionado]} restaurados!
+
+📊 Corrección aplicada:
+• Eliminados errores de redondeo acumulativo
+• Restaurados precios originales exactos (Septiembre 2025)
+• Todos los planes de ${nombresPrestadores[prestadorSeleccionado]} corregidos
+
+📥 Se descargó: precios-data-${prestadorSeleccionado}-corregido.json
+Sube este archivo como 'precios-data.json' para aplicar la corrección.`);
+        
+        // Limpiar selector
+        document.getElementById('precision-prestador').value = '';
+        
+    } catch (error) {
+        alert('Error al corregir precios del prestador: ' + error.message);
+    }
 }

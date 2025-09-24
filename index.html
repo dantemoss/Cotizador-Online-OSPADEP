@@ -22,12 +22,13 @@
                 <p>Obra Social del Personal de Aeronavegación de Entes Privados</p>
             </div>
             <div class="user-section">
-                <!-- Cuando no hay usuario logueado (descomentar para que se muestre el login) -->
-                <!-- <div class="login-section" id="login-section">
-                    <button class="header-login-btn" onclick="showAdminLogin()">
+                <!-- Cuando no hay usuario logueado -->
+                <div class="login-section" id="login-section">
+                    <!-- Panel de administración oculto - Solo accesible por método secreto -->
+                    <button class="header-login-btn" onclick="showAdminLogin()" style="display: none;" id="secret-admin-btn">
                         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                     </button>
-                </div> -->
+                </div>
                 <!-- Cuando hay usuario logueado -->
                 <div class="user-info-section" id="user-info-section" style="display: none;">
                     <div class="user-greeting">
@@ -42,6 +43,14 @@
                 </div>
             </div>
         </header>
+
+        <!-- Banner de información de precios -->
+        <div class="price-update-banner">
+            <div class="banner-content">
+                <i class="fas fa-calendar-alt banner-icon"></i>
+                <span class="banner-text">Precios actualizados para <strong>OCTUBRE</strong> - Mes actual de cotización</span>
+            </div>
+        </div>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -264,25 +273,352 @@
                         <div class="admin-controls">
                             <div class="admin-actions">
                                 <div class="admin-actions-row">
-                                    <button class="admin-btn increase" onclick="showBulkIncrease()">
-                                        <i class="fas fa-arrow-up"></i> Aplicar Aumento
-                                    </button>
-                                    <button class="admin-btn decrease" onclick="showBulkDecrease()">
-                                        <i class="fas fa-arrow-down"></i> Aplicar Descuento
+                                    <button class="admin-btn primary large" onclick="showExternalPricing()">
+                                        <i class="fas fa-cogs"></i> Gestión de Precios
                                     </button>
                                 </div>
                                 <div class="admin-actions-row">
-                                    <button class="admin-btn secondary" onclick="showIndividualUpdate()">
-                                        <i class="fas fa-edit"></i> Edición Individual
-                                    </button>
-                                    <button class="admin-btn warning" onclick="resetPrices()">
-                                        <i class="fas fa-undo"></i> Restaurar Precios Originales
+                                    <button class="admin-btn secondary" onclick="goToMainPage()">
+                                        <i class="fas fa-arrow-left"></i> Volver al Cotizador
                                     </button>
                                 </div>
-                                <div class="admin-actions-row">
-                                    <button class="admin-btn export" onclick="exportPrices()">
-                                        <i class="fas fa-download"></i> Exportar Configuración
+                            </div>
+                        </div>
+
+                        <!-- Nueva Sección: Gestión de Precios Externos -->
+                        <div class="external-pricing-section" id="external-pricing-section" style="display: none;">
+                            <div class="external-pricing-container">
+                                <!-- Header del Panel -->
+                                <div class="external-header">
+                                    <div class="header-content">
+                                        <div class="header-left">
+                                            <div class="header-icon">
+                                                <i class="fas fa-cogs"></i>
+                                            </div>
+                                            <div class="header-text">
+                                                <h2>Gestión de Precios</h2>
+                                                <p>Sistema avanzado de actualización de precios</p>
+                                            </div>
+                                        </div>
+                                        <div class="header-right">
+                                            <div class="status-card">
+                                                <div class="status-indicator active" id="external-status"></div>
+                                                <div class="status-details">
+                                                    <span class="status-label" id="status-text">Precios externos cargados</span>
+                                                    <span class="version-label">v<span id="current-version">2025-09</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Navegación de Pestañas -->
+                                <div class="external-nav">
+                                    <button class="nav-tab active" data-tab="percentage" onclick="switchExternalTab('percentage')">
+                                        <i class="fas fa-percentage"></i>
+                                        <span>Actualización por Porcentaje</span>
+                                        <small>La forma más rápida</small>
                                     </button>
+                                    <button class="nav-tab" data-tab="csv" onclick="switchExternalTab('csv')">
+                                        <i class="fas fa-file-csv"></i>
+                                        <span>Importar desde CSV</span>
+                                        <small>Usa tus archivos existentes</small>
+                                    </button>
+                                    <button class="nav-tab" data-tab="manual" onclick="switchExternalTab('manual')">
+                                        <i class="fas fa-code"></i>
+                                        <span>Editor Manual</span>
+                                        <small>Control total</small>
+                                    </button>
+                                </div>
+
+                                <!-- Contenido de las Pestañas -->
+                                <div class="external-content">
+                                    
+                                    <!-- Tab 1: Actualización por Porcentaje -->
+                                    <div class="tab-panel active" id="tab-percentage">
+                                        <div class="tab-panel-header">
+                                            <h4><i class="fas fa-calculator"></i> Aplicar Aumentos por Porcentaje</h4>
+                                            <p>Ingresa el porcentaje de aumento para cada prestador. Usa números positivos para aumentos y negativos para descuentos.</p>
+                                        </div>
+                                        
+                                        <div class="prestadores-grid">
+                                            <!-- OMINT Card -->
+                                            <div class="prestador-card omint-card">
+                                                <div class="prestador-header">
+                                                    <div class="prestador-logo">
+                                                        <img src="logosEmpresas/omint.png" alt="OMINT Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                        <div class="logo-circle omint-logo" style="display: none;"><span>O</span></div>
+                                                    </div>
+                                                    <div class="prestador-info">
+                                                        <h5>OMINT</h5>
+                                                        <span class="prestador-subtitle">Medicina Prepaga</span>
+                                                    </div>
+                                                </div>
+                                                <div class="prestador-input-container">
+                                                    <div class="input-group">
+                                                        <input type="number" id="omint-percent" step="0.1" placeholder="0.0" class="prestador-input">
+                                                        <span class="input-suffix">%</span>
+                                                    </div>
+                                                    <small class="input-help">Ej: 3.5 para aumento del 3.5%</small>
+                                                </div>
+                                            </div>
+
+                                            <!-- SWISS MEDICAL Card -->
+                                            <div class="prestador-card swiss-card">
+                                                <div class="prestador-header">
+                                                    <div class="prestador-logo">
+                                                        <img src="logosEmpresas/swissmedical.png" alt="Swiss Medical Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                        <div class="logo-circle swiss-logo" style="display: none;"><span>S</span></div>
+                                                    </div>
+                                                    <div class="prestador-info">
+                                                        <h5>SWISS MEDICAL</h5>
+                                                        <span class="prestador-subtitle">Medicina Prepaga</span>
+                                                    </div>
+                                                </div>
+                                                <div class="prestador-input-container">
+                                                    <div class="input-group">
+                                                        <input type="number" id="swiss-percent" step="0.1" placeholder="0.0" class="prestador-input">
+                                                        <span class="input-suffix">%</span>
+                                                    </div>
+                                                    <small class="input-help">Ej: 2.8 para aumento del 2.8%</small>
+                                                </div>
+                                            </div>
+
+                                            <!-- ACTIVA SALUD Card -->
+                                            <div class="prestador-card activa-card">
+                                                <div class="prestador-header">
+                                                    <div class="prestador-logo">
+                                                        <img src="logosEmpresas/activasalud.png" alt="Activa Salud Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                        <div class="logo-circle activa-logo" style="display: none;"><span>A</span></div>
+                                                    </div>
+                                                    <div class="prestador-info">
+                                                        <h5>ACTIVA SALUD</h5>
+                                                        <span class="prestador-subtitle">Medicina Prepaga</span>
+                                                    </div>
+                                                </div>
+                                                <div class="prestador-input-container">
+                                                    <div class="input-group">
+                                                        <input type="number" id="activa-percent" step="0.1" placeholder="0.0" class="prestador-input">
+                                                        <span class="input-suffix">%</span>
+                                                    </div>
+                                                    <small class="input-help">Ej: 1.9 para aumento del 1.9%</small>
+                                                </div>
+                                            </div>
+
+                                            <!-- MEDIFE Card -->
+                                            <div class="prestador-card medife-card">
+                                                <div class="prestador-header">
+                                                    <div class="prestador-logo">
+                                                        <img src="logosEmpresas/medife.png" alt="MEDIFE Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                        <div class="logo-circle medife-logo" style="display: none;"><span>M</span></div>
+                                                    </div>
+                                                    <div class="prestador-info">
+                                                        <h5>MEDIFE</h5>
+                                                        <span class="prestador-subtitle">Medicina Prepaga</span>
+                                                    </div>
+                                                </div>
+                                                <div class="prestador-input-container">
+                                                    <div class="input-group">
+                                                        <input type="number" id="medife-percent" step="0.1" placeholder="0.0" class="prestador-input">
+                                                        <span class="input-suffix">%</span>
+                                                    </div>
+                                                    <small class="input-help">Ej: 3.6 para aumento del 3.6%</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sección Aplicar Descuento -->
+                                        <div class="admin-tool-section discount-section">
+                                            <div class="tool-header">
+                                                <div class="tool-icon discount-icon">
+                                                    <i class="fas fa-percentage"></i>
+                                                </div>
+                                                <div class="tool-info">
+                                                    <h4>Aplicar Descuento</h4>
+                                                    <p>Reduce precios con porcentajes directos. Operación simétrica a los aumentos.</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="tool-content">
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        <i class="fas fa-building"></i>
+                                                        Prestador afectado
+                                                    </label>
+                                                    <select id="revert-prestador" class="form-select">
+                                                        <option value="">Seleccionar prestador</option>
+                                                        <option value="omint">OMINT</option>
+                                                        <option value="swiss">SWISS MEDICAL</option>
+                                                        <option value="activa">ACTIVA SALUD</option>
+                                                        <option value="medife">MEDIFE</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        <i class="fas fa-minus-circle"></i>
+                                                        Porcentaje de descuento
+                                                    </label>
+                                                    <div class="input-with-button">
+                                                        <input type="number" id="revert-calc" step="0.1" placeholder="Ej: 2.5" class="form-input">
+                                                        <span class="input-addon">%</span>
+                                                        <button class="btn-primary" onclick="aplicarDescuentoDirecto()">
+                                                            <i class="fas fa-arrow-down"></i>
+                                                            Aplicar
+                                                        </button>
+                                                    </div>
+                                                    <small class="form-hint">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        Si aplicaste +2.5% de aumento, usa 2.5 para regresar al precio original
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sección Corrección de Precisión -->
+                                        <div class="admin-tool-section precision-section">
+                                            <div class="tool-header">
+                                                <div class="tool-icon precision-icon">
+                                                    <i class="fas fa-crosshairs"></i>
+                                                </div>
+                                                <div class="tool-info">
+                                                    <h4>Corrección de Precisión</h4>
+                                                    <p>Restaura los precios originales exactos eliminando errores de redondeo acumulativo.</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="tool-content">
+                                                <div class="warning-card">
+                                                    <div class="warning-icon">
+                                                        <i class="fas fa-exclamation-triangle"></i>
+                                                    </div>
+                                                    <div class="warning-text">
+                                                        <strong>¿Precios inexactos?</strong>
+                                                        <p>Múltiples aumentos/descuentos pueden crear pequeñas variaciones por redondeo.</p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        <i class="fas fa-building"></i>
+                                                        Prestador a restaurar
+                                                    </label>
+                                                    <select id="precision-prestador" class="form-select">
+                                                        <option value="">Seleccionar prestador</option>
+                                                        <option value="omint">OMINT</option>
+                                                        <option value="swiss">SWISS MEDICAL</option>
+                                                        <option value="activa">ACTIVA SALUD</option>
+                                                        <option value="medife">MEDIFE</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="action-group">
+                                                    <button class="btn-warning" onclick="corregirPrecisionUniversal()">
+                                                        <i class="fas fa-undo-alt"></i>
+                                                        Restaurar Precios Originales
+                                                    </button>
+                                                    <small class="form-hint">
+                                                        <i class="fas fa-shield-alt"></i>
+                                                        Esta acción reemplazará todos los precios del prestador con los valores originales exactos
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="action-section">
+                                            <button class="btn-primary large" onclick="aplicarAumentosExternos()">
+                                                <i class="fas fa-calculator"></i>
+                                                <span>Calcular y Generar Archivo</span>
+                                            </button>
+                                            <p class="action-help">Se descargará un archivo JSON actualizado que deberás subir como 'precios-data.json'</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tab 2: Importar CSV -->
+                                    <div class="tab-panel" id="tab-csv">
+                                        <div class="tab-panel-header">
+                                            <h4><i class="fas fa-upload"></i> Importar Precios desde CSV</h4>
+                                            <p>Arrastra tu archivo CSV o selecciónalo para procesar los precios automáticamente.</p>
+                                        </div>
+                                        
+                                        <div class="csv-upload-zone">
+                                            <div class="upload-area" ondrop="handleCSVDrop(event)" ondragover="allowDrop(event)">
+                                                <div class="upload-icon">
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                </div>
+                                                <div class="upload-text">
+                                                    <h5>Arrastra tu archivo CSV aquí</h5>
+                                                    <p>o haz clic para seleccionar</p>
+                                                </div>
+                                                <input type="file" id="csv-file" accept=".csv" onchange="handleCSVFile(event)" style="display: none;">
+                                                <button class="btn-outline" onclick="document.getElementById('csv-file').click()">
+                                                    <i class="fas fa-folder-open"></i>
+                                                    Seleccionar Archivo
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="csv-preview-section" id="csv-preview" style="display: none;">
+                                            <h5><i class="fas fa-eye"></i> Vista Previa del Archivo</h5>
+                                            <div class="csv-content-preview">
+                                                <pre id="csv-content"></pre>
+                                            </div>
+                                            <div class="action-section">
+                                                <button class="btn-primary" onclick="procesarCSVExterno()">
+                                                    <i class="fas fa-cogs"></i>
+                                                    <span>Procesar CSV</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tab 3: Editor Manual -->
+                                    <div class="tab-panel" id="tab-manual">
+                                        <div class="tab-panel-header">
+                                            <h4><i class="fas fa-edit"></i> Editor JSON Manual</h4>
+                                            <p>Edita directamente el archivo JSON de precios para cambios específicos.</p>
+                                        </div>
+                                        
+                                        <div class="json-editor-section">
+                                            <div class="editor-toolbar">
+                                                <button class="btn-outline small" onclick="cargarJSONActual()">
+                                                    <i class="fas fa-sync-alt"></i>
+                                                    Cargar Actual
+                                                </button>
+                                                <div class="editor-info">
+                                                    <i class="fas fa-info-circle"></i>
+                                                    <span>Edita con cuidado - Formato JSON requerido</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="json-editor-container">
+                                                <textarea id="json-editor" rows="25" placeholder="Haz clic en 'Cargar Actual' para ver el contenido del archivo precios-data.json..."></textarea>
+                                            </div>
+                                            
+                                            <div class="action-section">
+                                                <button class="btn-primary" onclick="guardarJSONExterno()">
+                                                    <i class="fas fa-save"></i>
+                                                    <span>Generar Archivo Actualizado</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Footer con Acciones Principales -->
+                                <div class="external-footer">
+                                    <div class="footer-left">
+                                        <button class="btn-secondary" onclick="hideExternalPricing()">
+                                            <i class="fas fa-arrow-left"></i>
+                                            Volver al Panel
+                                        </button>
+                                    </div>
+                                    <div class="footer-right">
+                                        <button class="btn-outline" onclick="descargarJSONExterno()">
+                                            <i class="fas fa-download"></i>
+                                            Descargar Respaldo
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -376,21 +712,7 @@
                             </div>
                         </div>
 
-                        <!-- Histórico de cambios -->
-                        <div class="price-history">
-                            <h3><i class="fas fa-history"></i> Histórico de Cambios</h3>
-                            <div class="history-list" id="price-history-list">
-                                <!-- El histórico se generará dinámicamente -->
-                            </div>
-                        </div>
-
-                        <!-- Vista actual de precios -->
-                        <div class="current-prices">
-                            <h3><i class="fas fa-list"></i> Precios Actuales</h3>
-                            <div class="prices-grid" id="current-prices-grid">
-                                <!-- Los precios actuales se mostrarán aquí -->
-                            </div>
-                        </div>
+                        <!-- Secciones de histórico y precios eliminadas - Solo funciona el sistema de precios externos -->
                     </div>
                 </div>
             </div>
@@ -452,69 +774,17 @@
                             <div class="control-section">
                                 <h3><i class="fas fa-cogs"></i> Controles del Sistema</h3>
                                 <div class="control-buttons">
-                                    <button class="control-btn" onclick="showUserManagement()">
-                                        <i class="fas fa-users-cog"></i> Gestionar Usuarios
+                                    <button class="control-btn primary" onclick="showExternalPricing()">
+                                        <i class="fas fa-cogs"></i> Gestión de Precios
                                     </button>
-                                    <button class="control-btn" onclick="showAuditLog()">
-                                        <i class="fas fa-search"></i> Ver Registro de Auditoría
-                                    </button>
-                                    <button class="control-btn" onclick="showUserActivity()">
-                                        <i class="fas fa-user-friends"></i> Actividad de Usuarios
-                                    </button>
-                                    <button class="control-btn" onclick="exportFullData()">
-                                        <i class="fas fa-download"></i> Exportar Todo
-                                    </button>
-                                    <button class="control-btn warning" onclick="clearAuditLog()">
-                                        <i class="fas fa-trash"></i> Limpiar Auditoría
+                                    <button class="control-btn secondary" onclick="goToMainPage()">
+                                        <i class="fas fa-arrow-left"></i> Volver al Cotizador
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Registro de auditoría -->
-                        <div class="audit-log-section" id="audit-log-section" style="display: none;">
-                            <div class="audit-header">
-                                <h3><i class="fas fa-list-alt"></i> Registro de Auditoría</h3>
-                                <div class="audit-filters">
-                                    <select id="audit-user-filter">
-                                        <option value="">Todos los usuarios</option>
-                                    </select>
-                                    <select id="audit-action-filter">
-                                        <option value="">Todas las acciones</option>
-                                    </select>
-                                    <input type="date" id="audit-date-from" />
-                                    <input type="date" id="audit-date-to" />
-                                    <button class="filter-btn" onclick="applyAuditFilters()">
-                                        <i class="fas fa-filter"></i> Filtrar
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="audit-log-list" id="audit-log-list">
-                                <!-- Los registros se generarán dinámicamente -->
-                            </div>
-                        </div>
-
-                        <!-- Actividad de usuarios -->
-                        <div class="user-activity-section" id="user-activity-section" style="display: none;">
-                            <h3><i class="fas fa-chart-bar"></i> Actividad de Usuarios</h3>
-                            <div class="user-activity-list" id="user-activity-list">
-                                <!-- La actividad se generará dinámicamente -->
-                            </div>
-                        </div>
-
-                        <!-- Gestión de usuarios -->
-                        <div class="user-management-section" id="user-management-section" style="display: none;">
-                            <div class="user-management-header">
-                                <h3><i class="fas fa-users-cog"></i> Gestión de Usuarios</h3>
-                                <button class="add-user-btn" onclick="showCreateUserModal()">
-                                    <i class="fas fa-user-plus"></i> Crear Usuario
-                                </button>
-                            </div>
-                            
-                            <div class="users-grid" id="users-grid">
-                                <!-- Los usuarios se generarán dinámicamente -->
-                            </div>
-                        </div>
+                        <!-- Secciones de SuperAdmin eliminadas - Solo funciona el sistema de precios externos -->
                     </div>
                 </div>
             </div>
@@ -548,12 +818,7 @@
                                 <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                             </button>
                         </div>
-                        <div class="login-help">
-                            <small>
-                                <i class="fas fa-info-circle"></i>
-                                Usuario por defecto: <strong>superadmin</strong> / Contraseña: <strong>superadmin2024</strong>
-                            </small>
-                        </div>
+                        <!-- Credenciales removidas por seguridad -->
                     </div>
                 </div>
             </div>

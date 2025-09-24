@@ -1,0 +1,575 @@
+{
+  "version": "2025-09",
+  "fechaActualizacion": "2025-09-24",
+  "prestadores": {
+    "omint": {
+      "name": "OMINT",
+      "tipoEstructura": "estructura_compleja",
+      "planes": {
+        "plan2500": {
+          "name": "PLAN 2500",
+          "type": "omint",
+          "preciosPorEdad": {
+            "0-25": {
+              "adultoConyugue": 84210,
+              "hijo1Menor": 73343,
+              "hijo2MasMenores": 63417
+            },
+            "26-35": {
+              "adultoConyugue": 120666,
+              "hijo1Menor": 73343,
+              "hijo2MasMenores": 63417
+            },
+            "36-54": {
+              "adultoConyugue": 142443,
+              "hijo1Menor": 73343,
+              "hijo2MasMenores": 63417
+            },
+            "55-59": {
+              "adultoConyugue": 242637,
+              "hijo1Menor": 73343,
+              "hijo2MasMenores": 63417
+            },
+            "60+": {
+              "adultoConyugue": 375163,
+              "hijo1Menor": 73343,
+              "hijo2MasMenores": 63417
+            }
+          },
+          "features": [
+            "Plan económico OMINT",
+            "Red de prestadores nivel 2500",
+            "Consultas médicas",
+            "Emergencias 24hs",
+            "Estudios básicos",
+            "Ideal para presupuestos ajustados"
+          ],
+          "recommended": false
+        },
+        "plan4500": {
+          "name": "PLAN 4500",
+          "type": "omint",
+          "preciosPorEdad": {
+            "0-25": {
+              "adultoConyugue": 113392,
+              "hijo1Menor": 98722,
+              "hijo2MasMenores": 85204
+            },
+            "26-35": {
+              "adultoConyugue": 164378,
+              "hijo1Menor": 98722,
+              "hijo2MasMenores": 85204
+            },
+            "36-54": {
+              "adultoConyugue": 192969,
+              "hijo1Menor": 98722,
+              "hijo2MasMenores": 85204
+            },
+            "55-59": {
+              "adultoConyugue": 332673,
+              "hijo1Menor": 98722,
+              "hijo2MasMenores": 85204
+            },
+            "60+": {
+              "adultoConyugue": 504883,
+              "hijo1Menor": 98722,
+              "hijo2MasMenores": 85204
+            }
+          },
+          "features": [
+            "Plan intermedio OMINT",
+            "Red de prestadores nivel 4500",
+            "Consultas médicas",
+            "Emergencias 24hs",
+            "Estudios de mediana complejidad",
+            "Ideal para familias"
+          ],
+          "recommended": false
+        },
+        "plan6500": {
+          "name": "PLAN 6500",
+          "type": "omint",
+          "preciosPorEdad": {
+            "0-25": {
+              "adultoConyugue": 143971,
+              "hijo1Menor": 125857,
+              "hijo2MasMenores": 109287
+            },
+            "26-35": {
+              "adultoConyugue": 206020,
+              "hijo1Menor": 125857,
+              "hijo2MasMenores": 109287
+            },
+            "36-54": {
+              "adultoConyugue": 241269,
+              "hijo1Menor": 125857,
+              "hijo2MasMenores": 109287
+            },
+            "55-59": {
+              "adultoConyugue": 404401,
+              "hijo1Menor": 125857,
+              "hijo2MasMenores": 109287
+            },
+            "60+": {
+              "adultoConyugue": 602237,
+              "hijo1Menor": 125857,
+              "hijo2MasMenores": 109287
+            }
+          },
+          "features": [
+            "Cobertura integral OMINT",
+            "Red de prestadores nivel 6500",
+            "Internación en habitación privada",
+            "Consultas médicas sin límite",
+            "Estudios de alta complejidad",
+            "Emergencias 24hs",
+            "Cobertura odontológica completa",
+            "Medicina preventiva"
+          ],
+          "recommended": true
+        },
+        "plan8500": {
+          "name": "PLAN 8500",
+          "type": "omint",
+          "preciosPorEdad": {
+            "0-25": {
+              "adultoConyugue": 247566,
+              "hijo1Menor": 217070,
+              "hijo2MasMenores": 189337
+            },
+            "26-35": {
+              "adultoConyugue": 329998,
+              "hijo1Menor": 217070,
+              "hijo2MasMenores": 189337
+            },
+            "36-54": {
+              "adultoConyugue": 434391,
+              "hijo1Menor": 217070,
+              "hijo2MasMenores": 189337
+            },
+            "55-59": {
+              "adultoConyugue": 605333,
+              "hijo1Menor": 217070,
+              "hijo2MasMenores": 189337
+            },
+            "60+": {
+              "adultoConyugue": 825143,
+              "hijo1Menor": 217070,
+              "hijo2MasMenores": 189337
+            }
+          },
+          "features": [
+            "Plan premium OMINT",
+            "Red de prestadores nivel 8500",
+            "Internación en habitación privada",
+            "Consultas médicas sin límite",
+            "Estudios de alta complejidad",
+            "Emergencias 24hs",
+            "Cobertura odontológica completa",
+            "Medicina preventiva premium"
+          ],
+          "recommended": false
+        },
+        "planComunidad": {
+          "name": "PLAN COMUNIDAD SIN COPAGO",
+          "type": "omint",
+          "preciosPorEdad": {
+            "0-25": {
+              "adultoConyugue": 85444,
+              "hijo1Menor": 74290,
+              "hijo2MasMenores": 64146
+            },
+            "26-35": {
+              "adultoConyugue": 122133,
+              "hijo1Menor": 74290,
+              "hijo2MasMenores": 64146
+            },
+            "36-54": {
+              "adultoConyugue": 144332,
+              "hijo1Menor": 74290,
+              "hijo2MasMenores": 64146
+            },
+            "55-59": {
+              "adultoConyugue": 244528,
+              "hijo1Menor": 74290,
+              "hijo2MasMenores": 64146
+            },
+            "60+": {
+              "adultoConyugue": 379914,
+              "hijo1Menor": 74290,
+              "hijo2MasMenores": 64146
+            }
+          },
+          "features": [
+            "Plan comunitario OMINT",
+            "Sin copagos en consultas",
+            "Red de prestadores comunitarios",
+            "Cobertura básica integral",
+            "Emergencias 24hs",
+            "Estudios básicos incluidos",
+            "Ideal para familias jóvenes"
+          ],
+          "recommended": false
+        }
+      }
+    },
+    "swissMedical": {
+      "name": "SWISS MEDICAL",
+      "tipoEstructura": "plantilla_adultos_solo",
+      "planes": {
+        "po62": {
+          "name": "PLAN PO62",
+          "type": "swiss_medical",
+          "preciosPorEdad": {
+            "≤65": 252104,
+            ">65": 732555
+          },
+          "features": [
+            "Cobertura integral SWISS MEDICAL",
+            "Red de prestadores PO62",
+            "Consultas médicas sin límite",
+            "Internación en habitación privada",
+            "Emergencias 24hs",
+            "Estudios de diagnóstico",
+            "Cobertura odontológica"
+          ],
+          "recommended": false
+        },
+        "po64": {
+          "name": "PLAN PO64",
+          "type": "swiss_medical",
+          "preciosPorEdad": {
+            "≤65": 302302,
+            ">65": 877189
+          },
+          "features": [
+            "Cobertura premium SWISS MEDICAL",
+            "Red de prestadores PO64",
+            "Consultas médicas sin límite",
+            "Internación en habitación privada",
+            "Emergencias 24hs prioritarias",
+            "Estudios de alta complejidad",
+            "Cobertura odontológica completa",
+            "Medicina preventiva"
+          ],
+          "recommended": true
+        },
+        "sb04": {
+          "name": "PLAN SB04",
+          "type": "swiss_medical",
+          "preciosPorEdad": {
+            "≤65": 198817,
+            ">65": 543687
+          },
+          "features": [
+            "Cobertura básica SWISS MEDICAL",
+            "Red de prestadores SB04",
+            "Consultas médicas",
+            "Emergencias 24hs",
+            "Estudios básicos",
+            "Ideal para familias jóvenes"
+          ],
+          "recommended": false
+        }
+      }
+    },
+    "swNubial": {
+      "name": "SW NUBIAL",
+      "tipoEstructura": "plantilla_adultos_simple",
+      "planes": {
+        "ms": {
+          "name": "PLAN MS",
+          "type": "sw_nubial",
+          "preciosPorEdad": {
+            "≤65": 163772,
+            ">65": 465259
+          },
+          "features": [
+            "Plan SW NUBIAL exclusivo",
+            "Solo Capital Federal y GBA",
+            "Cobertura básica integral",
+            "Emergencias 24hs",
+            "Consultas médicas",
+            "Red específica SW NUBIAL",
+            "Plan económico para CABA/GBA"
+          ],
+          "recommended": false
+        }
+      }
+    },
+    "swiss": {
+      "name": "SWISS",
+      "tipoEstructura": "plantilla_adultos_simple",
+      "planes": {
+        "sb02": {
+          "name": "PLAN SB02",
+          "type": "swiss",
+          "preciosPorEdad": {
+            "≤65": 190363,
+            ">65": 645910
+          },
+          "features": [
+            "Plan SWISS básico",
+            "Cobertura nacional",
+            "Emergencias 24hs",
+            "Consultas médicas",
+            "Estudios diagnósticos",
+            "Red SWISS",
+            "Plan económico"
+          ],
+          "recommended": false
+        }
+      }
+    },
+    "activaSalud": {
+      "name": "ACTIVA SALUD",
+      "tipoEstructura": "estructura_compleja",
+      "planes": {
+        "as25": {
+          "name": "PLAN AS 25",
+          "type": "activa_salud",
+          "preciosPorEdad": {
+            "≤100": 68775
+          },
+          "features": [
+            "Plan básico ACTIVA SALUD",
+            "Consultas médicas básicas",
+            "Emergencias 24hs",
+            "Estudios de laboratorio",
+            "Red de prestadores ACTIVA",
+            "Ideal para jóvenes"
+          ],
+          "recommended": false
+        },
+        "as300": {
+          "name": "PLAN AS 300",
+          "type": "activa_salud",
+          "preciosPorEdad": {
+            "≤100": 79357
+          },
+          "features": [
+            "Plan AS 300 ACTIVA SALUD",
+            "Cobertura integral",
+            "Emergencias 24hs",
+            "Consultas ilimitadas",
+            "Estudios diagnósticos",
+            "Internación completa"
+          ],
+          "recommended": false
+        },
+        "as700": {
+          "name": "PLAN AS 700",
+          "type": "activa_salud",
+          "preciosPorEdad": {
+            "≤100": 89938
+          },
+          "features": [
+            "Plan AS 700 ACTIVA SALUD",
+            "Cobertura superior",
+            "Todas las especialidades",
+            "Cirugías complejas",
+            "Medicina de alta complejidad",
+            "Red premium"
+          ],
+          "recommended": false
+        },
+        "as800": {
+          "name": "PLAN AS 800",
+          "type": "activa_salud",
+          "preciosPorEdad": {
+            "≤100": 111100
+          },
+          "features": [
+            "Plan AS 800 ACTIVA SALUD",
+            "Máxima cobertura",
+            "Sin límites",
+            "Medicina especializada",
+            "Tratamientos avanzados",
+            "VIP access"
+          ],
+          "recommended": false
+        },
+        "as900": {
+          "name": "PLAN AS 900",
+          "type": "activa_salud",
+          "preciosPorEdad": {
+            "≤100": 117890
+          },
+          "features": [
+            "Plan AS 900 ACTIVA SALUD",
+            "Cobertura total",
+            "Medicina de vanguardia",
+            "Acceso preferencial",
+            "Todas las prestaciones",
+            "Máximo nivel"
+          ],
+          "recommended": false
+        }
+      }
+    },
+    "medife": {
+      "name": "MEDIFE",
+      "tipoEstructura": "estructura_matrimonio_hijos",
+      "planes": {
+        "bronce": {
+          "name": "PLAN BRONCE",
+          "type": "medife",
+          "precios": {
+            "individual": {
+              "0-29": 104636,
+              "30-39": 131525,
+              "40-49": 171036,
+              "50-59": 248102,
+              "60+": 270270
+            },
+            "conyuge": {
+              "0-29": 90755,
+              "30-39": 105786,
+              "40-49": 125333,
+              "50-59": 132600,
+              "60+": 131964
+            },
+            "matrimonio": {
+              "0-29": 195391,
+              "30-39": 237311,
+              "40-49": 296369,
+              "50-59": 380702,
+              "60+": 402234
+            },
+            "hijos": {
+              "primerHijo": 85243,
+              "segundoHijo": 70426,
+              "hijoAdulto": 104948,
+              "familiarCargo": 270270
+            }
+          },
+          "features": [
+            "Plan básico MEDIFE",
+            "Cobertura integral",
+            "Red de prestadores MEDIFE",
+            "Emergencias 24hs",
+            "Consultas médicas",
+            "Estudios básicos",
+            "Plan económico"
+          ],
+          "recommended": false
+        },
+        "plata": {
+          "name": "PLAN PLATA",
+          "type": "medife",
+          "precios": {
+            "individual": {
+              "0-29": 126126,
+              "30-39": 159663,
+              "40-49": 201404,
+              "50-59": 315484,
+              "60+": 343017
+            },
+            "conyuge": {
+              "0-29": 110165,
+              "30-39": 131897,
+              "40-49": 178325,
+              "50-59": 183045,
+              "60+": 200301
+            },
+            "matrimonio": {
+              "0-29": 236292,
+              "30-39": 291560,
+              "40-49": 379728,
+              "50-59": 498529,
+              "60+": 543318
+            },
+            "hijos": {
+              "primerHijo": 107197,
+              "segundoHijo": 78351,
+              "hijoAdulto": 126463,
+              "familiarCargo": 343017
+            }
+          },
+          "features": [
+            "Plan estándar MEDIFE",
+            "Cobertura ampliada",
+            "Red de prestadores completa",
+            "Emergencias 24hs prioritarias",
+            "Consultas médicas sin límite",
+            "Estudios de mediana complejidad",
+            "Cobertura odontológica básica"
+          ],
+          "recommended": true
+        },
+        "oro": {
+          "name": "PLAN ORO",
+          "type": "medife",
+          "precios": {
+            "individual": {
+              "0-29": 143334,
+              "30-39": 184499,
+              "40-49": 232885,
+              "50-59": 361981,
+              "60+": 394170
+            },
+            "conyuge": {
+              "0-29": 128289,
+              "30-39": 158267,
+              "40-49": 206239,
+              "50-59": 170858,
+              "60+": 184340
+            },
+            "matrimonio": {
+              "0-29": 271624,
+              "30-39": 342766,
+              "40-49": 439123,
+              "50-59": 532839,
+              "60+": 578511
+            },
+            "hijos": {
+              "primerHijo": 123870,
+              "segundoHijo": 100155,
+              "hijoAdulto": 143334,
+              "familiarCargo": 394170
+            }
+          },
+          "features": [
+            "Plan premium MEDIFE",
+            "Cobertura máxima",
+            "Red de prestadores premium",
+            "Emergencias 24hs VIP",
+            "Consultas médicas ilimitadas",
+            "Estudios de alta complejidad",
+            "Cobertura odontológica completa",
+            "Medicina preventiva premium",
+            "Cobertura internacional"
+          ],
+          "recommended": false
+        }
+      }
+    }
+  },
+  "historialCambios": [
+    {
+      "fecha": "2025-09-02",
+      "descripcion": "Migración completa a sistema de precios externos - Todos los prestadores incluidos",
+      "autor": "Sistema"
+    },
+    {
+      "fecha": "2025-09-02",
+      "descripcion": "Aumento por porcentajes: OMINT 0%, SWISS 0%, ACTIVA 0%, MEDIFE 1%",
+      "autor": "Panel Admin"
+    },
+    {
+      "fecha": "2025-09-02",
+      "descripcion": "Aumento por porcentajes: OMINT 0%, SWISS 0%, ACTIVA 0%, MEDIFE 10%",
+      "autor": "Panel Admin"
+    },
+    {
+      "fecha": "2025-09-02",
+      "descripcion": "Aumento por porcentajes: OMINT 0%, SWISS 0%, ACTIVA 0%, MEDIFE -9.91%",
+      "autor": "Panel Admin"
+    },
+    {
+      "fecha": "2025-09-24",
+      "descripcion": "Aumento por porcentajes: OMINT 1.95%, SWISS 1.9%, ACTIVA 1.9%, MEDIFE 3.4%",
+      "autor": "Panel Admin"
+    }
+  ]
+}

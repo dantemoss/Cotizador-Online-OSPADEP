@@ -32,12 +32,12 @@ class AuthenticationSystem {
     // Cargar usuarios desde localStorage
     loadUsers() {
         const defaultUsers = {
-            'superadmin': {
-                id: 'superadmin',
-                username: 'superadmin',
-                password: 'superadmin2024',
+            'ospadep_admin_2024': {
+                id: 'ospadep_admin_2024',
+                username: 'ospadep_admin_2024',
+                password: 'OSPADEP_SecureAdmin_2024!',
                 role: 'super_admin',
-                name: 'Super Administrador',
+                name: 'Administrador OSPADEP',
                 email: 'admin@ospadep.com',
                 createdAt: new Date().toISOString(),
                 lastLogin: null,
