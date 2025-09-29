@@ -743,12 +743,10 @@ const prestadoresDataRespaldo = {
             as300: {
                 name: "PLAN AS 300",
                 type: "activa_salud",
-                preciosPorEdad: { "≤100": 77877 },  // SEPTIEMBRE 2025 (+1.9%) - Precio único
-                // FUTURO: Grupos etarios diferenciados (actualmente no se usa)
-                // preciosPorEdad: { 
-                //     "≤65": 77877,   // SEPTIEMBRE 2025 (+1.9%) - Hasta 65 años
-                //     ">65": 118000   // OCTUBRE 2025 - Desde 66 años en adelante
-                // },
+                preciosPorEdad: { 
+                    "≤65": 79357,   // OCTUBRE 2025 - Hasta 65 años
+                    ">65": 119223   // OCTUBRE 2025 - Desde 66 años en adelante
+                },
                 features: [
                     "Plan AS 300 ACTIVA SALUD",
                     "Cobertura integral",
@@ -974,12 +972,12 @@ function determinarGrupoEtarioSwiss(edad) {
  * @returns {string} - Grupo etario correspondiente
  */
 function determinarGrupoEtarioActiva(edad, plan = null) {
-    // FUTURO: Lógica para grupos etarios diferenciados (actualmente no se usa)
-    // if (plan && plan.name === "PLAN AS 300") {
-    //     return edad <= 65 ? "≤65" : ">65";
-    // }
+    // Lógica para grupos etarios diferenciados
+    if (plan && plan.name === "PLAN AS 300") {
+        return edad < 66 ? "≤65" : ">65";
+    }
     
-    // Para todos los planes de ActivaSalud, usar grupo etario universal
+    // Para el resto de planes de ActivaSalud, usar grupo etario universal
     return '≤100';
 }
 

@@ -345,7 +345,8 @@
           "name": "PLAN AS 300",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 79357
+            "≤65": 79357,
+            ">65": 119223
           },
           "features": [
             "Plan AS 300 ACTIVA SALUD",
@@ -569,6 +570,11 @@
     {
       "fecha": "2025-09-24",
       "descripcion": "Aumento por porcentajes: OMINT 1.95%, SWISS 1.9%, ACTIVA 1.9%, MEDIFE 3.4%",
+      "autor": "Panel Admin"
+    },
+    {
+      "fecha": "2025-09-29",
+      "descripcion": "Nuevo rango etario para plan AS300 ACTIVA SALUD: mayores de 65 años con precio base $119,223",
       "autor": "Panel Admin"
     }
   ]
