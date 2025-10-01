@@ -281,7 +281,7 @@
           "name": "PLAN MS",
           "type": "sw_nubial",
           "preciosPorEdad": {
-            "≤65": 163772,
+            "≤65": 166884,
             ">65": 465259
           },
           "features": [
@@ -305,7 +305,7 @@
           "name": "PLAN SB02",
           "type": "swiss",
           "preciosPorEdad": {
-            "≤65": 190363,
+            "≤65": 193980,
             ">65": 645910
           },
           "features": [
