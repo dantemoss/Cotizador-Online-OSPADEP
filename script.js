@@ -9828,7 +9828,11 @@ async function aplicarAumentosExternos() {
         
         // Aplicar aumentos
         if (omintPercent !== 0) aplicarAumentoAPrestador(data.prestadores.omint, omintPercent);
-        if (swissPercent !== 0) aplicarAumentoAPrestador(data.prestadores.swissMedical, swissPercent);
+        if (swissPercent !== 0) {
+            aplicarAumentoAPrestador(data.prestadores.swissMedical, swissPercent);
+            aplicarAumentoAPrestador(data.prestadores.swNubial, swissPercent);
+            aplicarAumentoAPrestador(data.prestadores.swiss, swissPercent);
+        }
         if (activaPercent !== 0) aplicarAumentoAPrestador(data.prestadores.activaSalud, activaPercent);
         if (medifePercent !== 0) aplicarAumentoAPrestador(data.prestadores.medife, medifePercent);
         
@@ -9840,7 +9844,7 @@ async function aplicarAumentosExternos() {
         // Agregar al historial
         data.historialCambios.push({
             fecha: data.fechaActualizacion,
-            descripcion: `Aumento por porcentajes: OMINT ${omintPercent}%, SWISS ${swissPercent}%, ACTIVA ${activaPercent}%, MEDIFE ${medifePercent}%`,
+            descripcion: `Aumento por porcentajes: OMINT ${omintPercent}%, SWISS (todos) ${swissPercent}%, ACTIVA ${activaPercent}%, MEDIFE ${medifePercent}%`,
             autor: 'Panel Admin'
         });
         
@@ -9851,7 +9855,10 @@ async function aplicarAumentosExternos() {
         
 📊 Resumen:
 • OMINT: ${omintPercent}%
-• SWISS MEDICAL: ${swissPercent}%  
+• SWISS (todos los planes): ${swissPercent}%
+  - SWISS MEDICAL (PO62, PO64, SB04)
+  - SW NUBIAL (MS)
+  - SWISS (SB02)
 • ACTIVA SALUD: ${activaPercent}%
 • MEDIFE: ${medifePercent}%
 
