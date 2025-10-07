@@ -1316,16 +1316,20 @@ function calcularPrecioFinalMedife(planMedife, composicionFamiliar, edadTitular,
     }
     let precioTotal = 0;
     
-    // Nuevo: calcular individual para titular y conyuge por separado usando estructura correcta
+    // NUEVA LÓGICA: Si es matrimonio, se toma la edad MAYOR y se usa el precio MATRIMONIO de ese rango
     const esMatrimonio = composicionFamiliar.tienePareja;
-    const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
+    
     if (esMatrimonio && edadPareja) {
-        const grupoEtarioPareja = determinarGrupoEtarioMedife(edadPareja);
-        const precioTitular = planMedife.precios.individual[grupoEtarioTitular];
-        const precioConyuge = planMedife.precios.conyuge[grupoEtarioPareja];
-        precioTotal += precioTitular + precioConyuge;
+        // Determinar la edad más alta entre titular y cónyuge
+        const edadMaxima = Math.max(edadTitular, edadPareja);
+        const grupoEtarioMatrimonio = determinarGrupoEtarioMedife(edadMaxima);
+        
+        // Usar precio MATRIMONIO del rango etario de la persona mayor
+        const precioMatrimonio = planMedife.precios.matrimonio[grupoEtarioMatrimonio];
+        precioTotal += precioMatrimonio;
     } else {
-        // Usar precio individual solo para el titular
+        // Si es individual, usar precio individual del titular
+        const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
         const precioIndividual = planMedife.precios.individual[grupoEtarioTitular];
         precioTotal += precioIndividual;
     }
@@ -2003,31 +2007,26 @@ function generarDesglosePrecioMedife(planMedife, composicionFamiliar, edadTitula
         total: 0
     };
     
-    // Nuevo: desglose individual para titular y conyuge usando estructura correcta
+    // NUEVA LÓGICA: Si es matrimonio, se toma la edad MAYOR y se usa el precio MATRIMONIO de ese rango
     const esMatrimonio = composicionFamiliar.tienePareja;
-    const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
+    
     if (esMatrimonio && edadPareja) {
-        const grupoEtarioPareja = determinarGrupoEtarioMedife(edadPareja);
-        const precioTitular = planMedife.precios.individual[grupoEtarioTitular];
-        const precioConyuge = planMedife.precios.conyuge[grupoEtarioPareja];
+        // Determinar la edad más alta entre titular y cónyuge
+        const edadMaxima = Math.max(edadTitular, edadPareja);
+        const grupoEtarioMatrimonio = determinarGrupoEtarioMedife(edadMaxima);
+        const precioMatrimonio = planMedife.precios.matrimonio[grupoEtarioMatrimonio];
+        
         desglose.items.push({
-            concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
+            concepto: `Matrimonio (Titular: ${edadTitular} años, Cónyuge: ${edadPareja} años - Rango: ${grupoEtarioMatrimonio})`,
             cantidad: 1,
-            precioUnitario: precioTitular,
-            subtotal: precioTitular,
-            porcentaje: "Precio individual titular"
+            precioUnitario: precioMatrimonio,
+            subtotal: precioMatrimonio,
+            porcentaje: "Precio matrimonio según edad mayor"
         });
-        desglose.total += precioTitular;
-        desglose.items.push({
-            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
-            cantidad: 1,
-            precioUnitario: precioConyuge,
-            subtotal: precioConyuge,
-            porcentaje: "Precio especial cónyuge"
-        });
-        desglose.total += precioConyuge;
+        desglose.total += precioMatrimonio;
     } else {
         // Precio INDIVIDUAL
+        const grupoEtarioTitular = determinarGrupoEtarioMedife(edadTitular);
         const precioIndividual = planMedife.precios.individual[grupoEtarioTitular];
         desglose.items.push({
             concepto: `Individual (${edadTitular} años - ${grupoEtarioTitular})`,
