@@ -1,6 +1,6 @@
 {
-  "version": "2025-09",
-  "fechaActualizacion": "2025-09-24",
+  "version": "2025-10",
+  "fechaActualizacion": "2025-10-24",
   "prestadores": {
     "omint": {
       "name": "OMINT",
@@ -221,8 +221,8 @@
           "name": "PLAN PO62",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 252104,
-            ">65": 732555
+            "≤65": 257398,
+            ">65": 747939
           },
           "features": [
             "Cobertura integral SWISS MEDICAL",
@@ -239,8 +239,8 @@
           "name": "PLAN PO64",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 302302,
-            ">65": 877189
+            "≤65": 308650,
+            ">65": 895610
           },
           "features": [
             "Cobertura premium SWISS MEDICAL",
@@ -258,8 +258,8 @@
           "name": "PLAN SB04",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 198817,
-            ">65": 543687
+            "≤65": 202992,
+            ">65": 555104
           },
           "features": [
             "Cobertura básica SWISS MEDICAL",
@@ -281,8 +281,8 @@
           "name": "PLAN MS",
           "type": "sw_nubial",
           "preciosPorEdad": {
-            "≤65": 166884,
-            ">65": 465259
+            "≤65": 170389,
+            ">65": 475029
           },
           "features": [
             "Plan SW NUBIAL exclusivo",
@@ -305,8 +305,8 @@
           "name": "PLAN SB02",
           "type": "swiss",
           "preciosPorEdad": {
-            "≤65": 193980,
-            ">65": 645910
+            "≤65": 198054,
+            ">65": 659474
           },
           "features": [
             "Plan SWISS básico",
@@ -329,7 +329,7 @@
           "name": "PLAN AS 25",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 68775
+            "≤100": 70219
           },
           "features": [
             "Plan básico ACTIVA SALUD",
@@ -345,8 +345,8 @@
           "name": "PLAN AS 300",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤65": 79357,
-            ">65": 119223
+            "≤65": 81023,
+            ">65": 121727
           },
           "features": [
             "Plan AS 300 ACTIVA SALUD",
@@ -362,7 +362,7 @@
           "name": "PLAN AS 700",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 89938
+            "≤100": 91827
           },
           "features": [
             "Plan AS 700 ACTIVA SALUD",
@@ -378,7 +378,7 @@
           "name": "PLAN AS 800",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 111100
+            "≤100": 113433
           },
           "features": [
             "Plan AS 800 ACTIVA SALUD",
@@ -394,7 +394,7 @@
           "name": "PLAN AS 900",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 117890
+            "≤100": 120366
           },
           "features": [
             "Plan AS 900 ACTIVA SALUD",
@@ -417,31 +417,31 @@
           "type": "medife",
           "precios": {
             "individual": {
-              "0-29": 104635,
-              "30-39": 131525,
-              "40-49": 171036,
-              "50-59": 248102,
-              "60+": 270270
+              "0-29": 108402,
+              "30-39": 136260,
+              "40-49": 177193,
+              "50-59": 257034,
+              "60+": 280000
             },
             "conyuge": {
-              "0-29": 90755,
-              "30-39": 105786,
-              "40-49": 125333,
-              "50-59": 132600,
-              "60+": 142500
+              "0-29": 94022,
+              "30-39": 109594,
+              "40-49": 129845,
+              "50-59": 137374,
+              "60+": 147630
             },
             "matrimonio": {
-              "0-29": 195390,
-              "30-39": 237311,
-              "40-49": 296369,
-              "50-59": 380702,
-              "60+": 412770
+              "0-29": 202424,
+              "30-39": 245854,
+              "40-49": 307038,
+              "50-59": 394407,
+              "60+": 427630
             },
             "hijos": {
-              "primerHijo": 85243,
-              "segundoHijo": 70425,
-              "hijoAdulto": 104947,
-              "familiarCargo": 270270
+              "primerHijo": 88312,
+              "segundoHijo": 72960,
+              "hijoAdulto": 108725,
+              "familiarCargo": 280000
             }
           },
           "features": [
@@ -460,31 +460,31 @@
           "type": "medife",
           "precios": {
             "individual": {
-              "0-29": 126126,
-              "30-39": 159665,
-              "40-49": 201404,
-              "50-59": 315484,
-              "60+": 343017
+              "0-29": 130667,
+              "30-39": 165413,
+              "40-49": 208655,
+              "50-59": 326841,
+              "60+": 355366
             },
             "conyuge": {
-              "0-29": 110165,
-              "30-39": 131897,
-              "40-49": 178325,
-              "50-59": 183045,
-              "60+": 200301
+              "0-29": 114131,
+              "30-39": 136645,
+              "40-49": 184745,
+              "50-59": 189635,
+              "60+": 207512
             },
             "matrimonio": {
-              "0-29": 236292,
-              "30-39": 291562,
-              "40-49": 379729,
-              "50-59": 498529,
-              "60+": 543318
+              "0-29": 244799,
+              "30-39": 302058,
+              "40-49": 393399,
+              "50-59": 516476,
+              "60+": 562877
             },
             "hijos": {
-              "primerHijo": 107197,
-              "segundoHijo": 78351,
-              "hijoAdulto": 126464,
-              "familiarCargo": 343017
+              "primerHijo": 111056,
+              "segundoHijo": 81172,
+              "hijoAdulto": 131017,
+              "familiarCargo": 355366
             }
           },
           "features": [
@@ -503,31 +503,31 @@
           "type": "medife",
           "precios": {
             "individual": {
-              "0-29": 143334,
-              "30-39": 184499,
-              "40-49": 232885,
-              "50-59": 357980,
-              "60+": 394170
+              "0-29": 148494,
+              "30-39": 191141,
+              "40-49": 241269,
+              "50-59": 370867,
+              "60+": 408360
             },
             "conyuge": {
-              "0-29": 128289,
-              "30-39": 158267,
-              "40-49": 206239,
-              "50-59": 256158,
-              "60+": 184340
+              "0-29": 132907,
+              "30-39": 163965,
+              "40-49": 213664,
+              "50-59": 265380,
+              "60+": 190976
             },
             "matrimonio": {
-              "0-29": 271624,
-              "30-39": 342766,
-              "40-49": 439123,
-              "50-59": 535531,
-              "60+": 581088
+              "0-29": 281402,
+              "30-39": 355106,
+              "40-49": 454931,
+              "50-59": 554810,
+              "60+": 602007
             },
             "hijos": {
-              "primerHijo": 123870,
-              "segundoHijo": 100155,
-              "hijoAdulto": 143334,
-              "familiarCargo": 394170
+              "primerHijo": 128329,
+              "segundoHijo": 103761,
+              "hijoAdulto": 148494,
+              "familiarCargo": 408360
             }
           },
           "features": [
@@ -540,6 +540,156 @@
             "Cobertura odontológica completa",
             "Medicina preventiva premium",
             "Cobertura internacional"
+          ],
+          "recommended": false
+        }
+      }
+    },
+    "ospadepSalud": {
+      "name": "OSPADEP SALUD",
+      "tipoEstructura": "estructura_compleja",
+      "planes": {
+        "os25": {
+          "name": "PLAN OS25",
+          "type": "ospadep_salud",
+          "preciosPorEdad": {
+            "18-27": {
+              "adultoConyugue": 72069,
+              "hijoMenor": 43962
+            },
+            "28-35": {
+              "adultoConyugue": 72069,
+              "hijoMenor": 43962
+            },
+            "36-40": {
+              "adultoConyugue": 72069,
+              "hijoMenor": 43962
+            },
+            "41-45": {
+              "adultoConyugue": 75673,
+              "hijoMenor": 43962
+            },
+            "46-50": {
+              "adultoConyugue": 83601,
+              "hijoMenor": 43962
+            },
+            "51-55": {
+              "adultoConyugue": 108104,
+              "hijoMenor": 43962
+            },
+            "56-64": {
+              "adultoConyugue": 161435,
+              "hijoMenor": 43962
+            },
+            "65+": {
+              "adultoConyugue": 216208,
+              "hijoMenor": 43962
+            }
+          },
+          "features": [
+            "Plan básico OSPADEP SALUD",
+            "Cobertura integral de salud",
+            "Emergencias 24hs",
+            "Consultas médicas",
+            "Red de prestadores OSPADEP",
+            "Ideal para jóvenes y familias"
+          ],
+          "recommended": false
+        },
+        "os300": {
+          "name": "PLAN OS300",
+          "type": "ospadep_salud",
+          "preciosPorEdad": {
+            "18-27": {
+              "adultoConyugue": 91200,
+              "hijoMenor": 55632
+            },
+            "28-35": {
+              "adultoConyugue": 91200,
+              "hijoMenor": 55632
+            },
+            "36-40": {
+              "adultoConyugue": 91200,
+              "hijoMenor": 55632
+            },
+            "41-45": {
+              "adultoConyugue": 95760,
+              "hijoMenor": 55632
+            },
+            "46-50": {
+              "adultoConyugue": 105792,
+              "hijoMenor": 55632
+            },
+            "51-55": {
+              "adultoConyugue": 136800,
+              "hijoMenor": 55632
+            },
+            "56-64": {
+              "adultoConyugue": 204288,
+              "hijoMenor": 55632
+            },
+            "65+": {
+              "adultoConyugue": 273600,
+              "hijoMenor": 55632
+            }
+          },
+          "features": [
+            "Plan intermedio OSPADEP SALUD",
+            "Cobertura ampliada",
+            "Emergencias 24hs prioritarias",
+            "Consultas médicas sin límite",
+            "Estudios de mediana complejidad",
+            "Red completa de prestadores",
+            "Ideal para familias"
+          ],
+          "recommended": true
+        },
+        "os900": {
+          "name": "PLAN OS900",
+          "type": "ospadep_salud",
+          "preciosPorEdad": {
+            "18-27": {
+              "adultoConyugue": 108650,
+              "hijoMenor": 66144
+            },
+            "28-35": {
+              "adultoConyugue": 108650,
+              "hijoMenor": 66144
+            },
+            "36-40": {
+              "adultoConyugue": 108650,
+              "hijoMenor": 66144
+            },
+            "41-45": {
+              "adultoConyugue": 113420,
+              "hijoMenor": 66144
+            },
+            "46-50": {
+              "adultoConyugue": 126034,
+              "hijoMenor": 66144
+            },
+            "51-55": {
+              "adultoConyugue": 162180,
+              "hijoMenor": 66144
+            },
+            "56-64": {
+              "adultoConyugue": 240938,
+              "hijoMenor": 66144
+            },
+            "65+": {
+              "adultoConyugue": 322240,
+              "hijoMenor": 66144
+            }
+          },
+          "features": [
+            "Plan premium OSPADEP SALUD",
+            "Cobertura máxima",
+            "Emergencias 24hs VIP",
+            "Consultas médicas ilimitadas",
+            "Estudios de alta complejidad",
+            "Red premium de prestadores",
+            "Medicina preventiva",
+            "Internación en habitación privada"
           ],
           "recommended": false
         }
@@ -575,6 +725,11 @@
     {
       "fecha": "2025-09-29",
       "descripcion": "Nuevo rango etario para plan AS300 ACTIVA SALUD: mayores de 65 años con precio base $119,223",
+      "autor": "Panel Admin"
+    },
+    {
+      "fecha": "2025-10-24",
+      "descripcion": "Aumento por porcentajes: OMINT 0%, SWISS (todos) 2.1%, ACTIVA 2.1%, MEDIFE 3.6%, OSPADEP SALUD 0%",
       "autor": "Panel Admin"
     }
   ]

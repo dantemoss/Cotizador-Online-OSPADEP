@@ -48,7 +48,7 @@
         <div class="price-update-banner">
             <div class="banner-content">
                 <i class="fas fa-calendar-alt banner-icon"></i>
-                <span class="banner-text">Precios actualizados para <strong>OCTUBRE</strong> - Mes actual de cotización</span>
+                <span class="banner-text">Precios actualizados para <strong>NOVIEMBRE</strong> - Mes actual de cotización</span>
             </div>
         </div>
 
@@ -425,6 +425,27 @@
                                                     <small class="input-help">Ej: 3.6 para aumento del 3.6%</small>
                                                 </div>
                                             </div>
+
+                                            <!-- OSPADEP SALUD Card -->
+                                            <div class="prestador-card ospadep-card">
+                                                <div class="prestador-header">
+                                                    <div class="prestador-logo">
+                                                        <img src="logosEmpresas/OSPADEPSalud.png" alt="OSPADEP SALUD Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                        <div class="logo-circle ospadep-logo" style="display: none;"><span>OS</span></div>
+                                                    </div>
+                                                    <div class="prestador-info">
+                                                        <h5>OSPADEP SALUD</h5>
+                                                        <span class="prestador-subtitle">Medicina Prepaga</span>
+                                                    </div>
+                                                </div>
+                                                <div class="prestador-input-container">
+                                                    <div class="input-group">
+                                                        <input type="number" id="ospadep-percent" step="0.1" placeholder="0.0" class="prestador-input">
+                                                        <span class="input-suffix">%</span>
+                                                    </div>
+                                                    <small class="input-help">Ej: 3.0 para aumento del 3.0%</small>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!-- Sección Aplicar Descuento -->
@@ -451,6 +472,7 @@
                                                         <option value="swiss">SWISS MEDICAL</option>
                                                         <option value="activa">ACTIVA SALUD</option>
                                                         <option value="medife">MEDIFE</option>
+                                                        <option value="ospadep">OSPADEP SALUD</option>
                                                     </select>
                                                 </div>
                                                 

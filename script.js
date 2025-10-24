@@ -1012,6 +1012,22 @@ function determinarGrupoEtarioMedife(edad) {
     return "60+";
 }
 
+/**
+ * Determina el grupo etario para OSPADEP SALUD (rangos específicos)
+ * @param {number} edad - Edad de la persona
+ * @returns {string} - Grupo etario correspondiente
+ */
+function determinarGrupoEtarioOspadep(edad) {
+    if (edad <= 27) return "18-27";
+    if (edad <= 35) return "28-35";
+    if (edad <= 40) return "36-40";
+    if (edad <= 45) return "41-45";
+    if (edad <= 50) return "46-50";
+    if (edad <= 55) return "51-55";
+    if (edad <= 64) return "56-64";
+    return "65+";
+}
+
 // ===== PLANTILLA DE PRECIOS SIN DESCUENTOS =====
 const plantillaSinDescuentos = {
     capitaTitular: 1.00,    // 100% - Precio base
@@ -1369,6 +1385,54 @@ function calcularPrecioFinalMedife(planMedife, composicionFamiliar, edadTitular,
 }
 
 /**
+ * Calcula el precio final de un plan OSPADEP SALUD según la composición familiar
+ * @param {object} planOspadep - Plan OSPADEP SALUD con precios por edad
+ * @param {object} composicionFamiliar - Objeto con la composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {number} - Precio total calculado
+ */
+function calcularPrecioFinalOspadep(planOspadep, composicionFamiliar, edadTitular, edadPareja = null) {
+    if (!planOspadep || !planOspadep.preciosPorEdad) {
+        console.warn('Plan OSPADEP SALUD sin preciosPorEdad:', planOspadep);
+        return 0;
+    }
+    let precioTotal = 0;
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioOspadep(edadTitular);
+    const preciosGrupoTitular = planOspadep.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular (siempre presente)
+    precioTotal += preciosGrupoTitular.adultoConyugue;
+    
+    // 2. Segunda capita (pareja/cónyuge)
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioOspadep(edadPareja);
+        const preciosGrupoPareja = planOspadep.preciosPorEdad[grupoEtarioPareja];
+        precioTotal += preciosGrupoPareja.adultoConyugue;
+    }
+    
+    // 3. Hijos menores de 21 años (todos al mismo precio)
+    const todosLosMenores = composicionFamiliar.menores || [];
+    if (todosLosMenores.length > 0) {
+        // Todos los hijos menores tienen el mismo precio
+        precioTotal += preciosGrupoTitular.hijoMenor * todosLosMenores.length;
+    }
+    
+    // 4. Hijos mayores de 21 años (se cobran como adultos)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach(edadHijo => {
+            const grupoEtarioHijo = determinarGrupoEtarioOspadep(edadHijo);
+            const preciosGrupoHijo = planOspadep.preciosPorEdad[grupoEtarioHijo];
+            precioTotal += preciosGrupoHijo.adultoConyugue;
+        });
+    }
+    
+    return Math.round(precioTotal);
+}
+
+/**
  * FUNCIÓN UNIFICADA - Determina automáticamente qué tipo de cálculo usar
  * @param {string} prestadorKey - Clave del prestador (omint, swissMedical, etc.)
  * @param {object} plan - Plan específico del prestador
@@ -1386,6 +1450,8 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
     let precioBase;
     if (prestadorKey === 'activaSalud') {
         precioBase = calcularPrecioFinalActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+    } else if (prestadorKey === 'ospadepSalud') {
+        precioBase = calcularPrecioFinalOspadep(plan, composicionFamiliar, edadTitular, edadPareja);
     } else {
         switch (prestador.tipoEstructura) {
             case "plantilla_adultos_solo":
@@ -1640,6 +1706,85 @@ function generarDesglosePrecioOMINT(planOMINT, composicionFamiliar, edadTitular,
     }
     
 
+    
+    desglose.total = Math.round(desglose.total);
+    return desglose;
+}
+
+/**
+ * Genera un desglose detallado del precio para planes OSPADEP SALUD
+ * @param {object} planOspadep - Plan OSPADEP SALUD con precios por edad
+ * @param {object} composicionFamiliar - Composición familiar
+ * @param {number} edadTitular - Edad del titular
+ * @param {number} edadPareja - Edad de la pareja (opcional)
+ * @returns {object} - Desglose detallado
+ */
+function generarDesglosePrecioOspadep(planOspadep, composicionFamiliar, edadTitular, edadPareja = null) {
+    const desglose = {
+        items: [],
+        total: 0
+    };
+    
+    // Determinar grupo etario del titular
+    const grupoEtarioTitular = determinarGrupoEtarioOspadep(edadTitular);
+    const preciosGrupoTitular = planOspadep.preciosPorEdad[grupoEtarioTitular];
+    
+    // 1. Capita titular
+    const precioTitular = preciosGrupoTitular.adultoConyugue;
+    desglose.items.push({
+        concepto: `Titular (${edadTitular} años - ${grupoEtarioTitular})`,
+        cantidad: 1,
+        precioUnitario: precioTitular,
+        subtotal: precioTitular
+    });
+    desglose.total += precioTitular;
+    
+    // 2. Segunda capita (pareja/cónyuge)
+    if (composicionFamiliar.tienePareja && edadPareja) {
+        const grupoEtarioPareja = determinarGrupoEtarioOspadep(edadPareja);
+        const preciosGrupoPareja = planOspadep.preciosPorEdad[grupoEtarioPareja];
+        const precioPareja = preciosGrupoPareja.adultoConyugue;
+        
+        desglose.items.push({
+            concepto: `Cónyuge (${edadPareja} años - ${grupoEtarioPareja})`,
+            cantidad: 1,
+            precioUnitario: precioPareja,
+            subtotal: precioPareja
+        });
+        desglose.total += precioPareja;
+    }
+    
+    // 3. Hijos menores de 21 años (todos al mismo precio)
+    const todosLosMenores = composicionFamiliar.menores || [];
+    if (todosLosMenores.length > 0) {
+        const precioHijo = preciosGrupoTitular.hijoMenor;
+        const totalHijos = todosLosMenores.length;
+        
+        desglose.items.push({
+            concepto: `${totalHijos} hijo${totalHijos > 1 ? 's' : ''} menor${totalHijos > 1 ? 'es' : ''} (< 21 años)`,
+            cantidad: totalHijos,
+            precioUnitario: precioHijo,
+            subtotal: precioHijo * totalHijos
+        });
+        desglose.total += precioHijo * totalHijos;
+    }
+    
+    // 4. Hijos mayores de 21 años (se cobran como adultos)
+    if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
+        composicionFamiliar.mayores.forEach((edadHijo, index) => {
+            const grupoEtarioHijo = determinarGrupoEtarioOspadep(edadHijo);
+            const preciosGrupoHijo = planOspadep.preciosPorEdad[grupoEtarioHijo];
+            const precioHijoMayor = preciosGrupoHijo.adultoConyugue;
+            
+            desglose.items.push({
+                concepto: `Hijo mayor (${edadHijo} años - ${grupoEtarioHijo})`,
+                cantidad: 1,
+                precioUnitario: precioHijoMayor,
+                subtotal: precioHijoMayor
+            });
+            desglose.total += precioHijoMayor;
+        });
+    }
     
     desglose.total = Math.round(desglose.total);
     return desglose;
@@ -2122,6 +2267,8 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
     let desglose;
     if (prestadorKey === 'activaSalud') {
         desglose = generarDesglosePrecioActiva(plan, composicionFamiliar, edadTitular, edadPareja);
+    } else if (prestadorKey === 'ospadepSalud') {
+        desglose = generarDesglosePrecioOspadep(plan, composicionFamiliar, edadTitular, edadPareja);
     } else {
         switch (prestador.tipoEstructura) {
             case "plantilla_adultos_solo":
@@ -3814,6 +3961,9 @@ function generatePlanCard(plan) {
     } else if (plan.prestador === 'MEDIFE') {
         prestadorColor = '#dc2626'; // Rojo
         prestadorLogo = 'logosEmpresas/medife.png';
+    } else if (plan.prestador === 'OSPADEP SALUD') {
+        prestadorColor = '#1e40af'; // Azul oscuro
+        prestadorLogo = 'logosEmpresas/OSPADEPSalud.png';
     }
     
     // ===== NUEVO: Generar desglose de precio mejorado =====
@@ -5641,7 +5791,8 @@ function togglePlanSelection(plan) {
             'OMINT': 'omint',
             'Swiss Medical': 'swiss_medical',
             'ACTIVA SALUD': 'activa_salud',
-            'MEDIFE': 'medife'
+            'MEDIFE': 'medife',
+            'OSPADEP SALUD': 'ospadep_salud'
         };
         plan.type = prestadorMap[plan.prestador] || 'omint';
     }
@@ -9814,8 +9965,9 @@ async function aplicarAumentosExternos() {
     const swissPercent = parseFloat(document.getElementById('swiss-percent').value) || 0;
     const activaPercent = parseFloat(document.getElementById('activa-percent').value) || 0;
     const medifePercent = parseFloat(document.getElementById('medife-percent').value) || 0;
+    const ospadepPercent = parseFloat(document.getElementById('ospadep-percent').value) || 0;
     
-    if (omintPercent === 0 && swissPercent === 0 && activaPercent === 0 && medifePercent === 0) {
+    if (omintPercent === 0 && swissPercent === 0 && activaPercent === 0 && medifePercent === 0 && ospadepPercent === 0) {
         alert('Ingresa al menos un porcentaje de aumento');
         return;
     }
@@ -9834,6 +9986,7 @@ async function aplicarAumentosExternos() {
         }
         if (activaPercent !== 0) aplicarAumentoAPrestador(data.prestadores.activaSalud, activaPercent);
         if (medifePercent !== 0) aplicarAumentoAPrestador(data.prestadores.medife, medifePercent);
+        if (ospadepPercent !== 0) aplicarAumentoAPrestador(data.prestadores.ospadepSalud, ospadepPercent);
         
         // Actualizar versión y fecha
         const now = new Date();
@@ -9843,7 +9996,7 @@ async function aplicarAumentosExternos() {
         // Agregar al historial
         data.historialCambios.push({
             fecha: data.fechaActualizacion,
-            descripcion: `Aumento por porcentajes: OMINT ${omintPercent}%, SWISS (todos) ${swissPercent}%, ACTIVA ${activaPercent}%, MEDIFE ${medifePercent}%`,
+            descripcion: `Aumento por porcentajes: OMINT ${omintPercent}%, SWISS (todos) ${swissPercent}%, ACTIVA ${activaPercent}%, MEDIFE ${medifePercent}%, OSPADEP SALUD ${ospadepPercent}%`,
             autor: 'Panel Admin'
         });
         
@@ -9860,6 +10013,7 @@ async function aplicarAumentosExternos() {
   - SWISS (SB02)
 • ACTIVA SALUD: ${activaPercent}%
 • MEDIFE: ${medifePercent}%
+• OSPADEP SALUD: ${ospadepPercent}%
 
 📥 Se descargó el archivo actualizado.
 Sube este archivo como 'precios-data.json' para aplicar los cambios.`);
@@ -10024,7 +10178,8 @@ function aplicarDescuentoDirecto() {
         'omint': 'OMINT',
         'swiss': 'SWISS MEDICAL', 
         'activa': 'ACTIVA SALUD',
-        'medife': 'MEDIFE'
+        'medife': 'MEDIFE',
+        'ospadep': 'OSPADEP SALUD'
     };
     
     // Confirmar la acción
@@ -10033,12 +10188,23 @@ function aplicarDescuentoDirecto() {
     if (!confirmar) return;
     
     try {
+        // Mapear IDs de select a keys del JSON
+        const prestadorMapping = {
+            'omint': 'omint',
+            'swiss': 'swissMedical',
+            'activa': 'activaSalud',
+            'medife': 'medife',
+            'ospadep': 'ospadepSalud'
+        };
+        
+        const prestadorKey = prestadorMapping[prestadorSeleccionado];
+        
         // Cargar datos actuales
         fetch('precios-data.json')
             .then(response => response.json())
             .then(data => {
                 // Aplicar descuento (porcentaje negativo)
-                aplicarAumentoAPrestador(data.prestadores[prestadorSeleccionado], -porcentajeDescuento);
+                aplicarAumentoAPrestador(data.prestadores[prestadorKey], -porcentajeDescuento);
                 
                 // Actualizar fecha y versión
                 const now = new Date();
@@ -10088,7 +10254,8 @@ function aplicarDescuentoCalculado() {
         'omint': 'omint-percent',
         'swiss': 'swiss-percent',
         'activa': 'activa-percent', 
-        'medife': 'medife-percent'
+        'medife': 'medife-percent',
+        'ospadep': 'ospadep-percent'
     };
     
     const inputId = camposInputs[prestador];
