@@ -1481,7 +1481,20 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
                 precioBase = calcularPrecioFinalOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
         }
     }
-    // === CORREGIDO: Descuento de aportes ===
+    // === ORDEN CORRECTO: 1) Descuento especial al precio base, 2) Restar aportes ===
+    
+    // PASO 1: Aplicar descuento especial al precio base
+    let descuentoEspecial = 0;
+    let precioConDescuento = precioBase;
+    if (formData['aplicar-descuento'] === 'on' && formData['porcentaje-descuento']) {
+        const porcentaje = parseFloat(formData['porcentaje-descuento']);
+        if (!isNaN(porcentaje) && porcentaje > 0 && porcentaje < 100) {
+            descuentoEspecial = Math.round(precioBase * (porcentaje / 100));
+            precioConDescuento = Math.max(0, precioBase - descuentoEspecial);
+        }
+    }
+    
+    // PASO 2: Calcular aportes a descontar
     let aporteTitular = 0;
     let aportePareja = 0;
     // Titular
@@ -1500,17 +1513,9 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
     let totalAportes = 0;
     if (!isNaN(aporteTitular)) totalAportes += aporteTitular;
     if (!isNaN(aportePareja)) totalAportes += aportePareja;
-    // Calcular precio final
-    let precioFinal = Math.max(0, Math.round(precioBase - totalAportes));
-    // Descuento especial
-    let descuentoEspecial = 0;
-    if (formData['aplicar-descuento'] === 'on' && formData['porcentaje-descuento']) {
-        const porcentaje = parseFloat(formData['porcentaje-descuento']);
-        if (!isNaN(porcentaje) && porcentaje > 0 && porcentaje < 100) {
-            descuentoEspecial = Math.round(precioFinal * (porcentaje / 100));
-            precioFinal = Math.max(0, precioFinal - descuentoEspecial);
-        }
-    }
+    
+    // PASO 3: Aplicar descuento de aportes al precio ya con descuento especial
+    let precioFinal = Math.max(0, Math.round(precioConDescuento - totalAportes));
     // Guardar info para visualización (precio base, descuento de aportes y especial)
     plan._precioBase = precioBase;
     plan._totalAportes = totalAportes;
@@ -2299,25 +2304,7 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
         }
     }
 
-    // Agregar descuento de aportes si existe
-    if (plan._totalAportes && plan._totalAportes > 0 && plan._precioBase) {
-        desglose.items.push({
-            concepto: 'Subtotal sin descuento',
-            cantidad: 1,
-            precioUnitario: plan._precioBase,
-            subtotal: plan._precioBase,
-            porcentaje: 'Precio base'
-        });
-        desglose.items.push({
-            concepto: 'Aportes descontados',
-            cantidad: 1,
-            precioUnitario: -plan._totalAportes,
-            subtotal: -plan._totalAportes,
-            porcentaje: 'Descuento'
-        });
-    }
-
-    // Agregar descuento especial si existe
+    // Agregar descuento especial si existe (pero NO aportes, para evitar duplicación)
     if (plan._descuentoEspecial && plan._descuentoEspecial > 0) {
         desglose.items.push({
             concepto: `Descuento especial (${plan._porcentajeDescuento}%)`,
@@ -2327,6 +2314,8 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
             porcentaje: 'Descuento especial'
         });
     }
+    
+    // NOTA: NO agregamos "Aportes descontados" aquí porque se maneja en la visualización (en verde)
 
     // Actualizar el total final solo si no hay items específicos del prestador
     if (desglose.items.length === 0) {
@@ -3984,22 +3973,30 @@ function generatePlanCard(plan) {
                 '</div>';
         });
         
-        // Si hay descuento de aportes, mostrar el precio original tachado y el descuento
-        if (plan._totalAportes && plan._totalAportes > 0 && plan._precioBase) {
+        // Mostrar descuentos en el orden correcto: 1) Descuento especial, 2) Aportes
+        const tieneDescuentos = (plan._descuentoEspecial && plan._descuentoEspecial > 0) || (plan._totalAportes && plan._totalAportes > 0);
+        
+        if (tieneDescuentos && plan._precioBase) {
+            // Mostrar subtotal sin descuentos
             desgloseHTML += '<div class="breakdown-item">' +
                 '<span class="breakdown-concept" style="color:#888;">Subtotal sin descuento</span>' +
                 '<span class="breakdown-amount" style="text-decoration:line-through;color:#888;">' + formatCurrency(plan._precioBase) + '</span>' +
                 '</div>';
-            desgloseHTML += '<div class="breakdown-item">' +
-                '<span class="breakdown-concept" style="color:#059669;">Aportes descontados</span>' +
-                '<span class="breakdown-amount" style="color:#059669;">- ' + formatCurrency(plan._totalAportes) + '</span>' +
-                '</div>';
         }
-        // NUEVO: Descuento especial
+        
+        // 1. PRIMERO: Descuento especial (se aplica al precio base)
         if (plan._descuentoEspecial && plan._descuentoEspecial > 0) {
             desgloseHTML += '<div class="breakdown-item">' +
                 '<span class="breakdown-concept" style="color:#a21caf;">Descuento especial (' + plan._porcentajeDescuento + '%)</span>' +
                 '<span class="breakdown-amount" style="color:#a21caf;">- ' + formatCurrency(plan._descuentoEspecial) + '</span>' +
+                '</div>';
+        }
+        
+        // 2. DESPUÉS: Aportes descontados (se aplican al precio con descuento)
+        if (plan._totalAportes && plan._totalAportes > 0) {
+            desgloseHTML += '<div class="breakdown-item">' +
+                '<span class="breakdown-concept" style="color:#059669;">Aportes descontados</span>' +
+                '<span class="breakdown-amount" style="color:#059669;">- ' + formatCurrency(plan._totalAportes) + '</span>' +
                 '</div>';
         }
         desgloseHTML += '</div>' +
