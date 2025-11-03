@@ -1495,7 +1495,10 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
     }
     
     // PASO 2: Aplicar descuento Plan Joven 25% (solo OSPADEP SALUD, menores de 35 años)
+    // El descuento se aplica por separado sobre titular y/o cónyuge menor de 35 años, SIN incluir hijos
     let descuento35 = 0;
+    let descuento35Titular = 0;
+    let descuento35Conyuge = 0;
     if (prestadorKey === 'ospadepSalud') {
         console.log('🔍 Verificando descuento Plan Joven:', {
             prestadorKey,
@@ -1508,11 +1511,30 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
             const edadTit = parseInt(edadTitular) || 0;
             const edadPar = parseInt(edadPareja) || 0;
             
-            // Verificar que al menos uno sea menor de 35 años
-            if ((edadTit > 0 && edadTit < 35) || (edadPar > 0 && edadPar < 35)) {
-                descuento35 = Math.round(precioConDescuento * 0.25);
-                precioConDescuento = Math.max(0, precioConDescuento - descuento35);
-                console.log('✅ Descuento Plan Joven aplicado:', descuento35);
+            // Calcular descuento por separado para titular y cónyuge menores de 35 años
+            if (plan && plan.preciosPorEdad) {
+                // Descuento sobre titular si es menor de 35 años
+                if (edadTit > 0 && edadTit < 35) {
+                    const grupoEtarioTitular = determinarGrupoEtarioOspadep(edadTit);
+                    const precioTitular = plan.preciosPorEdad[grupoEtarioTitular].adultoConyugue;
+                    descuento35Titular = Math.round(precioTitular * 0.25);
+                    descuento35 += descuento35Titular;
+                    console.log('✅ Descuento Plan Joven aplicado al titular:', descuento35Titular);
+                }
+                
+                // Descuento sobre cónyuge si existe y es menor de 35 años
+                if (edadPar > 0 && edadPar < 35) {
+                    const grupoEtarioPareja = determinarGrupoEtarioOspadep(edadPar);
+                    const precioPareja = plan.preciosPorEdad[grupoEtarioPareja].adultoConyugue;
+                    descuento35Conyuge = Math.round(precioPareja * 0.25);
+                    descuento35 += descuento35Conyuge;
+                    console.log('✅ Descuento Plan Joven aplicado al cónyuge:', descuento35Conyuge);
+                }
+                
+                if (descuento35 > 0) {
+                    precioConDescuento = Math.max(0, precioConDescuento - descuento35);
+                    console.log('✅ Descuento Plan Joven total:', descuento35);
+                }
             }
         }
     }
@@ -1544,6 +1566,10 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
     plan._totalAportes = totalAportes;
     plan._descuentoEspecial = descuentoEspecial;
     plan._descuento35 = descuento35;
+    plan._descuento35Titular = descuento35Titular;
+    plan._descuento35Conyuge = descuento35Conyuge;
+    plan._edadTitular = edadTitular;
+    plan._edadPareja = edadPareja;
     plan._porcentajeDescuento = formData['porcentaje-descuento'] || 0;
     plan._precioFinal = precioFinal;
     return precioFinal;
@@ -3388,7 +3414,7 @@ function generateFormFields(option) {
         '<span class="form-check-label">Aplicar descuento Plan Joven (25%)</span>' +
         '</label>' +
         '<small class="field-help" style="display: block; margin-top: 8px; color: #64748b;">' +
-        '⚠️ Este descuento solo aplica a planes de OSPADEP SALUD cuando el titular o cónyuge tiene menos de 35 años' +
+        '⚠️ Este descuento aplica el 25% de forma individual sobre titular y/o cónyuge menor de 35 años (no incluye hijos). Solo para OSPADEP SALUD.' +
         '</small>' +
         '</div>' +
         '</div>' +
@@ -3469,6 +3495,7 @@ function generateFormFields(option) {
             
             if (aplicaDescuento) {
                 checkboxDescuento35.disabled = false;
+                checkboxDescuento35.checked = true; // ✅ AUTO-ACTIVAR el checkbox
                 checkboxDescuento35.parentElement.style.opacity = '1';
                 checkboxDescuento35.parentElement.style.cursor = 'pointer';
             } else {
@@ -3823,6 +3850,10 @@ function showPlans() {
                     _totalAportes: plan._totalAportes,
                     _descuentoEspecial: plan._descuentoEspecial,
                     _descuento35: plan._descuento35,
+                    _descuento35Titular: plan._descuento35Titular,
+                    _descuento35Conyuge: plan._descuento35Conyuge,
+                    _edadTitular: plan._edadTitular,
+                    _edadPareja: plan._edadPareja,
                     _porcentajeDescuento: plan._porcentajeDescuento,
                     _precioFinal: plan._precioFinal,
                     // Información adicional para el desglose
@@ -4081,20 +4112,33 @@ function generatePlanCard(plan) {
                 '</div>';
         }
         
-        // 1.5. Descuento Plan Joven (solo OSPADEP SALUD)
+        // 1.5. Descuento Plan Joven (solo OSPADEP SALUD) - Mostrar por separado para titular y cónyuge
         console.log('📊 Verificando descuento Plan Joven en desglose:', {
             planName: plan.name,
             prestador: plan.prestador,
-            descuento35: plan._descuento35,
-            tiene: plan._descuento35 && plan._descuento35 > 0
+            descuento35Total: plan._descuento35,
+            descuento35Titular: plan._descuento35Titular,
+            descuento35Conyuge: plan._descuento35Conyuge
         });
         
         if (plan._descuento35 && plan._descuento35 > 0) {
             console.log('✅ Mostrando descuento Plan Joven en desglose:', plan._descuento35);
-            desgloseHTML += '<div class="breakdown-item" style="background:#eff6ff;padding:8px;border-radius:6px;">' +
-                '<span class="breakdown-concept" style="color:#1053F3;font-weight:600;">🎁 Descuento Plan Joven (25%)</span>' +
-                '<span class="breakdown-amount" style="color:#1053F3;font-weight:600;">- ' + formatCurrency(plan._descuento35) + '</span>' +
-                '</div>';
+            
+            // Descuento Plan Joven del Titular
+            if (plan._descuento35Titular && plan._descuento35Titular > 0) {
+                desgloseHTML += '<div class="breakdown-item" style="background:#d1fae5;padding:8px;border-radius:6px;">' +
+                    '<span class="breakdown-concept" style="color:#059669;font-weight:600;">🎁 Descuento Plan Joven - Titular (' + plan._edadTitular + ' años)</span>' +
+                    '<span class="breakdown-amount" style="color:#059669;font-weight:600;">- ' + formatCurrency(plan._descuento35Titular) + '</span>' +
+                    '</div>';
+            }
+            
+            // Descuento Plan Joven del Cónyuge
+            if (plan._descuento35Conyuge && plan._descuento35Conyuge > 0) {
+                desgloseHTML += '<div class="breakdown-item" style="background:#d1fae5;padding:8px;border-radius:6px;">' +
+                    '<span class="breakdown-concept" style="color:#059669;font-weight:600;">🎁 Descuento Plan Joven - Cónyuge (' + plan._edadPareja + ' años)</span>' +
+                    '<span class="breakdown-amount" style="color:#059669;font-weight:600;">- ' + formatCurrency(plan._descuento35Conyuge) + '</span>' +
+                    '</div>';
+            }
         }
         
         // 3. FINALMENTE: Aportes descontados (se aplican después de descuento especial y Plan Joven)
@@ -4128,15 +4172,24 @@ function generatePlanCard(plan) {
         badgesHTML += '<div class="recommended-badge"><i class="fas fa-star"></i> Recomendado</div>';
     }
     
-    // ===== NUEVO: Visualización de precio con descuento de aportes =====
+    // ===== NUEVO: Visualización de precio con descuentos aplicados =====
     let priceHTML = '';
-    if (plan._totalAportes && plan._totalAportes > 0 && plan._precioBase) {
+    const tieneDescuentos = (plan._descuentoEspecial && plan._descuentoEspecial > 0) || 
+                            (plan._descuento35 && plan._descuento35 > 0) || 
+                            (plan._totalAportes && plan._totalAportes > 0);
+    
+    if (tieneDescuentos && plan._precioBase) {
+        // Mostrar precio original tachado y precio final con descuentos
         priceHTML = `<div class="plan-price">
             <span class="original-price" style="text-decoration:line-through;color:#888;font-size:18px;">${formatCurrency(plan._precioBase)}</span><br>
             <span class="discounted-price" style="color:#16a34a;font-size:32px;font-weight:700;">${formatCurrency(plan._precioFinal)}</span>
-            <div class="price-period">por mes</div>
-            <div class="aporte-descuento" style="color:#059669;font-size:13px;">Aportes descontados: -${formatCurrency(plan._totalAportes)}</div>
-        </div>`;
+            <div class="price-period">por mes</div>`;
+        
+        // Mostrar info de aportes si están descontados
+        if (plan._totalAportes && plan._totalAportes > 0) {
+            priceHTML += `<div class="aporte-descuento" style="color:#059669;font-size:13px;">Aportes descontados: -${formatCurrency(plan._totalAportes)}</div>`;
+        }
+        priceHTML += `</div>`;
     } else {
         priceHTML = `<div class="plan-price">
             <span class="currency">$</span>${plan.price.toLocaleString()}
@@ -9814,15 +9867,29 @@ function printCompactEmailWithBenefitsPDF() {
                     `;
                 }
                 
-                // Descuento Plan Joven
+                // Descuento Plan Joven - Mostrar por separado para titular y cónyuge
                 if (plan._descuento35 && plan._descuento35 > 0) {
-                    const desc35Formateado = plan._descuento35.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                    desgloseHTML += `
-                        <div class="breakdown-item discount-item" style="background:#eff6ff;padding:6px;border-radius:4px;">
-                            <span class="breakdown-concept" style="color:#1053F3;font-weight:600;">🎁 Descuento Plan Joven (25%)</span>
-                            <span class="breakdown-amount" style="color:#1053F3;font-weight:600;">-$${desc35Formateado}</span>
-                        </div>
-                    `;
+                    // Descuento del Titular
+                    if (plan._descuento35Titular && plan._descuento35Titular > 0) {
+                        const desc35TitularFormateado = plan._descuento35Titular.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        desgloseHTML += `
+                            <div class="breakdown-item discount-item" style="background:#d1fae5;padding:6px;border-radius:4px;">
+                                <span class="breakdown-concept" style="color:#059669;font-weight:600;">🎁 Descuento Plan Joven - Titular (${plan._edadTitular} años)</span>
+                                <span class="breakdown-amount" style="color:#059669;font-weight:600;">-$${desc35TitularFormateado}</span>
+                            </div>
+                        `;
+                    }
+                    
+                    // Descuento del Cónyuge
+                    if (plan._descuento35Conyuge && plan._descuento35Conyuge > 0) {
+                        const desc35ConyugeFormateado = plan._descuento35Conyuge.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        desgloseHTML += `
+                            <div class="breakdown-item discount-item" style="background:#d1fae5;padding:6px;border-radius:4px;">
+                                <span class="breakdown-concept" style="color:#059669;font-weight:600;">🎁 Descuento Plan Joven - Cónyuge (${plan._edadPareja} años)</span>
+                                <span class="breakdown-amount" style="color:#059669;font-weight:600;">-$${desc35ConyugeFormateado}</span>
+                            </div>
+                        `;
+                    }
                 }
                 
                 // Aportes descontados
