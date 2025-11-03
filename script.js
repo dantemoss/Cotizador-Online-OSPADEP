@@ -1481,7 +1481,7 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
                 precioBase = calcularPrecioFinalOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
         }
     }
-    // === ORDEN CORRECTO: 1) Descuento especial al precio base, 2) Restar aportes ===
+    // === ORDEN CORRECTO: 1) Descuento especial, 2) Descuento Plan Joven (25%), 3) Aportes ===
     
     // PASO 1: Aplicar descuento especial al precio base
     let descuentoEspecial = 0;
@@ -1494,7 +1494,30 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
         }
     }
     
-    // PASO 2: Calcular aportes a descontar
+    // PASO 2: Aplicar descuento Plan Joven 25% (solo OSPADEP SALUD, menores de 35 años)
+    let descuento35 = 0;
+    if (prestadorKey === 'ospadepSalud') {
+        console.log('🔍 Verificando descuento Plan Joven:', {
+            prestadorKey,
+            checkboxValue: formData['aplicar-descuento-35'],
+            edadTitular,
+            edadPareja
+        });
+        
+        if (formData['aplicar-descuento-35'] === 'on') {
+            const edadTit = parseInt(edadTitular) || 0;
+            const edadPar = parseInt(edadPareja) || 0;
+            
+            // Verificar que al menos uno sea menor de 35 años
+            if ((edadTit > 0 && edadTit < 35) || (edadPar > 0 && edadPar < 35)) {
+                descuento35 = Math.round(precioConDescuento * 0.25);
+                precioConDescuento = Math.max(0, precioConDescuento - descuento35);
+                console.log('✅ Descuento Plan Joven aplicado:', descuento35);
+            }
+        }
+    }
+    
+    // PASO 3: Calcular aportes a descontar
     let aporteTitular = 0;
     let aportePareja = 0;
     // Titular
@@ -1514,12 +1537,13 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
     if (!isNaN(aporteTitular)) totalAportes += aporteTitular;
     if (!isNaN(aportePareja)) totalAportes += aportePareja;
     
-    // PASO 3: Aplicar descuento de aportes al precio ya con descuento especial
+    // PASO 4: Aplicar descuento de aportes al precio ya con descuentos (especial + Plan Joven)
     let precioFinal = Math.max(0, Math.round(precioConDescuento - totalAportes));
-    // Guardar info para visualización (precio base, descuento de aportes y especial)
+    // Guardar info para visualización (precio base, descuento especial, Plan Joven y aportes)
     plan._precioBase = precioBase;
     plan._totalAportes = totalAportes;
     plan._descuentoEspecial = descuentoEspecial;
+    plan._descuento35 = descuento35;
     plan._porcentajeDescuento = formData['porcentaje-descuento'] || 0;
     plan._precioFinal = precioFinal;
     return precioFinal;
@@ -3351,6 +3375,24 @@ function generateFormFields(option) {
         '</div>' +
         '</div>' +
         '</div>';
+    
+    // Agregar sección de descuento Plan Joven (solo OSPADEP SALUD)
+    sections += '<div class="form-section-group">' +
+        '<div class="section-title">' +
+        '<i class="fas fa-gift"></i> Descuento Plan Joven - OSPADEP SALUD' +
+        '</div>' +
+        '<div class="form-row">' +
+        '<div class="form-group">' +
+        '<label>' +
+        '<input type="checkbox" id="aplicar-descuento-35" name="aplicar-descuento-35" class="form-check-input">' +
+        '<span class="form-check-label">Aplicar descuento Plan Joven (25%)</span>' +
+        '</label>' +
+        '<small class="field-help" style="display: block; margin-top: 8px; color: #64748b;">' +
+        '⚠️ Este descuento solo aplica a planes de OSPADEP SALUD cuando el titular o cónyuge tiene menos de 35 años' +
+        '</small>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
 
     // Después de generar los campos, configurar validaciones y lógica de toggles
     setTimeout(() => {
@@ -3409,6 +3451,46 @@ function generateFormFields(option) {
                 }
             });
         }
+        
+        // Lógica para el descuento de menores de 35 años
+        const checkboxDescuento35 = document.getElementById('aplicar-descuento-35');
+        const edadTitularInput = document.getElementById('edad-titular');
+        const edadParejaInput = document.getElementById('edad-pareja');
+        
+        // Función para verificar si aplica el descuento
+        function verificarDescuento35() {
+            if (!checkboxDescuento35) return;
+            
+            const edadTitular = parseInt(edadTitularInput?.value) || 0;
+            const edadPareja = parseInt(edadParejaInput?.value) || 0;
+            
+            // Verificar si al menos uno es menor de 35 años
+            const aplicaDescuento = (edadTitular > 0 && edadTitular < 35) || (edadPareja > 0 && edadPareja < 35);
+            
+            if (aplicaDescuento) {
+                checkboxDescuento35.disabled = false;
+                checkboxDescuento35.parentElement.style.opacity = '1';
+                checkboxDescuento35.parentElement.style.cursor = 'pointer';
+            } else {
+                checkboxDescuento35.disabled = true;
+                checkboxDescuento35.checked = false;
+                checkboxDescuento35.parentElement.style.opacity = '0.5';
+                checkboxDescuento35.parentElement.style.cursor = 'not-allowed';
+            }
+        }
+        
+        // Escuchar cambios en las edades
+        if (edadTitularInput) {
+            edadTitularInput.addEventListener('input', verificarDescuento35);
+            edadTitularInput.addEventListener('change', verificarDescuento35);
+        }
+        if (edadParejaInput) {
+            edadParejaInput.addEventListener('input', verificarDescuento35);
+            edadParejaInput.addEventListener('change', verificarDescuento35);
+        }
+        
+        // Verificar al cargar
+        verificarDescuento35();
     }, 0);
 
     return sections;
@@ -3654,7 +3736,9 @@ function processForm() {
         composicion: formData.composicionFamiliar,
         edadTitular: formData['edad-titular'],
         tienePareja: formData.composicionFamiliar.tienePareja,
-        menores: formData.composicionFamiliar.menores
+        menores: formData.composicionFamiliar.menores,
+        descuentoEspecial: formData['aplicar-descuento'],
+        descuento35: formData['aplicar-descuento-35']
     });
     
     // Mostrar indicador de carga
@@ -3734,9 +3818,12 @@ function showPlans() {
                     prestador: prestador.name,
                     composicion: composicionFamiliar,
                     desglose: desglose,
-                    // NUEVO: incluir los campos de descuento de aportes
+                    // NUEVO: incluir los campos de descuento de aportes, especial y 35 años
                     _precioBase: plan._precioBase,
                     _totalAportes: plan._totalAportes,
+                    _descuentoEspecial: plan._descuentoEspecial,
+                    _descuento35: plan._descuento35,
+                    _porcentajeDescuento: plan._porcentajeDescuento,
                     _precioFinal: plan._precioFinal,
                     // Información adicional para el desglose
                     planDetails: {
@@ -3973,8 +4060,10 @@ function generatePlanCard(plan) {
                 '</div>';
         });
         
-        // Mostrar descuentos en el orden correcto: 1) Descuento especial, 2) Aportes
-        const tieneDescuentos = (plan._descuentoEspecial && plan._descuentoEspecial > 0) || (plan._totalAportes && plan._totalAportes > 0);
+        // Mostrar descuentos en el orden correcto: 1) Descuento especial, 2) Plan Joven, 3) Aportes
+        const tieneDescuentos = (plan._descuentoEspecial && plan._descuentoEspecial > 0) || 
+                                (plan._descuento35 && plan._descuento35 > 0) || 
+                                (plan._totalAportes && plan._totalAportes > 0);
         
         if (tieneDescuentos && plan._precioBase) {
             // Mostrar subtotal sin descuentos
@@ -3992,7 +4081,23 @@ function generatePlanCard(plan) {
                 '</div>';
         }
         
-        // 2. DESPUÉS: Aportes descontados (se aplican al precio con descuento)
+        // 1.5. Descuento Plan Joven (solo OSPADEP SALUD)
+        console.log('📊 Verificando descuento Plan Joven en desglose:', {
+            planName: plan.name,
+            prestador: plan.prestador,
+            descuento35: plan._descuento35,
+            tiene: plan._descuento35 && plan._descuento35 > 0
+        });
+        
+        if (plan._descuento35 && plan._descuento35 > 0) {
+            console.log('✅ Mostrando descuento Plan Joven en desglose:', plan._descuento35);
+            desgloseHTML += '<div class="breakdown-item" style="background:#eff6ff;padding:8px;border-radius:6px;">' +
+                '<span class="breakdown-concept" style="color:#1053F3;font-weight:600;">🎁 Descuento Plan Joven (25%)</span>' +
+                '<span class="breakdown-amount" style="color:#1053F3;font-weight:600;">- ' + formatCurrency(plan._descuento35) + '</span>' +
+                '</div>';
+        }
+        
+        // 3. FINALMENTE: Aportes descontados (se aplican después de descuento especial y Plan Joven)
         if (plan._totalAportes && plan._totalAportes > 0) {
             desgloseHTML += '<div class="breakdown-item">' +
                 '<span class="breakdown-concept" style="color:#059669;">Aportes descontados</span>' +
@@ -4069,21 +4174,26 @@ function createPrestadorFilter(planesCalculados) {
     // Obtener prestadores únicos
     const prestadores = [...new Set(planesCalculados.map(plan => plan.prestador))];
     
-    // Crear checkboxes del filtro
+    // Crear checkboxes del filtro (desmarcados por defecto)
     let checkboxesHTML = '';
     
     prestadores.forEach(prestador => {
         checkboxesHTML += `
-            <label class="filter-checkbox">
-                <input type="checkbox" checked onchange="filterByPrestadores()" data-prestador="${prestador}">
-                <span class="checkbox-label">${prestador}</span>
+            <label class="filter-checkbox-modern">
+                <input type="checkbox" onchange="filterByPrestadores()" data-prestador="${prestador}">
+                <span class="checkbox-label-modern">${prestador}</span>
             </label>
         `;
     });
     
     filterContainer.innerHTML = `
-        <span class="filter-label">Mostrar:</span>
-        <div class="filter-checkboxes">
+        <div class="filter-header-modern">
+            <span class="filter-label-modern">
+                <i class="fas fa-filter"></i>
+                Filtrar por prestador
+            </span>
+        </div>
+        <div class="filter-checkboxes-modern">
             ${checkboxesHTML}
         </div>
     `;
@@ -4106,20 +4216,22 @@ function filterByPrestadores() {
     
     // Filtrar planes
     const planCards = document.querySelectorAll('.plan-card');
-    planCards.forEach(card => {
-        const prestadorCard = card.getAttribute('data-prestador');
-        
-        if (prestadoresSeleccionados.includes(prestadorCard)) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
     
-    // Si no hay prestadores seleccionados, mostrar mensaje
+    // Si no hay prestadores seleccionados, mostrar todos los planes
     if (prestadoresSeleccionados.length === 0) {
         planCards.forEach(card => {
-            card.style.display = 'none';
+            card.style.display = 'block';
+        });
+    } else {
+        // Si hay prestadores seleccionados, filtrar
+        planCards.forEach(card => {
+            const prestadorCard = card.getAttribute('data-prestador');
+            
+            if (prestadoresSeleccionados.includes(prestadorCard)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
         });
     }
 }
@@ -9600,32 +9712,158 @@ function printCompactEmailWithBenefitsPDF() {
         day: 'numeric' 
     });
 
-    // Generar HTML de los planes con beneficios (cards horizontales, alineadas)
+    // Función auxiliar para obtener el logo del prestador
+    function getPrestadorLogo(prestador) {
+        const logos = {
+            'OMINT': 'logosEmpresas/omint.png',
+            'Swiss Medical': 'logosEmpresas/swissmedical.png',
+            'ACTIVA SALUD': 'logosEmpresas/activasalud.png',
+            'MEDIFE': 'logosEmpresas/medife.png',
+            'OSPADEP SALUD': 'logosEmpresas/OSPADEPSalud.png'
+        };
+        return logos[prestador] || '';
+    }
+
+    // Función auxiliar para obtener el color del prestador
+    function getPrestadorColor(prestador) {
+        const colores = {
+            'OMINT': '#3182ce',
+            'Swiss Medical': '#d53f8c',
+            'ACTIVA SALUD': '#059669',
+            'MEDIFE': '#dc2626',
+            'OSPADEP SALUD': '#1053F3'
+        };
+        return colores[prestador] || '#718096';
+    }
+
+    // Generar HTML de los planes con toda la información detallada
     let planesHTML = '';
     window.selectedPlans.forEach((plan) => {
         const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
         const precioFormateado = typeof precio === 'number' ? 
-            precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : 
-            '$' + precio.toString();
-        const prestadorLabel = getPrestadorLabel(plan.type);
+            precio.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : 
+            precio.toString();
+        const prestadorLabel = plan.prestador || getPrestadorLabel(plan.type);
         const planName = plan.name.replace(/_/g, ' ');
+        const prestadorLogo = getPrestadorLogo(prestadorLabel);
+        const prestadorColor = getPrestadorColor(prestadorLabel);
+        
+        // Generar badges
+        let badgesHTML = '';
+        if (plan.recommended) {
+            badgesHTML += '<div class="badge recommended-badge">⭐ Recomendado</div>';
+        }
+        if (plan.isBestPrice) {
+            badgesHTML += '<div class="badge best-price-badge">🏷️ Mejor Precio</div>';
+        }
+        if (plan.isBestValue) {
+            badgesHTML += '<div class="badge best-value-badge">💎 Mejor Valor</div>';
+        }
+
+        // Generar características
         let beneficiosHTML = '';
         if (plan.features && plan.features.length > 0) {
-            beneficiosHTML = '<ul style="margin: 10px 0 0 0; padding-left: 18px; text-align: left;">';
+            beneficiosHTML = '<ul class="plan-features-list">';
             plan.features.forEach(feature => {
-                beneficiosHTML += `<li style="margin: 4px 0; color: #374151; font-size: 13px;">${feature}</li>`;
+                beneficiosHTML += `<li>${feature}</li>`;
             });
             beneficiosHTML += '</ul>';
         }
+
+        // Generar desglose de precio
+        let desgloseHTML = '';
+        if (plan.desglose && plan.desglose.items && plan.desglose.items.length > 0) {
+            desgloseHTML = '<div class="price-breakdown"><div class="breakdown-title">🧮 Desglose del precio</div><div class="breakdown-items">';
+            
+            plan.desglose.items.forEach(item => {
+                const porcentajeInfo = item.porcentaje ? ` (${item.porcentaje})` : '';
+                const subtotalFormateado = typeof item.subtotal === 'number' ? 
+                    item.subtotal.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : 
+                    item.subtotal.toString();
+                desgloseHTML += `
+                    <div class="breakdown-item">
+                        <span class="breakdown-concept">${item.concepto}${porcentajeInfo}</span>
+                        <span class="breakdown-amount">$${subtotalFormateado}</span>
+                    </div>
+                `;
+            });
+
+            // Mostrar descuentos si existen
+            const tieneDescuentos = (plan._descuentoEspecial && plan._descuentoEspecial > 0) || 
+                                    (plan._descuento35 && plan._descuento35 > 0) || 
+                                    (plan._totalAportes && plan._totalAportes > 0);
+            
+            if (tieneDescuentos && plan._precioBase) {
+                const precioBaseFormateado = plan._precioBase.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                
+                desgloseHTML += `
+                    <div class="breakdown-item">
+                        <span class="breakdown-concept" style="color:#888;">Subtotal sin descuento</span>
+                        <span class="breakdown-amount" style="text-decoration:line-through;">$${precioBaseFormateado}</span>
+                    </div>
+                `;
+                
+                // Descuento especial
+                if (plan._descuentoEspecial && plan._descuentoEspecial > 0) {
+                    const descEspecialFormateado = plan._descuentoEspecial.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                    desgloseHTML += `
+                        <div class="breakdown-item">
+                            <span class="breakdown-concept" style="color:#a21caf;">Descuento especial (${plan._porcentajeDescuento}%)</span>
+                            <span class="breakdown-amount" style="color:#a21caf;">-$${descEspecialFormateado}</span>
+                        </div>
+                    `;
+                }
+                
+                // Descuento Plan Joven
+                if (plan._descuento35 && plan._descuento35 > 0) {
+                    const desc35Formateado = plan._descuento35.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                    desgloseHTML += `
+                        <div class="breakdown-item discount-item" style="background:#eff6ff;padding:6px;border-radius:4px;">
+                            <span class="breakdown-concept" style="color:#1053F3;font-weight:600;">🎁 Descuento Plan Joven (25%)</span>
+                            <span class="breakdown-amount" style="color:#1053F3;font-weight:600;">-$${desc35Formateado}</span>
+                        </div>
+                    `;
+                }
+                
+                // Aportes descontados
+                if (plan._totalAportes && plan._totalAportes > 0) {
+                    const aportesFormateado = plan._totalAportes.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                    desgloseHTML += `
+                        <div class="breakdown-item discount-item">
+                            <span class="breakdown-concept" style="color:#059669;">Aportes descontados</span>
+                            <span class="breakdown-amount" style="color:#059669;">-$${aportesFormateado}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            desgloseHTML += `
+                <div class="breakdown-total">
+                    <span class="breakdown-concept">Total Final</span>
+                    <span class="breakdown-amount">$${precioFormateado}</span>
+                </div>
+            </div></div>`;
+        }
+
+        // Información de grupo etario
+        const ageRangeHTML = plan.ageRange ? `<div class="plan-age-range">👤 ${plan.ageRange}</div>` : '';
+
         planesHTML += `
-        <div class="plan-card-horizontal">
-            <div class="plan-header">
-                <div class="plan-title">${planName}</div>
-                <div class="plan-prestador">${prestadorLabel}</div>
+        <div class="plan-card-pdf" style="border-left-color: ${prestadorColor};">
+            ${badgesHTML}
+            <div class="provider-logo">
+                <img src="${prestadorLogo}" alt="${prestadorLabel}" onerror="this.style.display='none';">
             </div>
-            <div class="plan-precio">${precioFormateado}</div>
-            <div class="plan-beneficios">
-                <span class="benef-title">Beneficios incluidos:</span>
+            <h3 class="plan-name">${planName}</h3>
+            ${ageRangeHTML}
+            <div class="plan-price">
+                <span class="currency">$</span>
+                <span class="price">${precioFormateado}</span>
+                <span class="period">/mes</span>
+            </div>
+            ${desgloseHTML}
+            <div class="plan-features">
+                <h4>✅ Características</h4>
                 ${beneficiosHTML}
             </div>
         </div>
@@ -9648,6 +9886,12 @@ function printCompactEmailWithBenefitsPDF() {
         totalSectionHTML = `<div class="total-section"><h3>¡Descontá con tus aportes!</h3></div>`;
     }
 
+    // Generar número de cotización único
+    const cotizacionNumber = '#OSP-' + new Date().getFullYear() + 
+                             (new Date().getMonth() + 1).toString().padStart(2, '0') + 
+                             new Date().getDate().toString().padStart(2, '0') + '-' + 
+                             Math.floor(Math.random() * 9000 + 1000);
+    
     const htmlContent = `
 <!DOCTYPE html>
 <html lang="es">
@@ -9656,221 +9900,541 @@ function printCompactEmailWithBenefitsPDF() {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cotización de Planes de Salud - OSPADEP</title>
     <style>
-        html, body, * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.4;
-            color: #333;
-            max-width: 1000px;
-            margin: 0 auto;
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
+        
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.3;
+            color: #0F152B;
+            background-color: #ffffff;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            color-adjust: exact !important;
         }
+        
         .container {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
             margin: 0 auto;
-            max-width: 1000px;
-            page-break-inside: avoid;
+            max-width: 100%;
+            padding: 0;
         }
-        .main-content {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
+        
         .header {
-            padding: 10px 0 0 0;
-            text-align: center;
-            page-break-inside: avoid;
+            background: #ffffff;
+            padding: 12px 25px;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0;
+            border-bottom: 2px solid #e2e8f0;
         }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
         .header img {
-            width: 160px;
+            max-width: 180px;
             height: auto;
-            display: block;
-            margin: 0 auto 8px auto;
-            border-radius: 12px 12px 0 0;
+            filter: none;
         }
-        .plans-section {
-            margin-top: 0;
-            padding: 0 20px;
+        
+        .header-right {
+            background: rgba(16, 83, 243, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-align: right;
+            border: 1px solid rgba(16, 83, 243, 0.15);
         }
-        .plans-section h3 {
-            color: #1e40af;
-            font-size: 18px;
-            margin-bottom: 12px;
-            text-align: center;
+        
+        .cotizacion-label {
+            color: #64748b;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
         }
-        .plans-horizontal-container {
+        
+        .cotizacion-number {
+            color: #1053F3;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .cotizacion-date {
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+        
+        .header h1,
+        .header p {
+            display: none;
+        }
+        
+        .plans-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 10px;
+            margin: 15px 20px;
             justify-content: center;
-            margin-bottom: 18px;
-            page-break-inside: avoid;
-            break-inside: avoid;
         }
-        .plan-card-horizontal {
+        
+        .plan-card-pdf {
             background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 14px 14px 12px 14px;
-            margin-bottom: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid #e2e8f0;
+            border-left: 4px solid;
+            border-radius: 6px;
+            padding: 8px;
+            padding-top: 28px;
+            position: relative;
+            width: calc(33.333% - 7px);
             min-width: 220px;
-            max-width: 240px;
-            flex: 1 1 220px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
+            max-width: 260px;
+            box-sizing: border-box;
             page-break-inside: avoid;
             break-inside: avoid;
         }
-        .plan-header {
-            width: 100%;
-            margin-bottom: 2px;
+        
+        .badge {
+            position: absolute;
+            padding: 3px 6px;
+            border-radius: 10px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            z-index: 10;
         }
-        .plan-title {
-            font-size: 15px;
+        
+        .recommended-badge {
+            background: #10b981;
+            color: white;
+            top: 6px;
+            right: 6px;
+        }
+        
+        .best-price-badge {
+            background: #f59e0b;
+            color: white;
+            top: 6px;
+            left: 6px;
+        }
+        
+        .best-value-badge {
+            background: #8b5cf6;
+            color: white;
+            top: 6px;
+            left: 6px;
+        }
+        
+        .provider-logo {
+            text-align: center;
+            margin-bottom: 6px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .provider-logo img {
+            max-width: 70px;
+            max-height: 35px;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .plan-name {
+            font-size: 0.95rem;
             font-weight: 700;
-            color: #1e40af;
-            margin-bottom: 2px;
+            color: #0F152B;
+            margin-bottom: 4px;
+            text-align: center;
+            line-height: 1.2;
         }
-        .plan-prestador {
-            font-size: 12px;
-            color: #6b7280;
+        
+        .plan-age-range {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.65rem;
             margin-bottom: 6px;
         }
-        .plan-precio {
-            font-size: 20px;
+        
+        .plan-price {
+            text-align: center;
+            margin: 8px 0;
+            padding: 8px;
+            background: #f0f9ff;
+            border-radius: 6px;
+            border: 1px solid #bae6fd;
+        }
+        
+        .plan-price .currency {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #0369a1;
+        }
+        
+        .plan-price .price {
+            font-size: 1.3rem;
             font-weight: 700;
+            color: #0c4a6e;
+        }
+        
+        .plan-price .period {
+            font-size: 0.7rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .price-breakdown {
+            background: #f8fafc;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 6px 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .breakdown-title {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+        
+        .breakdown-items {
+            margin-top: 3px;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.6rem;
+            padding: 2px 0;
+        }
+        
+        .breakdown-item.discount-item {
+            background: #d1fae5;
+            padding: 4px;
+            border-radius: 3px;
+            margin-top: 2px;
+        }
+        
+        .breakdown-item.discount-item .breakdown-concept,
+        .breakdown-item.discount-item .breakdown-amount {
             color: #059669;
-            margin-bottom: 8px;
-            width: 100%;
-            text-align: left;
-        }
-        .plan-beneficios {
-            width: 100%;
-        }
-        .benef-title {
-            color: #374151;
-            font-size: 13px;
             font-weight: 600;
         }
-        .total-section {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            color: white;
-            padding: 14px;
-            border-radius: 10px;
-            margin: 0 20px 18px 20px;
-            text-align: center;
-            font-size: 16px;
+        
+        .breakdown-concept {
+            color: #64748b;
+            font-weight: 500;
         }
-        .total-section h3 {
-            margin: 0 0 6px 0;
-            font-size: 16px;
+        
+        .breakdown-amount {
+            color: #0F152B;
+            font-weight: 600;
         }
-        .total-price {
-            font-size: 22px;
+        
+        .breakdown-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 4px;
+            margin-top: 4px;
+            border-top: 1px solid #cbd5e1;
             font-weight: 700;
-            margin: 0;
+            font-size: 0.7rem;
         }
-        .contact-section {
-            background: #f3f4f6;
+        
+        .breakdown-total .breakdown-amount {
+            color: #1053F3;
+            font-size: 0.8rem;
+        }
+        
+        .plan-features {
+            margin: 8px 0;
+        }
+        
+        .plan-features h4 {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #0F152B;
+            margin-bottom: 4px;
+        }
+        
+        .plan-features-list {
+            list-style: none;
+        }
+        
+        .plan-features-list li {
+            padding: 2px 0;
+            color: #475569;
+            font-size: 0.65rem;
+            line-height: 1.3;
+            padding-left: 12px;
+            position: relative;
+        }
+        
+        .plan-features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 0.6rem;
+        }
+        
+        .total-section {
+            background: #059669;
+            color: white;
+            padding: 10px 15px;
             border-radius: 8px;
-            padding: 14px;
-            margin: 0 20px 18px 20px;
+            margin: 12px 20px;
             text-align: center;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
         }
+        
+        .total-section h3 {
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .total-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .contact-section {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            margin: 0 20px 15px 20px;
+        }
+        
         .contact-section h3 {
-            color: #1e40af;
-            margin-top: 0;
-            font-size: 15px;
+            color: #0F152B;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            font-weight: 700;
         }
+        
         .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
+        
         .contact-item {
             background: white;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #e2e8f0;
+            flex: 1;
+            min-width: 130px;
+            text-align: center;
         }
+        
         .contact-item strong {
-            color: #1e40af;
+            color: #1053F3;
             display: block;
             margin-bottom: 3px;
+            font-size: 0.75rem;
         }
+        
+        .contact-item span {
+            font-size: 0.7rem;
+            color: #475569;
+        }
+        
         @media print {
-            html, body {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
+            @page {
+                margin: 0.5cm;
+                size: A4 landscape;
+            }
+            
+            body {
                 background: white !important;
+                margin: 0;
+                padding: 0;
             }
-            .container { box-shadow: none !important; }
-            .main-content, .plans-horizontal-container, .plan-card-horizontal {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
             }
-            .plans-horizontal-container {
+            
+            .plans-grid {
                 display: flex !important;
                 flex-wrap: wrap !important;
-                gap: 16px !important;
+                gap: 8px !important;
                 justify-content: center !important;
-                margin-bottom: 18px !important;
-                white-space: normal !important;
-                overflow-x: visible !important;
+                margin: 10px 15px !important;
             }
-            .plan-card-horizontal {
-                min-width: 220px !important;
-                max-width: 240px !important;
-                font-size: 12px !important;
+            
+            .plan-card-pdf {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                width: calc(33.333% - 6px) !important;
+                min-width: 210px !important;
+                max-width: 250px !important;
+                margin-bottom: 0 !important;
+                padding: 6px !important;
+                padding-top: 26px !important;
+            }
+            
+            .total-section {
+                background: #059669 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                margin: 8px 15px !important;
+                padding: 8px 12px !important;
+            }
+            
+            .recommended-badge {
+                background: #10b981 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .best-price-badge {
+                background: #f59e0b !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .best-value-badge {
+                background: #8b5cf6 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .header {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 10px 20px !important;
+                border-bottom: 2px solid #e2e8f0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .header-right {
+                background: rgba(16, 83, 243, 0.08) !important;
+                border: 1px solid rgba(16, 83, 243, 0.15) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                padding: 8px 15px !important;
+            }
+            
+            .contact-section {
+                margin: 0 15px 10px 15px !important;
+                padding: 8px 15px !important;
+            }
+            
+            .contact-section h3 {
+                font-size: 0.85rem !important;
+                margin-bottom: 5px !important;
+            }
+            
+            .contact-info {
+                gap: 8px !important;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="main-content">
-            <div class="header">
-                <img src="https://raw.githubusercontent.com/dantemoss/CotizadorWebOSPADEP-assets/main/logoOSPADEP16.9.jpg"
+        <div class="header">
+            <div class="header-left">
+                <img src="https://github.com/dantemoss/CotizadorWebOSPADEP-assets/blob/main/LOGO%20OSPADEP-Salud.png?raw=true"
                 alt="OSPADEP"
-                onerror="this.style.display='none';var alt=document.createElement('div');alt.style.color='#1e40af';alt.style.fontWeight='bold';alt.style.fontSize='22px';alt.style.margin='10px auto';alt.style.textAlign='center';alt.innerText='OSPADEP';this.parentNode.appendChild(alt);">
+                onerror="this.style.display='none';">
             </div>
-            <div class="plans-section">
-                <h3>📋 Cotización de Planes de Salud</h3>
-                <div class="plans-horizontal-container">
-                    ${planesHTML}
+            <div class="header-right">
+                <div class="cotizacion-label">COTIZACIÓN</div>
+                <div class="cotizacion-number">${cotizacionNumber}</div>
+                <div class="cotizacion-date">${fechaFormateada}</div>
+            </div>
+        </div>
+        <div class="plans-grid">
+            ${planesHTML}
+        </div>
+        ${totalSectionHTML}
+        <div class="contact-section">
+            <h3>📞 ¿Necesitas más información?</h3>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <strong>📞 Teléfono</strong>
+                    <span>+54 9 11 6625-9009</span>
                 </div>
-            </div>
-            ${totalSectionHTML}
-            <div class="contact-section">
-                <h3>📞 ¿Necesitas más información?</h3>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <strong>📞 Teléfono</strong>
-                        +54 9 11 6625-9009
-                    </div>
-                    <div class="contact-item">
-                        <strong>📧 Email</strong>
-                        comercial@ospadep.com
-                    </div>
-                    <div class="contact-item">
-                        <strong>🌐 Web</strong>
-                        www.ospadep.com
-                    </div>
+                <div class="contact-item">
+                    <strong>📧 Email</strong>
+                    <span>comercial@ospadep.com</span>
+                </div>
+                <div class="contact-item">
+                    <strong>🌐 Web</strong>
+                    <span>www.ospadep.com</span>
                 </div>
             </div>
         </div>
     </div>
-    <script>window.onload = function() { setTimeout(function() { window.print(); }, 400); }<\/script>
+    <script>
+        window.onload = function() { 
+            // Esperar a que las imágenes se carguen antes de imprimir
+            var images = document.images;
+            var loaded = 0;
+            var total = images.length;
+            
+            if (total === 0) {
+                setTimeout(function() { window.print(); }, 600);
+                return;
+            }
+            
+            for (var i = 0; i < total; i++) {
+                var img = images[i];
+                if (img.complete) {
+                    loaded++;
+                } else {
+                    img.addEventListener('load', function() {
+                        loaded++;
+                        if (loaded === total) {
+                            setTimeout(function() { window.print(); }, 600);
+                        }
+                    });
+                    img.addEventListener('error', function() {
+                        loaded++;
+                        if (loaded === total) {
+                            setTimeout(function() { window.print(); }, 600);
+                        }
+                    });
+                }
+            }
+            
+            if (loaded === total) {
+                setTimeout(function() { window.print(); }, 600);
+            }
+        };
+    <\/script>
 </body>
 </html>`;
 
