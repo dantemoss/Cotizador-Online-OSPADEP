@@ -1,6 +1,6 @@
 {
-  "version": "2025-10",
-  "fechaActualizacion": "2025-10-30",
+  "version": "2025-11",
+  "fechaActualizacion": "2025-11-20",
   "prestadores": {
     "omint": {
       "name": "OMINT",
@@ -221,8 +221,8 @@
           "name": "PLAN PO62",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 257398,
-            ">65": 747939
+            "≤65": 263318,
+            ">65": 765142
           },
           "features": [
             "Cobertura integral SWISS MEDICAL",
@@ -239,8 +239,8 @@
           "name": "PLAN PO64",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 308650,
-            ">65": 895610
+            "≤65": 315749,
+            ">65": 916209
           },
           "features": [
             "Cobertura premium SWISS MEDICAL",
@@ -258,8 +258,8 @@
           "name": "PLAN SB04",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 202992,
-            ">65": 555104
+            "≤65": 207661,
+            ">65": 567871
           },
           "features": [
             "Cobertura básica SWISS MEDICAL",
@@ -281,8 +281,8 @@
           "name": "PLAN MS",
           "type": "sw_nubial",
           "preciosPorEdad": {
-            "≤65": 170389,
-            ">65": 475029
+            "≤65": 174308,
+            ">65": 485955
           },
           "features": [
             "Plan SW NUBIAL exclusivo",
@@ -305,8 +305,8 @@
           "name": "PLAN SB02",
           "type": "swiss",
           "preciosPorEdad": {
-            "≤65": 198054,
-            ">65": 659474
+            "≤65": 202609,
+            ">65": 674642
           },
           "features": [
             "Plan SWISS básico",
@@ -329,7 +329,7 @@
           "name": "PLAN AS 25",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 70219
+            "≤100": 72958
           },
           "features": [
             "Plan básico ACTIVA SALUD",
@@ -345,8 +345,8 @@
           "name": "PLAN AS 300",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤65": 81023,
-            ">65": 121727
+            "≤65": 84183,
+            ">65": 126474
           },
           "features": [
             "Plan AS 300 ACTIVA SALUD",
@@ -362,7 +362,7 @@
           "name": "PLAN AS 700",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 91827
+            "≤100": 95408
           },
           "features": [
             "Plan AS 700 ACTIVA SALUD",
@@ -378,7 +378,7 @@
           "name": "PLAN AS 800",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 113433
+            "≤100": 117857
           },
           "features": [
             "Plan AS 800 ACTIVA SALUD",
@@ -394,7 +394,7 @@
           "name": "PLAN AS 900",
           "type": "activa_salud",
           "preciosPorEdad": {
-            "≤100": 120366
+            "≤100": 125060
           },
           "features": [
             "Plan AS 900 ACTIVA SALUD",
@@ -417,31 +417,31 @@
           "type": "medife",
           "precios": {
             "individual": {
-              "0-29": 108402,
-              "30-39": 136260,
-              "40-49": 177193,
-              "50-59": 257034,
-              "60+": 280000
+              "0-29": 112630,
+              "30-39": 141574,
+              "40-49": 184104,
+              "50-59": 267058,
+              "60+": 290920
             },
             "conyuge": {
-              "0-29": 94022,
-              "30-39": 109594,
-              "40-49": 129845,
-              "50-59": 137374,
-              "60+": 147630
+              "0-29": 97689,
+              "30-39": 113868,
+              "40-49": 134909,
+              "50-59": 142732,
+              "60+": 153388
             },
             "matrimonio": {
-              "0-29": 202424,
-              "30-39": 245854,
-              "40-49": 307038,
-              "50-59": 394407,
-              "60+": 427630
+              "0-29": 210319,
+              "30-39": 255442,
+              "40-49": 319012,
+              "50-59": 409789,
+              "60+": 444308
             },
             "hijos": {
-              "primerHijo": 88312,
-              "segundoHijo": 72960,
-              "hijoAdulto": 108725,
-              "familiarCargo": 280000
+              "primerHijo": 91756,
+              "segundoHijo": 75805,
+              "hijoAdulto": 112965,
+              "familiarCargo": 290920
             }
           },
           "features": [
@@ -460,31 +460,31 @@
           "type": "medife",
           "precios": {
             "individual": {
-              "0-29": 130667,
-              "30-39": 165413,
-              "40-49": 208655,
-              "50-59": 326841,
-              "60+": 355366
+              "0-29": 135763,
+              "30-39": 171864,
+              "40-49": 216793,
+              "50-59": 339588,
+              "60+": 369225
             },
             "conyuge": {
-              "0-29": 114131,
-              "30-39": 136645,
-              "40-49": 184745,
-              "50-59": 189635,
-              "60+": 207512
+              "0-29": 118582,
+              "30-39": 141974,
+              "40-49": 191950,
+              "50-59": 197031,
+              "60+": 215605
             },
             "matrimonio": {
-              "0-29": 244799,
-              "30-39": 302058,
-              "40-49": 393399,
-              "50-59": 516476,
-              "60+": 562877
+              "0-29": 254346,
+              "30-39": 313838,
+              "40-49": 408742,
+              "50-59": 536619,
+              "60+": 584829
             },
             "hijos": {
-              "primerHijo": 111056,
-              "segundoHijo": 81172,
-              "hijoAdulto": 131017,
-              "familiarCargo": 355366
+              "primerHijo": 115387,
+              "segundoHijo": 84338,
+              "hijoAdulto": 136127,
+              "familiarCargo": 369225
             }
           },
           "features": [
@@ -503,31 +503,31 @@
           "type": "medife",
           "precios": {
             "individual": {
-              "0-29": 148494,
-              "30-39": 191141,
-              "40-49": 241269,
-              "50-59": 370867,
-              "60+": 408360
+              "0-29": 154285,
+              "30-39": 198595,
+              "40-49": 250678,
+              "50-59": 385331,
+              "60+": 424286
             },
             "conyuge": {
-              "0-29": 132907,
-              "30-39": 163965,
-              "40-49": 213664,
-              "50-59": 265380,
-              "60+": 190976
+              "0-29": 138090,
+              "30-39": 170360,
+              "40-49": 221997,
+              "50-59": 275730,
+              "60+": 198424
             },
             "matrimonio": {
-              "0-29": 281402,
-              "30-39": 355106,
-              "40-49": 454931,
-              "50-59": 554810,
-              "60+": 602007
+              "0-29": 292377,
+              "30-39": 368955,
+              "40-49": 472673,
+              "50-59": 576448,
+              "60+": 625485
             },
             "hijos": {
-              "primerHijo": 128329,
-              "segundoHijo": 103761,
-              "hijoAdulto": 148494,
-              "familiarCargo": 408360
+              "primerHijo": 133334,
+              "segundoHijo": 107808,
+              "hijoAdulto": 154285,
+              "familiarCargo": 424286
             }
           },
           "features": [
@@ -735,6 +735,11 @@
     {
       "fecha": "2025-10-30",
       "descripcion": "Aumento por porcentajes: OMINT 2.15%, SWISS (todos) 0%, ACTIVA 0%, MEDIFE 0%, OSPADEP SALUD 0%",
+      "autor": "Panel Admin"
+    },
+    {
+      "fecha": "2025-11-20",
+      "descripcion": "Aumento por porcentajes: OMINT 0%, SWISS (todos) 2.3%, ACTIVA 3.9%, MEDIFE 3.9%, OSPADEP SALUD 0%",
       "autor": "Panel Admin"
     }
   ]
