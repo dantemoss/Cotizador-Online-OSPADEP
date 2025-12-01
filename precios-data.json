@@ -1,6 +1,6 @@
 {
-  "version": "2025-11",
-  "fechaActualizacion": "2025-11-20",
+  "version": "2025-12",
+  "fechaActualizacion": "2025-12-01",
   "prestadores": {
     "omint": {
       "name": "OMINT",
@@ -11,29 +11,29 @@
           "type": "omint",
           "preciosPorEdad": {
             "0-25": {
-              "adultoConyugue": 86021,
-              "hijo1Menor": 74920,
-              "hijo2MasMenores": 64780
+              "adultoConyugue": 88042,
+              "hijo1Menor": 76681,
+              "hijo2MasMenores": 66302
             },
             "26-35": {
-              "adultoConyugue": 123260,
-              "hijo1Menor": 74920,
-              "hijo2MasMenores": 64780
+              "adultoConyugue": 126157,
+              "hijo1Menor": 76681,
+              "hijo2MasMenores": 66302
             },
             "36-54": {
-              "adultoConyugue": 145506,
-              "hijo1Menor": 74920,
-              "hijo2MasMenores": 64780
+              "adultoConyugue": 148925,
+              "hijo1Menor": 76681,
+              "hijo2MasMenores": 66302
             },
             "55-59": {
-              "adultoConyugue": 247854,
-              "hijo1Menor": 74920,
-              "hijo2MasMenores": 64780
+              "adultoConyugue": 253679,
+              "hijo1Menor": 76681,
+              "hijo2MasMenores": 66302
             },
             "60+": {
-              "adultoConyugue": 383229,
-              "hijo1Menor": 74920,
-              "hijo2MasMenores": 64780
+              "adultoConyugue": 392235,
+              "hijo1Menor": 76681,
+              "hijo2MasMenores": 66302
             }
           },
           "features": [
@@ -51,29 +51,29 @@
           "type": "omint",
           "preciosPorEdad": {
             "0-25": {
-              "adultoConyugue": 115830,
-              "hijo1Menor": 100845,
-              "hijo2MasMenores": 87036
+              "adultoConyugue": 118552,
+              "hijo1Menor": 103215,
+              "hijo2MasMenores": 89081
             },
             "26-35": {
-              "adultoConyugue": 167912,
-              "hijo1Menor": 100845,
-              "hijo2MasMenores": 87036
+              "adultoConyugue": 171858,
+              "hijo1Menor": 103215,
+              "hijo2MasMenores": 89081
             },
             "36-54": {
-              "adultoConyugue": 197118,
-              "hijo1Menor": 100845,
-              "hijo2MasMenores": 87036
+              "adultoConyugue": 201750,
+              "hijo1Menor": 103215,
+              "hijo2MasMenores": 89081
             },
             "55-59": {
-              "adultoConyugue": 339825,
-              "hijo1Menor": 100845,
-              "hijo2MasMenores": 87036
+              "adultoConyugue": 347811,
+              "hijo1Menor": 103215,
+              "hijo2MasMenores": 89081
             },
             "60+": {
-              "adultoConyugue": 515738,
-              "hijo1Menor": 100845,
-              "hijo2MasMenores": 87036
+              "adultoConyugue": 527858,
+              "hijo1Menor": 103215,
+              "hijo2MasMenores": 89081
             }
           },
           "features": [
@@ -91,29 +91,29 @@
           "type": "omint",
           "preciosPorEdad": {
             "0-25": {
-              "adultoConyugue": 147066,
-              "hijo1Menor": 128563,
-              "hijo2MasMenores": 111637
+              "adultoConyugue": 150522,
+              "hijo1Menor": 131584,
+              "hijo2MasMenores": 114260
             },
             "26-35": {
-              "adultoConyugue": 210449,
-              "hijo1Menor": 128563,
-              "hijo2MasMenores": 111637
+              "adultoConyugue": 215395,
+              "hijo1Menor": 131584,
+              "hijo2MasMenores": 114260
             },
             "36-54": {
-              "adultoConyugue": 246456,
-              "hijo1Menor": 128563,
-              "hijo2MasMenores": 111637
+              "adultoConyugue": 252248,
+              "hijo1Menor": 131584,
+              "hijo2MasMenores": 114260
             },
             "55-59": {
-              "adultoConyugue": 413096,
-              "hijo1Menor": 128563,
-              "hijo2MasMenores": 111637
+              "adultoConyugue": 422804,
+              "hijo1Menor": 131584,
+              "hijo2MasMenores": 114260
             },
             "60+": {
-              "adultoConyugue": 615185,
-              "hijo1Menor": 128563,
-              "hijo2MasMenores": 111637
+              "adultoConyugue": 629642,
+              "hijo1Menor": 131584,
+              "hijo2MasMenores": 114260
             }
           },
           "features": [
@@ -133,29 +133,29 @@
           "type": "omint",
           "preciosPorEdad": {
             "0-25": {
-              "adultoConyugue": 252889,
-              "hijo1Menor": 221737,
-              "hijo2MasMenores": 193408
+              "adultoConyugue": 258832,
+              "hijo1Menor": 226948,
+              "hijo2MasMenores": 197953
             },
             "26-35": {
-              "adultoConyugue": 337093,
-              "hijo1Menor": 221737,
-              "hijo2MasMenores": 193408
+              "adultoConyugue": 345015,
+              "hijo1Menor": 226948,
+              "hijo2MasMenores": 197953
             },
             "36-54": {
-              "adultoConyugue": 443730,
-              "hijo1Menor": 221737,
-              "hijo2MasMenores": 193408
+              "adultoConyugue": 454158,
+              "hijo1Menor": 226948,
+              "hijo2MasMenores": 197953
             },
             "55-59": {
-              "adultoConyugue": 618348,
-              "hijo1Menor": 221737,
-              "hijo2MasMenores": 193408
+              "adultoConyugue": 632879,
+              "hijo1Menor": 226948,
+              "hijo2MasMenores": 197953
             },
             "60+": {
-              "adultoConyugue": 842884,
-              "hijo1Menor": 221737,
-              "hijo2MasMenores": 193408
+              "adultoConyugue": 862692,
+              "hijo1Menor": 226948,
+              "hijo2MasMenores": 197953
             }
           },
           "features": [
@@ -175,29 +175,29 @@
           "type": "omint",
           "preciosPorEdad": {
             "0-25": {
-              "adultoConyugue": 87281,
-              "hijo1Menor": 75887,
-              "hijo2MasMenores": 65525
+              "adultoConyugue": 89332,
+              "hijo1Menor": 77670,
+              "hijo2MasMenores": 67065
             },
             "26-35": {
-              "adultoConyugue": 124759,
-              "hijo1Menor": 75887,
-              "hijo2MasMenores": 65525
+              "adultoConyugue": 127691,
+              "hijo1Menor": 77670,
+              "hijo2MasMenores": 67065
             },
             "36-54": {
-              "adultoConyugue": 147435,
-              "hijo1Menor": 75887,
-              "hijo2MasMenores": 65525
+              "adultoConyugue": 150900,
+              "hijo1Menor": 77670,
+              "hijo2MasMenores": 67065
             },
             "55-59": {
-              "adultoConyugue": 249785,
-              "hijo1Menor": 75887,
-              "hijo2MasMenores": 65525
+              "adultoConyugue": 255655,
+              "hijo1Menor": 77670,
+              "hijo2MasMenores": 67065
             },
             "60+": {
-              "adultoConyugue": 388082,
-              "hijo1Menor": 75887,
-              "hijo2MasMenores": 65525
+              "adultoConyugue": 397202,
+              "hijo1Menor": 77670,
+              "hijo2MasMenores": 67065
             }
           },
           "features": [
@@ -740,6 +740,11 @@
     {
       "fecha": "2025-11-20",
       "descripcion": "Aumento por porcentajes: OMINT 0%, SWISS (todos) 2.3%, ACTIVA 3.9%, MEDIFE 3.9%, OSPADEP SALUD 0%",
+      "autor": "Panel Admin"
+    },
+    {
+      "fecha": "2025-12-01",
+      "descripcion": "Aumento por porcentajes: OMINT 2.35%, SWISS (todos) 0%, ACTIVA 0%, MEDIFE 0%, OSPADEP SALUD 0%",
       "autor": "Panel Admin"
     }
   ]
