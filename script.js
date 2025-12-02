@@ -1399,9 +1399,20 @@ function calcularPrecioFinalOspadep(planOspadep, composicionFamiliar, edadTitula
     }
     let precioTotal = 0;
     
+    // Determinar si usar precios "Particular" (con IVA) o normales (con obra social)
+    const situacionLaboral = window.situacionLaboralActual || 'dependencia';
+    const usarPreciosParticular = (situacionLaboral === 'particular');
+    
+    // Seleccionar la estructura de precios correcta
+    const estructuraPrecios = usarPreciosParticular && planOspadep.preciosPorEdadParticular 
+        ? planOspadep.preciosPorEdadParticular 
+        : planOspadep.preciosPorEdad;
+    
+    console.log(`💰 OSPADEP SALUD - Usando precios ${usarPreciosParticular ? 'PARTICULARES (CON IVA)' : 'CON OBRA SOCIAL'} para ${planOspadep.name}`);
+    
     // Determinar grupo etario del titular
     const grupoEtarioTitular = determinarGrupoEtarioOspadep(edadTitular);
-    const preciosGrupoTitular = planOspadep.preciosPorEdad[grupoEtarioTitular];
+    const preciosGrupoTitular = estructuraPrecios[grupoEtarioTitular];
     
     // 1. Capita titular (siempre presente)
     precioTotal += preciosGrupoTitular.adultoConyugue;
@@ -1409,7 +1420,7 @@ function calcularPrecioFinalOspadep(planOspadep, composicionFamiliar, edadTitula
     // 2. Segunda capita (pareja/cónyuge)
     if (composicionFamiliar.tienePareja && edadPareja) {
         const grupoEtarioPareja = determinarGrupoEtarioOspadep(edadPareja);
-        const preciosGrupoPareja = planOspadep.preciosPorEdad[grupoEtarioPareja];
+        const preciosGrupoPareja = estructuraPrecios[grupoEtarioPareja];
         precioTotal += preciosGrupoPareja.adultoConyugue;
     }
     
@@ -1424,7 +1435,7 @@ function calcularPrecioFinalOspadep(planOspadep, composicionFamiliar, edadTitula
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
         composicionFamiliar.mayores.forEach(edadHijo => {
             const grupoEtarioHijo = determinarGrupoEtarioOspadep(edadHijo);
-            const preciosGrupoHijo = planOspadep.preciosPorEdad[grupoEtarioHijo];
+            const preciosGrupoHijo = estructuraPrecios[grupoEtarioHijo];
             precioTotal += preciosGrupoHijo.adultoConyugue;
         });
     }
@@ -1780,9 +1791,18 @@ function generarDesglosePrecioOspadep(planOspadep, composicionFamiliar, edadTitu
         total: 0
     };
     
+    // Determinar si usar precios "Particular" (con IVA) o normales (con obra social)
+    const situacionLaboral = window.situacionLaboralActual || 'dependencia';
+    const usarPreciosParticular = (situacionLaboral === 'particular');
+    
+    // Seleccionar la estructura de precios correcta
+    const estructuraPrecios = usarPreciosParticular && planOspadep.preciosPorEdadParticular 
+        ? planOspadep.preciosPorEdadParticular 
+        : planOspadep.preciosPorEdad;
+    
     // Determinar grupo etario del titular
     const grupoEtarioTitular = determinarGrupoEtarioOspadep(edadTitular);
-    const preciosGrupoTitular = planOspadep.preciosPorEdad[grupoEtarioTitular];
+    const preciosGrupoTitular = estructuraPrecios[grupoEtarioTitular];
     
     // 1. Capita titular
     const precioTitular = preciosGrupoTitular.adultoConyugue;
@@ -1797,7 +1817,7 @@ function generarDesglosePrecioOspadep(planOspadep, composicionFamiliar, edadTitu
     // 2. Segunda capita (pareja/cónyuge)
     if (composicionFamiliar.tienePareja && edadPareja) {
         const grupoEtarioPareja = determinarGrupoEtarioOspadep(edadPareja);
-        const preciosGrupoPareja = planOspadep.preciosPorEdad[grupoEtarioPareja];
+        const preciosGrupoPareja = estructuraPrecios[grupoEtarioPareja];
         const precioPareja = preciosGrupoPareja.adultoConyugue;
         
         desglose.items.push({
@@ -1828,7 +1848,7 @@ function generarDesglosePrecioOspadep(planOspadep, composicionFamiliar, edadTitu
     if (composicionFamiliar.mayores && composicionFamiliar.mayores.length > 0) {
         composicionFamiliar.mayores.forEach((edadHijo, index) => {
             const grupoEtarioHijo = determinarGrupoEtarioOspadep(edadHijo);
-            const preciosGrupoHijo = planOspadep.preciosPorEdad[grupoEtarioHijo];
+            const preciosGrupoHijo = estructuraPrecios[grupoEtarioHijo];
             const precioHijoMayor = preciosGrupoHijo.adultoConyugue;
             
             desglose.items.push({
@@ -3226,7 +3246,6 @@ function generateFormFields(option) {
         '<select id="situacion-laboral" name="situacion-laboral" required>' +
         '<option value="">Selecciona una opción</option>' +
         '<option value="dependencia">Relación de dependencia</option>' +
-        '<option value="monotributista">Monotributista</option>' +
         '<option value="particular">Particular</option>' +
         '</select>' +
         '<div class="error-message" id="error-situacion-laboral"></div>' +
@@ -3270,7 +3289,6 @@ function generateFormFields(option) {
                 '<select id="situacion-pareja" name="situacion-pareja" required>' +
                 '<option value="">Selecciona una opción</option>' +
                 '<option value="dependencia">Relación de dependencia</option>' +
-                '<option value="monotributista">Monotributista</option>' +
                 '<option value="particular">Particular</option>' +
                 '</select>' +
                 '<div class="error-message" id="error-situacion-pareja"></div>' +
@@ -3312,7 +3330,6 @@ function generateFormFields(option) {
                 '<select id="situacion-pareja" name="situacion-pareja" required>' +
                 '<option value="">Selecciona una opción</option>' +
                 '<option value="dependencia">Relación de dependencia</option>' +
-                '<option value="monotributista">Monotributista</option>' +
                 '<option value="particular">Particular</option>' +
                 '</select>' +
                 '<div class="error-message" id="error-situacion-pareja"></div>' +
@@ -3758,6 +3775,9 @@ function processForm() {
     // ===== NUEVO: Análisis de composición familiar =====
     formData.composicionFamiliar = analizarComposicionFamiliar(formData);
     
+    // Guardar situación laboral globalmente para uso en cálculos de OSPADEP SALUD
+    window.situacionLaboralActual = formData['situacion-laboral'] || 'dependencia';
+    
     console.log('💰 Datos del formulario procesados:', {
         option: selectedOption,
         composicion: formData.composicionFamiliar,
@@ -3765,7 +3785,8 @@ function processForm() {
         tienePareja: formData.composicionFamiliar.tienePareja,
         menores: formData.composicionFamiliar.menores,
         descuentoEspecial: formData['aplicar-descuento'],
-        descuento35: formData['aplicar-descuento-35']
+        descuento35: formData['aplicar-descuento-35'],
+        situacionLaboral: window.situacionLaboralActual
     });
     
     // Mostrar indicador de carga
@@ -10659,18 +10680,33 @@ function aplicarAumentoAPrestador(prestador, porcentaje) {
     
     Object.values(prestador.planes).forEach(plan => {
         if (plan.preciosPorEdad) {
-            // Estructura ACTIVA SALUD
+            // Estructura ACTIVA SALUD / OMINT / SWISS / OSPADEP SALUD
             Object.keys(plan.preciosPorEdad).forEach(grupo => {
                 if (typeof plan.preciosPorEdad[grupo] === 'number') {
                     plan.preciosPorEdad[grupo] = Math.round(plan.preciosPorEdad[grupo] * factor);
                 } else if (typeof plan.preciosPorEdad[grupo] === 'object') {
-                    // Estructura OMINT/SWISS
+                    // Estructura OMINT/SWISS/OSPADEP
                     Object.keys(plan.preciosPorEdad[grupo]).forEach(subgrupo => {
                         plan.preciosPorEdad[grupo][subgrupo] = Math.round(plan.preciosPorEdad[grupo][subgrupo] * factor);
                     });
                 }
             });
-        } else if (plan.precios) {
+        }
+        
+        // NUEVO: También actualizar preciosPorEdadParticular si existe (OSPADEP SALUD)
+        if (plan.preciosPorEdadParticular) {
+            Object.keys(plan.preciosPorEdadParticular).forEach(grupo => {
+                if (typeof plan.preciosPorEdadParticular[grupo] === 'number') {
+                    plan.preciosPorEdadParticular[grupo] = Math.round(plan.preciosPorEdadParticular[grupo] * factor);
+                } else if (typeof plan.preciosPorEdadParticular[grupo] === 'object') {
+                    Object.keys(plan.preciosPorEdadParticular[grupo]).forEach(subgrupo => {
+                        plan.preciosPorEdadParticular[grupo][subgrupo] = Math.round(plan.preciosPorEdadParticular[grupo][subgrupo] * factor);
+                    });
+                }
+            });
+        }
+        
+        if (plan.precios) {
             // Estructura MEDIFE
             Object.keys(plan.precios).forEach(categoria => {
                 if (typeof plan.precios[categoria] === 'object') {

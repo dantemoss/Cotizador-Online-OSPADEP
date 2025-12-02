@@ -586,6 +586,40 @@
               "hijoMenor": 43962
             }
           },
+          "preciosPorEdadParticular": {
+            "18-27": {
+              "adultoConyugue": 79637,
+              "hijoMenor": 48578
+            },
+            "28-35": {
+              "adultoConyugue": 79637,
+              "hijoMenor": 48578
+            },
+            "36-40": {
+              "adultoConyugue": 79637,
+              "hijoMenor": 48578
+            },
+            "41-45": {
+              "adultoConyugue": 83619,
+              "hijoMenor": 48578
+            },
+            "46-50": {
+              "adultoConyugue": 92379,
+              "hijoMenor": 48578
+            },
+            "51-55": {
+              "adultoConyugue": 119455,
+              "hijoMenor": 48578
+            },
+            "56-64": {
+              "adultoConyugue": 178386,
+              "hijoMenor": 48578
+            },
+            "65+": {
+              "adultoConyugue": 238910,
+              "hijoMenor": 48578
+            }
+          },
           "features": [
             "Plan básico OSPADEP SALUD",
             "Cobertura integral de salud",
@@ -631,6 +665,40 @@
             "65+": {
               "adultoConyugue": 273600,
               "hijoMenor": 55632
+            }
+          },
+          "preciosPorEdadParticular": {
+            "18-27": {
+              "adultoConyugue": 100776,
+              "hijoMenor": 61473
+            },
+            "28-35": {
+              "adultoConyugue": 100776,
+              "hijoMenor": 61473
+            },
+            "36-40": {
+              "adultoConyugue": 100776,
+              "hijoMenor": 61473
+            },
+            "41-45": {
+              "adultoConyugue": 105816,
+              "hijoMenor": 61473
+            },
+            "46-50": {
+              "adultoConyugue": 116900,
+              "hijoMenor": 61473
+            },
+            "51-55": {
+              "adultoConyugue": 151164,
+              "hijoMenor": 61473
+            },
+            "56-64": {
+              "adultoConyugue": 225738,
+              "hijoMenor": 61473
+            },
+            "65+": {
+              "adultoConyugue": 302328,
+              "hijoMenor": 61473
             }
           },
           "features": [
@@ -679,6 +747,40 @@
             "65+": {
               "adultoConyugue": 322240,
               "hijoMenor": 66144
+            }
+          },
+          "preciosPorEdadParticular": {
+            "18-27": {
+              "adultoConyugue": 120058,
+              "hijoMenor": 73089
+            },
+            "28-35": {
+              "adultoConyugue": 120058,
+              "hijoMenor": 73089
+            },
+            "36-40": {
+              "adultoConyugue": 120058,
+              "hijoMenor": 73089
+            },
+            "41-45": {
+              "adultoConyugue": 125329,
+              "hijoMenor": 73089
+            },
+            "46-50": {
+              "adultoConyugue": 139268,
+              "hijoMenor": 73089
+            },
+            "51-55": {
+              "adultoConyugue": 179209,
+              "hijoMenor": 73089
+            },
+            "56-64": {
+              "adultoConyugue": 266236,
+              "hijoMenor": 73089
+            },
+            "65+": {
+              "adultoConyugue": 356075,
+              "hijoMenor": 73089
             }
           },
           "features": [
