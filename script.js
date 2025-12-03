@@ -4224,7 +4224,6 @@ function generatePlanCard(plan) {
         '</div>' +
         priceHTML +
         desgloseHTML +
-        '<ul class="plan-features">' + features + '</ul>' +
         '<div class="plan-card-actions" style="display:flex;gap:8px;">' +
         '<button class="select-plan-btn"><i class="fas fa-plus-circle"></i> Seleccionar Plan</button>' +
         '</div>' +
