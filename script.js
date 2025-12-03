@@ -1492,24 +1492,15 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
                 precioBase = calcularPrecioFinalOMINT(plan, composicionFamiliar, edadTitular, edadPareja);
         }
     }
-    // === ORDEN CORRECTO: 1) Descuento especial, 2) Descuento Plan Joven (25%), 3) Aportes ===
+    // === ORDEN CORRECTO: 1) Descuento Plan Joven (25%), 2) Descuento especial, 3) Aportes ===
     
-    // PASO 1: Aplicar descuento especial al precio base
-    let descuentoEspecial = 0;
-    let precioConDescuento = precioBase;
-    if (formData['aplicar-descuento'] === 'on' && formData['porcentaje-descuento']) {
-        const porcentaje = parseFloat(formData['porcentaje-descuento']);
-        if (!isNaN(porcentaje) && porcentaje > 0 && porcentaje < 100) {
-            descuentoEspecial = Math.round(precioBase * (porcentaje / 100));
-            precioConDescuento = Math.max(0, precioBase - descuentoEspecial);
-        }
-    }
-    
-    // PASO 2: Aplicar descuento Plan Joven 25% (solo OSPADEP SALUD, menores de 35 años)
+    // PASO 1: Aplicar descuento Plan Joven 25% (solo OSPADEP SALUD, menores de 35 años)
     // El descuento se aplica por separado sobre titular y/o cónyuge menor de 35 años, SIN incluir hijos
     let descuento35 = 0;
     let descuento35Titular = 0;
     let descuento35Conyuge = 0;
+    let precioConDescuento = precioBase;
+    
     if (prestadorKey === 'ospadepSalud') {
         console.log('🔍 Verificando descuento Plan Joven:', {
             prestadorKey,
@@ -1543,10 +1534,21 @@ function calcularPrecioUnificado(prestadorKey, plan, composicionFamiliar, edadTi
                 }
                 
                 if (descuento35 > 0) {
-                    precioConDescuento = Math.max(0, precioConDescuento - descuento35);
+                    precioConDescuento = Math.max(0, precioBase - descuento35);
                     console.log('✅ Descuento Plan Joven total:', descuento35);
                 }
             }
+        }
+    }
+    
+    // PASO 2: Aplicar descuento especial al precio YA con Plan Joven aplicado
+    let descuentoEspecial = 0;
+    if (formData['aplicar-descuento'] === 'on' && formData['porcentaje-descuento']) {
+        const porcentaje = parseFloat(formData['porcentaje-descuento']);
+        if (!isNaN(porcentaje) && porcentaje > 0 && porcentaje < 100) {
+            // El 30% se aplica sobre el subtotal con Plan Joven ya descontado
+            descuentoEspecial = Math.round(precioConDescuento * (porcentaje / 100));
+            precioConDescuento = Math.max(0, precioConDescuento - descuentoEspecial);
         }
     }
     
@@ -2374,22 +2376,12 @@ function generarDesgloseUnificado(prestadorKey, plan, composicionFamiliar, edadT
         }
     }
 
-    // Agregar descuento especial si existe (pero NO aportes, para evitar duplicación)
-    if (plan._descuentoEspecial && plan._descuentoEspecial > 0) {
-        desglose.items.push({
-            concepto: `Descuento especial (${plan._porcentajeDescuento}%)`,
-            cantidad: 1,
-            precioUnitario: -plan._descuentoEspecial,
-            subtotal: -plan._descuentoEspecial,
-            porcentaje: 'Descuento especial'
-        });
-    }
-    
-    // NOTA: NO agregamos "Aportes descontados" aquí porque se maneja en la visualización (en verde)
+    // NOTA: NO agregamos descuento especial ni aportes aquí porque se manejan en generatePlanCard
+    // para evitar duplicación y tener mejor control del formato visual
 
     // Actualizar el total final solo si no hay items específicos del prestador
     if (desglose.items.length === 0) {
-        desglose.total = plan._precioFinal || desglose.total;
+        desglose.total = plan._precioFinal !== undefined ? plan._precioFinal : desglose.total;
     } else {
         // Recalcular el total basado en los items del desglose
         desglose.total = desglose.items.reduce((sum, item) => sum + item.subtotal, 0);
@@ -4172,7 +4164,7 @@ function generatePlanCard(plan) {
         desgloseHTML += '</div>' +
             '<div class="breakdown-total">' +
             '<span class="breakdown-concept"><strong>Total mensual</strong></span>' +
-            `<span class="breakdown-amount" style="color:${plan._totalAportes && plan._totalAportes > 0 ? '#16a34a' : '#222'};font-weight:700;">` + formatCurrency(plan._precioFinal || plan.desglose.total) + '</span>' +
+            `<span class="breakdown-amount" style="color:${plan._totalAportes && plan._totalAportes > 0 ? '#16a34a' : '#222'};font-weight:700;">` + formatCurrency(plan._precioFinal !== undefined ? plan._precioFinal : plan.desglose.total) + '</span>' +
             '</div>' +
             '</div>';
     }
@@ -5889,8 +5881,8 @@ function renderSelectedPlansSidebar() {
     
     // Agregar cada plan seleccionado
     window.selectedPlans.forEach((plan, idx) => {
-        // Obtener el precio correcto
-        const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
+        // Obtener el precio correcto (usar !== undefined para manejar precio 0)
+        const precio = plan.precioFinal !== undefined ? plan.precioFinal : (plan.price !== undefined ? plan.price : (plan._precioFinal !== undefined ? plan._precioFinal : 0));
         const precioFormateado = typeof precio === 'number' ? 
             precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : 
             '$' + precio.toString();
@@ -9375,7 +9367,7 @@ function generateAndSaveCompleteQuote() {
     // Usar el primer plan seleccionado como principal
     const planPrincipal = window.selectedPlans[0];
     const beneficiosDelPlan = planPrincipal.features || [];
-    const precio = planPrincipal.price || planPrincipal._precioFinal || 0;
+    const precio = planPrincipal.price !== undefined ? planPrincipal.price : (planPrincipal._precioFinal !== undefined ? planPrincipal._precioFinal : 0);
     
     // Generar el HTML completo usando la función existente
     const htmlCompleto = createDownloadableHTML(datosCliente, planPrincipal, window.selectedPlans, beneficiosDelPlan, precio);
@@ -9472,7 +9464,8 @@ function generateCompactEmailWithBenefits() {
     let totalPrecio = 0;
 
     window.selectedPlans.forEach((plan, index) => {
-        const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
+        // Usar !== undefined para manejar precio 0 correctamente
+        const precio = plan.precioFinal !== undefined ? plan.precioFinal : (plan.price !== undefined ? plan.price : (plan._precioFinal !== undefined ? plan._precioFinal : 0));
         const precioFormateado = typeof precio === 'number' ? 
             precio.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' }) : 
             '$' + precio.toString();
@@ -9813,7 +9806,8 @@ function printCompactEmailWithBenefitsPDF() {
     // Generar HTML de los planes con toda la información detallada
     let planesHTML = '';
     window.selectedPlans.forEach((plan) => {
-        const precio = plan.precioFinal || plan.price || plan._precioFinal || 0;
+        // Usar !== undefined para manejar precio 0 correctamente
+        const precio = plan.precioFinal !== undefined ? plan.precioFinal : (plan.price !== undefined ? plan.price : (plan._precioFinal !== undefined ? plan._precioFinal : 0));
         const precioFormateado = typeof precio === 'number' ? 
             precio.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : 
             precio.toString();
