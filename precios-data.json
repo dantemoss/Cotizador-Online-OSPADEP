@@ -221,8 +221,8 @@
           "name": "PLAN PO62",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 269901,
-            ">65": 784270
+            "≤65": 277459,
+            ">65": 806229
           },
           "features": [
             "Cobertura integral SWISS MEDICAL",
@@ -239,8 +239,8 @@
           "name": "PLAN PO64",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 323642,
-            ">65": 939114
+            "≤65": 332704,
+            ">65": 965409
           },
           "features": [
             "Cobertura premium SWISS MEDICAL",
@@ -258,8 +258,8 @@
           "name": "PLAN SB04",
           "type": "swiss_medical",
           "preciosPorEdad": {
-            "≤65": 212852,
-            ">65": 582069
+            "≤65": 218812,
+            ">65": 598367
           },
           "features": [
             "Cobertura básica SWISS MEDICAL",
@@ -281,8 +281,8 @@
           "name": "PLAN MS",
           "type": "sw_nubial",
           "preciosPorEdad": {
-            "≤65": 178666,
-            ">65": 507568
+            "≤65": 183669,
+            ">65": 521780
           },
           "features": [
             "Plan SW NUBIAL exclusivo",
@@ -305,8 +305,8 @@
           "name": "PLAN SB02",
           "type": "swiss",
           "preciosPorEdad": {
-            "≤65": 207674,
-            ">65": 704647
+            "≤65": 213489,
+            ">65": 724377
           },
           "features": [
             "Plan SWISS básico",
@@ -856,7 +856,7 @@
     },
     {
       "fecha": "2026-01-16",
-      "descripcion": "Actualización FEBRERO 2026: OSPADEP SALUD +2.8%, ACTIVA SALUD +2.8%, OMINT +2.55%, MEDIFE (nuevos precios)",
+      "descripcion": "Actualización FEBRERO 2026: OSPADEP SALUD +2.8%, ACTIVA SALUD +2.8%, OMINT +2.55%, MEDIFE (nuevos precios), SWISS MEDICAL (todos) +2.8%",
       "autor": "Panel Admin"
     }
   ]
